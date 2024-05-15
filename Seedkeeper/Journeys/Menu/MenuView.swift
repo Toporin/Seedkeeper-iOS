@@ -59,7 +59,7 @@ struct MenuView: View {
                             iconWidth: 34, iconHeight: 34,
                             backgroundColor: Colors.darkMenuButton,
                             action: {
-                                
+                                self.homeNavigationPath.append(NavigationRoutes.cardInfo)
                             },
                             forcedHeight: 90
                         )
@@ -76,7 +76,7 @@ struct MenuView: View {
                 GeometryReader { geometry in
                     HStack(spacing: 10) {
                         
-                        // HOW TO USE LINK
+                        // BACKUP
                         MenuButton(
                             title: String(localized: "makeABackup"),
                             iconName: "ic_backup",
@@ -204,6 +204,7 @@ struct MenuButton: View {
     let backgroundColor: Color
     let action: () -> Void
     var forcedHeight: CGFloat = 120
+    var subTitle: String? = nil
 
     var body: some View {
         Button(action: action) {
@@ -235,6 +236,13 @@ struct MenuButton: View {
                         }
                         Spacer()
                         HStack {
+                            if let subTitle = subTitle {
+                                Text(subTitle)
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .lineLimit(2)
+                                    .padding([.leading, .trailing])
+                            }
                             Spacer()
                             Image(iconName)
                                 .resizable()

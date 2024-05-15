@@ -8,11 +8,23 @@
 import Foundation
 import SwiftUI
 
+enum PinCodeNavigationPath: Hashable {
+    case createPinCode
+    case confirmPinCode
+    case updatePinCode
+}
+
+struct PinCodeNavigationData: Hashable {
+    let mode: PinCodeNavigationPath
+    let pinCode: String?
+}
+
 struct CreatePinCodeView: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCode: String = ""
     @State private var shouldShowPinCodeError: Bool = false
+    var pinCodeNavigationData: PinCodeNavigationData
         
     var body: some View {
         ZStack {
@@ -23,15 +35,15 @@ struct CreatePinCodeView: View {
             VStack {
                 Spacer()
                 
-                SatoText(text: "createPinCode", style: .title)
+                SatoText(text: pinCodeNavigationData.mode == .createPinCode ? "createPinCode" : "editPinCode", style: .title)
                 
                 Spacer().frame(height: 10)
                 
-                SatoText(text: "createPinCodeSubtitle", style: .SKMenuItemTitle)
+                SatoText(text: pinCodeNavigationData.mode == .createPinCode ? "createPinCodeSubtitle" : "editPinCodeSubtitle", style: .SKMenuItemTitle)
                 
                 Spacer().frame(height: 24)
                 
-                SecureTextInput(placeholder: String(localized: "placeholder.enterPinCode"), text: $pinCode)
+                SecureTextInput(placeholder: String(localized: pinCodeNavigationData.mode == .createPinCode ?  "placeholder.enterPinCode" : "placeholder.currentPinCode"), text: $pinCode)
                 
                 if shouldShowPinCodeError {
                     Text(String(localized: "invalidPinCode"))
@@ -47,7 +59,7 @@ struct CreatePinCodeView: View {
                         shouldShowPinCodeError = true
                         return
                     }
-                    homeNavigationPath.append(NavigationRoutes.confirmPinCode(pinCode))
+                    homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCode, pinCode: pinCode)))
                 })
                 
                 Spacer().frame(height: 16)

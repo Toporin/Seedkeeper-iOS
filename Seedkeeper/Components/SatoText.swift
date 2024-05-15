@@ -15,6 +15,7 @@ enum SatoTextStyle {
     case lightTitleSmall
     case subtitle
     case lightSubtitle
+    case lightSubtitleDark
     case extraLightSubtitle
     case subtitleBold
     case viewTitle
@@ -25,12 +26,14 @@ enum SatoTextStyle {
     //SeedKeeper:
     case SKMenuItemTitle
     case SKMenuItemSubtitle
+    case SKStrongBodyDark
+    case SKStrongBodyLight
     
     var lineHeight: CGFloat {
         switch self {
         case .title:
             return 38
-        case .subtitle, .lightSubtitle:
+        case .subtitle, .lightSubtitle, .lightSubtitleDark:
             return 20
         case .extraLightSubtitle:
             return 16
@@ -54,6 +57,10 @@ enum SatoTextStyle {
             return 24
         case .SKMenuItemSubtitle:
             return 18
+        case .SKStrongBodyDark:
+            return 24
+        case .SKStrongBodyLight:
+            return 24
         }
     }
     
@@ -79,7 +86,7 @@ enum SatoTextStyle {
             return 20
         case .cellSmallTitle:
             return 14
-        case .lightSubtitle:
+        case .lightSubtitle, .lightSubtitleDark:
             return 20
         case .extraLightSubtitle:
             return 13
@@ -87,6 +94,10 @@ enum SatoTextStyle {
             return 16
         case .SKMenuItemSubtitle:
             return 14
+        case .SKStrongBodyDark:
+            return 16
+        case .SKStrongBodyLight:
+            return 16
         }
     }
 
@@ -100,15 +111,18 @@ enum SatoTextStyle {
             return .custom("Poppins-ExtraBold", size: self.fontSize)
         case .subtitleBold:
             return .custom("Outfit-Bold", size: self.fontSize)
-        case .slotTitle, .lightSubtitle, .SKMenuItemSubtitle:
+        case .slotTitle, .lightSubtitle, .SKMenuItemSubtitle, .lightSubtitleDark:
             return .custom("Outfit-ExtraLight", size: self.fontSize)
-
+        case .SKStrongBodyDark:
+            return .custom("OpenSans-Medium", size: self.fontSize)
+        case .SKStrongBodyLight:
+            return .custom("OpenSans-Medium", size: self.fontSize)
         }
     }
 
     var textColor: Color {
         switch self {
-        case .title, .lightTitle, .lightTitleSmall, .lightTitleDark:
+        case .title, .lightTitle, .lightTitleSmall, .lightTitleDark, .lightSubtitleDark:
             return .black
         case .subtitle, .lightSubtitle, .extraLightSubtitle:
             return .white
@@ -126,6 +140,10 @@ enum SatoTextStyle {
             return .white
         case .SKMenuItemTitle, .SKMenuItemSubtitle:
             return .black
+        case .SKStrongBodyDark:
+            return .black
+        case .SKStrongBodyLight:
+            return .white
         }
     }
 
@@ -133,7 +151,7 @@ enum SatoTextStyle {
         switch self {
         case .title, .subtitleBold:
             return .bold
-        case .subtitle, .lightSubtitle, .cellTitle, .extraLightSubtitle:
+        case .subtitle, .lightSubtitle, .cellTitle, .extraLightSubtitle, .lightSubtitleDark:
             return .regular
         case .viewTitle:
             return .bold
@@ -145,6 +163,10 @@ enum SatoTextStyle {
             return .regular
         case .SKMenuItemSubtitle:
             return .ultraLight
+        case .SKStrongBodyDark:
+            return .regular
+        case .SKStrongBodyLight:
+            return .regular
         }
     }
 }

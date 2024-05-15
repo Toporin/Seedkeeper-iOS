@@ -91,7 +91,9 @@ struct SettingsView: View {
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalGroupSeparator)
                     
-                    SKButton(text: showLogsButtonTitle, style: .inform) {}
+                    SKButton(text: showLogsButtonTitle, style: .inform) {
+                        homeNavigationPath.append(NavigationRoutes.logs)
+                    }
                     
                     Spacer()
                 }

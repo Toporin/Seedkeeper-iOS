@@ -13,7 +13,7 @@ struct ConfirmPinCodeView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCodeConfirmation: String = ""
     @State private var shouldShowPinCodeError: Bool = false
-    var pinCodeToValidate: String
+    var pinCodeNavigationData: PinCodeNavigationData
         
     var body: some View {
         ZStack {
@@ -43,13 +43,14 @@ struct ConfirmPinCodeView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, action: {
-                    guard Validator.isPinValid(pin: pinCodeConfirmation) && pinCodeConfirmation == pinCodeToValidate else {
+                    guard let pinCodeToValidate = self.pinCodeNavigationData.pinCode, Validator.isPinValid(pin: pinCodeConfirmation) && pinCodeConfirmation == pinCodeToValidate else {
                         shouldShowPinCodeError = true
                         return
                     }
                     
                     if pinCodeConfirmation == pinCodeToValidate {
                         print("Pin codes matches: \(pinCodeConfirmation) == \(pinCodeToValidate)")
+                        homeNavigationPath.append(NavigationRoutes.setupFaceId(pinCodeConfirmation))
                     } else {
                         print("Pin code does not match")
                     }

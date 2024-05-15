@@ -11,6 +11,7 @@ import SwiftUI
 struct EmptyScanStateOverlay: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
+    @Binding var isCardScanned: Bool
 
     var body: some View {
             VStack {
@@ -18,7 +19,8 @@ struct EmptyScanStateOverlay: View {
                 Spacer()
                 
                 ScanButton {
-                    homeNavigationPath.append(NavigationRoutes.createPinCode)
+                    isCardScanned = true
+                    // homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
                 }
                 
                 Spacer()
