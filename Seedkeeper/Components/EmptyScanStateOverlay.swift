@@ -10,8 +10,9 @@ import SwiftUI
 
 struct EmptyScanStateOverlay: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
+    
     @Binding var homeNavigationPath: NavigationPath
-    @Binding var isCardScanned: Bool
 
     var body: some View {
             VStack {
@@ -19,14 +20,15 @@ struct EmptyScanStateOverlay: View {
                 Spacer()
                 
                 ScanButton {
-                    isCardScanned = true
-                    // homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
+                    Task {
+                        cardState.scan()
+                    }
                 }
                 
                 Spacer()
                 
                 Button(action: {
-                    if let weblinkUrl = URL(string: "https://satochip.io/product/satodime/") {
+                    if let weblinkUrl = URL(string: "https://satochip.io/product/seedkeeper/") {
                         UIApplication.shared.open(weblinkUrl)
                     }
                 }) {

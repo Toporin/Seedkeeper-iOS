@@ -36,9 +36,9 @@ struct SKButton: View {
     var text: String
     var style: ButtonStyle
     var horizontalPadding: CGFloat = 16
-    var action: () -> Void
     var staticWidth: CGFloat?
     var isEnabled: Bool?
+    var action: () -> Void
 
     var body: some View {
         Button(action: {

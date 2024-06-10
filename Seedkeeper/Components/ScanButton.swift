@@ -21,7 +21,8 @@ struct ScanButton: View {
                 Circle()
                     .fill(LinearGradient(gradient: Gradient(colors: [Colors.darkPurple, Colors.lightPurple]), startPoint: .leading, endPoint: .trailing))
                     .frame(width: initialSize, height: initialSize)
-                    .overlay(
+                    // TODO: fix - Animation is not working correclty with parent view
+                    /*.overlay(
                         ZStack {
                             Circle()
                                 .fill(Color.white.opacity(0.35))
@@ -31,7 +32,7 @@ struct ScanButton: View {
                                 .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false), value: animate)
                                 .frame(width: animationCircleSize, height: animationCircleSize)
                         }
-                    )
+                    )*/
                     .shadow(radius: 10)
                 
                 Text(String(localized: "clickNScan"))
@@ -42,7 +43,7 @@ struct ScanButton: View {
             .frame(width: initialSize, height: initialSize)
         }
         .onAppear {
-            animate = true
+             animate = true
         }
     }
 }

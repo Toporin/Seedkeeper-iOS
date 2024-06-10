@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum EditableCardInfoBoxContentMode {
+enum EditableCardInfoBoxContentMode  {
     case text(String)
     case pin
     case dropdown(PickerOptions)
@@ -35,7 +35,7 @@ struct EditableCardInfoBox: View {
         
         switch mode {
         case .text(let initialText):
-            _editableText = State(initialValue: initialText)
+            _editableText = State(initialValue: "")
         case .pin:
             _editableText = State(initialValue: "Update PIN code")
         case .dropdown(let options):
@@ -51,26 +51,34 @@ struct EditableCardInfoBox: View {
     var body: some View {
         HStack {
             Group {
-                if isEditing {
-                    TextField("", text: $editableText, onCommit: {
-                        isEditing = false
-                        action(.text(editableText))
-                    })
-                    .multilineTextAlignment(.center)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .padding(.leading, 12)
-                } else {
-                    if case .dropdown(let pickerOptions) = mode {
-                        Text(pickerOptions.selectedOption ?? editableText)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .lineLimit(1)
-                            .padding(.leading, 12)
-                    } else {
-                        Text(editableText)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .lineLimit(1)
-                            .padding(.leading, 12)
+                if case .text(let initialText) = mode {
+                    ZStack(alignment: .leading) {
+                        if editableText.isEmpty {
+                            Text(initialText)
+                                .padding(.leading, 16)
+                                .fontWeight(.light)
+                                .foregroundColor(Color.white.opacity(0.8))
+                        }
+                        TextField("", text: $editableText, onCommit: {
+                            isEditing = false
+                            action(.text(editableText))
+                        })
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding(.leading, 16)
                     }
+
+                } else if case .dropdown(let pickerOptions) = mode, let text = pickerOptions.selectedOption {
+                        Text(text)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .lineLimit(1)
+                            .padding(.leading, 16)
+                } else {
+                    Text(editableText)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .lineLimit(1)
+                        .fontWeight(.light)
+                        .foregroundColor(Color.white.opacity(0.8))
+                        .padding(.leading, 16)
                 }
             }
             .onTapGesture {

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CardInfoView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     @State var shouldShowAuthenticityScreen = false
     
@@ -30,6 +31,15 @@ struct CardInfoView: View {
     let cardNotGenuineText = "thisCardIsNotGenuine"
     let certButtonTitle = "certDetails"
     
+    func getCardVersionString() -> String {
+        if let cardStatus = cardState.cardStatus {
+            let str = "Seedkeeper v\(cardStatus.protocolMajorVersion).\(cardStatus.protocolMinorVersion)-\(cardStatus.appletMajorVersion).\(cardStatus.appletMinorVersion)"
+            return str
+        } else {
+            return "n/a"
+        }
+    }
+
     // MARK: - View
     var body: some View {
         ZStack {
@@ -45,7 +55,7 @@ struct CardInfoView: View {
                 SatoText(text: "**\(cardVersionTitle)**", style: .lightSubtitleDark)
                 Spacer()
                     .frame(height: 14)
-                CardInfoBox(text: "[VERSION]", backgroundColor: Colors.lightMenuButton)
+                CardInfoBox(text: self.getCardVersionString(), backgroundColor: Colors.lightMenuButton)
                 
                 Spacer()
                     .frame(height: 20)
@@ -54,7 +64,7 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 14)
 
-                EditableCardInfoBox(mode: .text("[LABEL]"), backgroundColor: Colors.lightMenuButton) { result in
+                EditableCardInfoBox(mode: .text(self.cardState.getCardLabel()), backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .text(let value):
                         print("Edited text : \(value)")
@@ -92,8 +102,8 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 14)
                 CardInfoBox(
-                    text: cardNotGenuineText,
-                    backgroundColor: Colors.ledRed)
+                    text: cardState.certificateCode == .success ? cardGenuineText : cardNotGenuineText,
+                    backgroundColor: cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed)
                 {
                     self.homeNavigationPath.append(NavigationRoutes.authenticity)
                 }
@@ -116,4 +126,3 @@ struct CardInfoView: View {
         }
     }
 }
-

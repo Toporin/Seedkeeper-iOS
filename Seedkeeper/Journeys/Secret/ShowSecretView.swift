@@ -10,8 +10,9 @@ import SwiftUI
 
 struct ShowSecretView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
-    var secret: String
+    var secret: SeedkeeperSecretHeaderDto
     
     var body: some View {
         ZStack {
@@ -24,58 +25,70 @@ struct ShowSecretView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                SatoText(text: "**manageYourSecret**", style: .SKStrongBodyDark)
+                SatoText(text: "manageYourSecret", style: .SKStrongBodyDark)
                 
                 Spacer()
                     .frame(height: 16)
                 
                 SatoText(text: "secretInfoSubtitle", style: .SKStrongBodyDark)
                 
-                SKLabel(title: "Label", content: secret)
+                SKLabel(title: "label", content: secret.label)
                 
-                SKLabel(title: "MnemonicSize", content: "(none)")
-                
-                SKLabel(title: "Passphrase", content: "(none)")
-                
-                Spacer()
-                    .frame(height: 30)
-                
-                HStack {
-                    SKActionButtonSmall(title: "BIP85", icon: "ic_bip85") {
-                        
-                    }
+                if secret.type == .bip39Mnemonic {
                     
-                    Spacer()
+                    SKLabel(title: "mnemonicSize", content: "(none)")
                     
-                    SKActionButtonSmall(title: "SeedQR", icon: "ic_qr") {
-                        
-                    }
+                    SKLabel(title: "passphrase", content: "(none)")
                     
-                    Spacer()
+                } else if secret.type == .password {
                     
-                    SKActionButtonSmall(title: "Xpub", icon: "ic_xpub") {
-                        
-                    }
+                    SKLabel(title: "login", content: "(none)")
+                    
+                    SKLabel(title: "Url:", content: "(none)")
                 }
-                .padding([.leading, .trailing], 0)
+                
+                if secret.type == .bip39Mnemonic {
+                    Spacer()
+                        .frame(height: 30)
+                    
+                    HStack {
+                        SKActionButtonSmall(title: "BIP85", icon: "ic_bip85") {
+                            
+                        }
+                        
+                        Spacer()
+                        
+                        SKActionButtonSmall(title: "SeedQR", icon: "ic_qr") {
+                            
+                        }
+                        
+                        Spacer()
+                        
+                        SKActionButtonSmall(title: "Xpub", icon: "ic_xpub") {
+                            cardState.requestGetXpub()
+                        }
+                    }
+                    .padding([.leading, .trailing], 0)
+                }
                 
                 Spacer()
                     .frame(height: 30)
                 
-                SKSecretViewer(shouldShowQRCode: false, contentText: "author canvas lecture illegal rabbit aware walk visit thing found naive interest")
+                SKSecretViewer(shouldShowQRCode: false, contentText: cardState.currentSecretString)
                 
                 Spacer()
                     .frame(height: 30)
                 
                 HStack {
                     SKActionButtonSmall(title: "Delete", icon: "ic_trash") {
-                        
+                        cardState.currentSecretHeader = secret
+                        cardState.requestDeleteSecret()
                     }
                     
                     Spacer()
                     
                     SKActionButtonSmall(title: "Show", icon: "ic_eye") {
-                        
+                        cardState.requestGetSecret(with: secret)
                     }
                 }
                 .padding([.leading, .trailing], 0)
@@ -85,6 +98,9 @@ struct ShowSecretView: View {
 
             }
             .padding([.leading, .trailing], Dimensions.lateralPadding)
+        }
+        .onDisappear {
+            cardState.cleanShowSecret()
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

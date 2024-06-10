@@ -38,7 +38,6 @@ struct SetupFaceIdView: View {
                 Spacer()
                 
                 Button(action: {
-                    // pop to root view
                     homeNavigationPath = .init()
                 }) {
                     SatoText(text: "notNow", style: .SKMenuItemTitle)
@@ -58,7 +57,6 @@ struct SetupFaceIdView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
-            // pop to root view
             homeNavigationPath = .init()
         }) {
             Image("ic_back_dark")

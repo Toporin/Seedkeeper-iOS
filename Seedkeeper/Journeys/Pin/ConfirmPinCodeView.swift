@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ConfirmPinCodeView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
+    
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCodeConfirmation: String = ""
     @State private var shouldShowPinCodeError: Bool = false
@@ -50,7 +52,9 @@ struct ConfirmPinCodeView: View {
                     
                     if pinCodeConfirmation == pinCodeToValidate {
                         print("Pin codes matches: \(pinCodeConfirmation) == \(pinCodeToValidate)")
-                        homeNavigationPath.append(NavigationRoutes.setupFaceId(pinCodeConfirmation))
+                        cardState.pinCodeToSetup = pinCodeConfirmation
+                        cardState.requestInitPinOnCard()
+                        // homeNavigationPath.append(NavigationRoutes.setupFaceId(pinCodeConfirmation))
                     } else {
                         print("Pin code does not match")
                     }

@@ -21,6 +21,7 @@ enum SatochipURL: String {
 
 struct MenuView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     
     // MARK: - Helpers
@@ -59,7 +60,9 @@ struct MenuView: View {
                             iconWidth: 34, iconHeight: 34,
                             backgroundColor: Colors.darkMenuButton,
                             action: {
-                                self.homeNavigationPath.append(NavigationRoutes.cardInfo)
+                                if let _ = cardState.cardStatus {
+                                    self.homeNavigationPath.append(NavigationRoutes.cardInfo)
+                                }
                             },
                             forcedHeight: 90
                         )
@@ -84,7 +87,7 @@ struct MenuView: View {
                             iconHeight: 34,
                             backgroundColor: Colors.lightMenuButton,
                             action: {
-                                self.openURL(.howToUse)
+                                self.homeNavigationPath.append(NavigationRoutes.backup)
                             },
                             forcedHeight: 108
                         )

@@ -10,6 +10,12 @@
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
+		D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */; };
+		D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540122C04A3DC00ABF9C7 /* BackupView.swift */; };
+		D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540142C04D2B700ABF9C7 /* PinCodeView.swift */; };
+		D03540172C04D80C00ABF9C7 /* BackupCongratView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */; };
+		D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D05EB8482BFE4DEA006B84BB /* SatochipSwift */; };
+		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
 		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
 		D07141622BF259CF00A4939A /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */; };
@@ -24,8 +30,8 @@
 		D07141752BF4DC8500A4939A /* AddSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141742BF4DC8500A4939A /* AddSecretView.swift */; };
 		D07141772BF4DFC000A4939A /* Dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141762BF4DFC000A4939A /* Dimensions.swift */; };
 		D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141782BF4E54200A4939A /* ShowSecretView.swift */; };
-		D071417B2BF4FDB100A4939A /* GenerateSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417A2BF4FDB100A4939A /* GenerateSecretView.swift */; };
-		D071417D2BF505E500A4939A /* GenerateMnemonicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417C2BF505E500A4939A /* GenerateMnemonicView.swift */; };
+		D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */; };
+		D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */; };
 		D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */; };
 		D0BA41402BCFDDF000FD25B9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */; };
 		D0BA41422BCFDDF200FD25B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BA41412BCFDDF200FD25B9 /* Assets.xcassets */; };
@@ -82,6 +88,11 @@
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
+		D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorBox.swift; sourceTree = "<group>"; };
+		D03540122C04A3DC00ABF9C7 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
+		D03540142C04D2B700ABF9C7 /* PinCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeView.swift; sourceTree = "<group>"; };
+		D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratView.swift; sourceTree = "<group>"; };
+		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
 		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		D07141612BF259CF00A4939A /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
@@ -96,8 +107,8 @@
 		D07141742BF4DC8500A4939A /* AddSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSecretView.swift; sourceTree = "<group>"; };
 		D07141762BF4DFC000A4939A /* Dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dimensions.swift; sourceTree = "<group>"; };
 		D07141782BF4E54200A4939A /* ShowSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSecretView.swift; sourceTree = "<group>"; };
-		D071417A2BF4FDB100A4939A /* GenerateSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateSecretView.swift; sourceTree = "<group>"; };
-		D071417C2BF505E500A4939A /* GenerateMnemonicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateMnemonicView.swift; sourceTree = "<group>"; };
+		D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateSecretTypeView.swift; sourceTree = "<group>"; };
+		D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateGeneratorView.swift; sourceTree = "<group>"; };
 		D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seedkeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedkeeperApp.swift; sourceTree = "<group>"; };
 		D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -143,6 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +184,23 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		D03540112C04A3B300ABF9C7 /* Backup */ = {
+			isa = PBXGroup;
+			children = (
+				D03540122C04A3DC00ABF9C7 /* BackupView.swift */,
+				D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */,
+			);
+			path = Backup;
+			sourceTree = "<group>";
+		};
+		D05EB84A2BFE4E73006B84BB /* Card */ = {
+			isa = PBXGroup;
+			children = (
+				D05EB84B2BFE4E86006B84BB /* CardState.swift */,
+			);
+			path = Card;
+			sourceTree = "<group>";
+		};
 		D07141552BF2532100A4939A /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,8 +223,8 @@
 			children = (
 				D07141742BF4DC8500A4939A /* AddSecretView.swift */,
 				D07141782BF4E54200A4939A /* ShowSecretView.swift */,
-				D071417A2BF4FDB100A4939A /* GenerateSecretView.swift */,
-				D071417C2BF505E500A4939A /* GenerateMnemonicView.swift */,
+				D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */,
+				D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */,
 				D0BEA3192BF5193100BD05D7 /* GenerateSuccessView.swift */,
 			);
 			path = Secret;
@@ -224,6 +253,7 @@
 		D0BA413C2BCFDDF000FD25B9 /* Seedkeeper */ = {
 			isa = PBXGroup;
 			children = (
+				D05EB84A2BFE4E73006B84BB /* Card */,
 				D07141582BF255B100A4939A /* Repositories */,
 				D07141552BF2532100A4939A /* Models */,
 				D03110962BE4178D00ED0997 /* Helpers */,
@@ -270,6 +300,7 @@
 				D0C939D12BD6860700F2A17B /* CreatePinCodeView.swift */,
 				D0C939D52BD69CAD00F2A17B /* ConfirmPinCodeView.swift */,
 				D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */,
+				D03540142C04D2B700ABF9C7 /* PinCodeView.swift */,
 			);
 			path = Pin;
 			sourceTree = "<group>";
@@ -302,10 +333,11 @@
 		D0E4337B2BD3F978008DBAA6 /* Journeys */ = {
 			isa = PBXGroup;
 			children = (
+				D03540112C04A3B300ABF9C7 /* Backup */,
 				D07141732BF4DC7400A4939A /* Secret */,
 				D0C939D02BD685F900F2A17B /* Pin */,
 				D0E433A12BD40B48008DBAA6 /* Menu */,
-				D0E4337D2BD3F9C7008DBAA6 /* HomeView */,
+				D0E4337D2BD3F9C7008DBAA6 /* Home */,
 			);
 			path = Journeys;
 			sourceTree = "<group>";
@@ -322,17 +354,18 @@
 				D0C939D32BD687D400F2A17B /* SecureTextInput.swift */,
 				D071416B2BF272F300A4939A /* CardInfoBox.swift */,
 				D071416D2BF2772600A4939A /* EditableCardInfoBox.swift */,
+				D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		D0E4337D2BD3F9C7008DBAA6 /* HomeView */ = {
+		D0E4337D2BD3F9C7008DBAA6 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */,
 				D07141712BF4D71900A4939A /* DashboardView.swift */,
 			);
-			path = HomeView;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		D0E433842BD3FBC1008DBAA6 /* Resources */ = {
@@ -394,6 +427,9 @@
 			dependencies = (
 			);
 			name = Seedkeeper;
+			packageProductDependencies = (
+				D05EB8482BFE4DEA006B84BB /* SatochipSwift */,
+			);
 			productName = Seedkeeper;
 			productReference = D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */;
 			productType = "com.apple.product-type.application";
@@ -467,6 +503,9 @@
 				fr,
 			);
 			mainGroup = D0BA41312BCFDDF000FD25B9;
+			packageReferences = (
+				D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */,
+			);
 			productRefGroup = D0BA413B2BCFDDF000FD25B9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -526,16 +565,19 @@
 			files = (
 				D0BA41402BCFDDF000FD25B9 /* HomeView.swift in Sources */,
 				D071416C2BF272F300A4939A /* CardInfoBox.swift in Sources */,
+				D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */,
 				D0E433A02BD4088E008DBAA6 /* Colors.swift in Sources */,
 				D0E433812BD3FA48008DBAA6 /* SatoStatusView.swift in Sources */,
 				D07141572BF2533700A4939A /* LogModel.swift in Sources */,
 				D071416E2BF2772600A4939A /* EditableCardInfoBox.swift in Sources */,
 				D0E433832BD3FB08008DBAA6 /* SatoText.swift in Sources */,
-				D071417D2BF505E500A4939A /* GenerateMnemonicView.swift in Sources */,
+				D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */,
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
 				D0E433A32BD40B56008DBAA6 /* MenuView.swift in Sources */,
 				D07141752BF4DC8500A4939A /* AddSecretView.swift in Sources */,
 				D07141622BF259CF00A4939A /* Seedkeeper.xcdatamodeld in Sources */,
+				D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */,
+				D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */,
 				D0E433A52BD423B0008DBAA6 /* SettingsView.swift in Sources */,
 				D07141772BF4DFC000A4939A /* Dimensions.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
@@ -545,14 +587,16 @@
 				D0C939D82BD6A35900F2A17B /* Validator.swift in Sources */,
 				D0BEA31A2BF5193100BD05D7 /* GenerateSuccessView.swift in Sources */,
 				D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */,
-				D071417B2BF4FDB100A4939A /* GenerateSecretView.swift in Sources */,
+				D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */,
 				D0E4339C2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift in Sources */,
+				D03540172C04D80C00ABF9C7 /* BackupCongratView.swift in Sources */,
 				D03110952BE40D2400ED0997 /* LogsView.swift in Sources */,
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
 				D0C939D42BD687D400F2A17B /* SecureTextInput.swift in Sources */,
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
+				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
 				D0C939D22BD6860700F2A17B /* CreatePinCodeView.swift in Sources */,
@@ -743,11 +787,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC is used to scan Satochip card";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -779,11 +825,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC is used to scan Satochip card";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -919,6 +967,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = /Users/lioneldelvaux/Projects/SatochipSwift;
+			requirement = {
+				branch = "support-seedkeeper";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D05EB8482BFE4DEA006B84BB /* SatochipSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */;
+			productName = SatochipSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */ = {

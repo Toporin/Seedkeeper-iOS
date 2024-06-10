@@ -7,10 +7,43 @@
 
 import Foundation
 import SwiftUI
+import SatochipSwift
+import CryptoSwift
+
+struct SeedkeeperSecretHeaderDto: Hashable {
+    
+    public static let HEADER_SIZE = 13
+    
+    public var sid = 0
+    public var type = SeedkeeperSecretType.defaultType
+    public var subtype: UInt8 = UInt8(0) // todo:
+    public var origin = SeedkeeperSecretOrigin.plainImport
+    public var exportRights = SeedkeeperExportRights.exportPlaintextAllowed
+    public var nbExportPlaintext: UInt8 = UInt8(0)
+    public var nbExportEncrypted: UInt8 = UInt8(0)
+    public var useCounter: UInt8 = UInt8(0)
+    public var rfu2: UInt8 = UInt8(0) // currently not used
+    public var fingerprintBytes = [UInt8](repeating: 0, count: 4)
+    public var label = ""
+    
+    public init(secretHeader: SeedkeeperSecretHeader) {
+        self.sid = secretHeader.sid
+        self.type = secretHeader.type
+        self.subtype = secretHeader.subtype
+        self.origin = secretHeader.origin
+        self.exportRights = secretHeader.exportRights
+        self.nbExportPlaintext = secretHeader.nbExportPlaintext
+        self.nbExportEncrypted = secretHeader.nbExportEncrypted
+        self.useCounter = secretHeader.useCounter
+        self.rfu2 = secretHeader.rfu2
+        self.fingerprintBytes = secretHeader.fingerprintBytes
+        self.label = secretHeader.label
+    }
+}
 
 struct DashboardView: View {
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
-    @State var secretsList: [String] = ["secret1", "secret2"]
     
     var body: some View {
         VStack {
@@ -22,14 +55,14 @@ struct DashboardView: View {
             Spacer()
                 .frame(height: 48)
             
-            SatoText(text: "mySecretList", style: .SKStrongBodyDark)
+            SatoText(text: "mySecretsList", style: .SKStrongBodyDark)
             
             Spacer()
                 .frame(height: 12)
             
             List {
-                ForEach(secretsList, id: \.self) { secret in
-                    SKSecretButton(secret: secret) {
+                ForEach(cardState.masterSecretHeaders, id: \.self) { secret in
+                    SKSecretButton(secret: secret.label) {
                         homeNavigationPath.append(NavigationRoutes.showSecret(secret))
                     }
                     .listRowBackground(Color.clear)
@@ -54,6 +87,11 @@ struct DashboardView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
                 .frame(maxWidth: .infinity, alignment: .center)
                 .listRowSeparator(.hidden)
+            }
+            .refreshable {
+                Task {
+                    cardState.scan()
+                }
             }
             .listStyle(PlainListStyle())
             .background(Color.clear)

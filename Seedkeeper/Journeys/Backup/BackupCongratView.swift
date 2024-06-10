@@ -1,16 +1,16 @@
 //
-//  GenerateSuccessView.swift
+//  BackupCongratView.swift
 //  Seedkeeper
 //
-//  Created by Lionel Delvaux on 09/05/2024.
+//  Created by Lionel Delvaux on 24/05/2024.
 //
 
+import Foundation
 import SwiftUI
 
-struct GenerateSuccessView: View {
+struct BackupCongratsView: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
-    @State var secretLabel: String
     
     var body: some View {
         ZStack {
@@ -23,32 +23,19 @@ struct GenerateSuccessView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                SatoText(text: "congrats", style: .SKStrongBodyDark)
+                SatoText(text: "**congrats**", style: .SKStrongBodyDark)
                 
                 Spacer()
                     .frame(height: 16)
                 
-                SatoText(text: "generateSecretSuccessInfoSubtitle", style: .SKStrongBodyDark)
+                SatoText(text: "congratsInfoSubtitle", style: .SKStrongBodyDark)
                 
                 Spacer()
-                    .frame(height: 30)
                 
-                Text(secretLabel)
-                    .font(.custom("OpenSans-Regular", size: 16))
-                    .lineSpacing(24)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 33, maxHeight: 33)
-                    .background(Colors.purpleBtn.opacity(0.5))
-                    .cornerRadius(20)
-                
-                Spacer()
-                    .frame(height: 30)
-                
-                Image("il_vault")
+                Image("il_backup_congrats")
                     .resizable()
-                    .frame(width: 225, height: 225)
-                
+                    .frame(width: 300, height: 268)
+
                 Spacer()
                 
                 SKButton(text: String(localized: "home"), style: .regular, horizontalPadding: 66, action: {
@@ -64,7 +51,7 @@ struct GenerateSuccessView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: "generateSecretViewTitle", style: .lightTitleDark)
+                SatoText(text: "backupCongratsViewTitle", style: .lightTitleDark)
             }
         }
     }
