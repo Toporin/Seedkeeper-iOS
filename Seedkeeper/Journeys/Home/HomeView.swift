@@ -9,6 +9,12 @@ import SwiftUI
 
 enum ActionAfterPin {
     case rescanCard
+    case continueBackupFlow
+}
+
+enum SecretCreationMode {
+    case generate
+    case manualImport
 }
 
 enum NavigationRoutes: Hashable {
@@ -25,10 +31,11 @@ enum NavigationRoutes: Hashable {
     case pinCode(ActionAfterPin)
     case addSecret
     case showSecret(SeedkeeperSecretHeaderDto)
-    case generateSecretType
-    case generateGenerator(GeneratorMode)
+    case generateSecretType(SecretCreationMode)
+    case generateGenerator(GeneratorModeNavData)
     case generateSuccess(String)
     case backup
+    case backupSuccess
 }
 
 struct HomeView: View {
@@ -73,8 +80,8 @@ struct HomeView: View {
                     MenuView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .settings:
                     SettingsView(homeNavigationPath: $cardState.homeNavigationPath)
-                case .createPinCode:
-                    CreatePinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: PinCodeNavigationData(mode: .createPinCode, pinCode: nil))
+                case .createPinCode(let pinCodeNavigationData):
+                    CreatePinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: pinCodeNavigationData)
                 case .confirmPinCode(let pinCodeNavigationData):
                     ConfirmPinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: pinCodeNavigationData)
                 case .setupFaceId(let pinCode):
@@ -88,19 +95,21 @@ struct HomeView: View {
                 case .authenticity:
                     AuthenticityView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .editPinCode:
-                    CreatePinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: PinCodeNavigationData(mode: .updatePinCode, pinCode: nil))
+                    CreatePinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: PinCodeNavigationData(mode: .updatePinCodeDefineNew, pinCode: nil))
                 case .addSecret:
                     AddSecretView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .showSecret(let secret):
                     ShowSecretView(homeNavigationPath: $cardState.homeNavigationPath, secret: secret)
-                case .generateSecretType:
-                    GenerateSecretTypeView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .generateSecretType(let mode):
+                    GenerateSecretTypeView(homeNavigationPath: $cardState.homeNavigationPath, secretCreationMode: mode)
                 case .generateGenerator(let mode):
-                    GenerateGeneratorView(homeNavigationPath: $cardState.homeNavigationPath, generatorMode: mode)
+                    GenerateGeneratorView(homeNavigationPath: $cardState.homeNavigationPath, generatorModeNavData: mode)
                 case .generateSuccess(let label):
                     GenerateSuccessView(homeNavigationPath: $cardState.homeNavigationPath, secretLabel: label)
                 case .backup:
                     BackupView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .backupSuccess:
+                    BackupCongratsView(homeNavigationPath: $cardState.homeNavigationPath)
                 }
             }
         }

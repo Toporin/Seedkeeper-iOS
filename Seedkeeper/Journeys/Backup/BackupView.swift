@@ -10,34 +10,34 @@ import SwiftUI
 
 enum BackupMode {
     case start
-    case pair
+    case pairBackupCard
     case backupImport
     case backupExport
 }
 
 struct BackupView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
-    @State var mode: BackupMode = .start
     
     func getActionButtonTitle() -> String {
-        switch mode {
+        switch cardState.mode {
         case .start:
             return "start"
-        case .pair:
-            return "next"
+        case .pairBackupCard:
+            return "scan my backup card"
         case .backupImport:
-            return "scan my seedkeeper"
+            return "scan my master card again"
         case .backupExport:
-            return "next"
+            return "backup"
         }
     }
     
     func getIndicationImageName() -> String {
-        switch mode {
+        switch cardState.mode {
         case .start:
             return "il_backup_master_backup"
-        case .pair:
+        case .pairBackupCard:
             return "il_backup_backup"
         case .backupImport:
             return "il_backup_master_backup"
@@ -77,15 +77,15 @@ struct BackupView: View {
                     .frame(height: 16)
                 
                 SKButton(text: getActionButtonTitle(), style: .regular, horizontalPadding: 66, action: {
-                    switch mode {
+                    switch cardState.mode {
                     case .start:
-                        mode = .pair
-                    case .pair:
-                        break
+                        cardState.mode = .pairBackupCard
+                    case .pairBackupCard:
+                        cardState.scanBackupCard()
                     case .backupImport:
-                        break
+                        cardState.requestFetchSecretsForBackup()
                     case .backupExport:
-                        break
+                        cardState.requestImportSecretsToBackupCard()
                     }
                 })
                 

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import CoreGraphics
+import QRCode
 import SwiftUI
 
 struct ShowSecretView: View {
@@ -13,6 +15,7 @@ struct ShowSecretView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     var secret: SeedkeeperSecretHeaderDto
+    @State var shouldShowSeedQR: Bool = false
     
     var body: some View {
         ZStack {
@@ -36,15 +39,15 @@ struct ShowSecretView: View {
                 
                 if secret.type == .bip39Mnemonic {
                     
-                    SKLabel(title: "mnemonicSize", content: "(none)")
+                    SKLabel(title: "mnemonicSize", content: cardState.currentMnemonicCardData?.getMnemonicSize()?.humanReadableName ?? "(none)")
                     
-                    SKLabel(title: "passphrase", content: "(none)")
+                    SKLabel(title: "passphrase", content: cardState.currentMnemonicCardData?.passphrase ?? "(none)")
                     
                 } else if secret.type == .password {
                     
-                    SKLabel(title: "login", content: "(none)")
+                    SKLabel(title: "login", content: cardState.currentPasswordCardData?.login ?? "(none)")
                     
-                    SKLabel(title: "Url:", content: "(none)")
+                    SKLabel(title: "Url:", content: cardState.currentPasswordCardData?.url ?? "(none)")
                 }
                 
                 if secret.type == .bip39Mnemonic {
@@ -52,20 +55,29 @@ struct ShowSecretView: View {
                         .frame(height: 30)
                     
                     HStack {
-                        SKActionButtonSmall(title: "BIP85", icon: "ic_bip85") {
-                            
+                        SKActionButtonSmall(title: "Seed", icon: "ic_bip85") {
+                            guard let _ = cardState.currentMnemonicCardData else {
+                                return
+                            }
+                            shouldShowSeedQR = false
                         }
                         
                         Spacer()
                         
                         SKActionButtonSmall(title: "SeedQR", icon: "ic_qr") {
-                            
+                            guard let _ = cardState.currentMnemonicCardData else {
+                                return
+                            }
+                            shouldShowSeedQR = true
                         }
                         
-                        Spacer()
-                        
-                        SKActionButtonSmall(title: "Xpub", icon: "ic_xpub") {
-                            cardState.requestGetXpub()
+                        if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
+                            Spacer()
+                            
+                            SKActionButtonSmall(title: "Xpub", icon: "ic_xpub") {
+                                shouldShowSeedQR = false
+                                cardState.requestGetXpub()
+                            }
                         }
                     }
                     .padding([.leading, .trailing], 0)
@@ -74,15 +86,26 @@ struct ShowSecretView: View {
                 Spacer()
                     .frame(height: 30)
                 
-                SKSecretViewer(shouldShowQRCode: false, contentText: cardState.currentSecretString)
+                if let password = cardState.currentPasswordCardData?.password {
+                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText:  .constant(password) )
+                    
+                } else if let mnemonicCardData = cardState.currentMnemonicCardData {
+                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: shouldShowSeedQR ? .constant(mnemonicCardData.getSeedQRContent()) : .constant(mnemonicCardData.mnemonic))
+                    
+                } else {
+                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: .constant(""))
+                    
+                }
                 
                 Spacer()
                     .frame(height: 30)
                 
                 HStack {
-                    SKActionButtonSmall(title: "Delete", icon: "ic_trash") {
-                        cardState.currentSecretHeader = secret
-                        cardState.requestDeleteSecret()
+                    if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
+                        SKActionButtonSmall(title: "Delete", icon: "ic_trash") {
+                            cardState.currentSecretHeader = secret
+                            cardState.requestDeleteSecret()
+                        }
                     }
                     
                     Spacer()
@@ -174,21 +197,29 @@ struct SKActionButtonSmall: View {
 
 struct SKSecretViewer: View {
     @State private var showText: Bool = false
-    @State var shouldShowQRCode: Bool = false
-    var contentText: String
+    @Binding var shouldShowQRCode: Bool
+    @Binding var contentText: String {
+        didSet {
+            print("contentText: \(contentText)")
+        }
+    }
+    var isEditable: Bool = false
+    var userInputResult: ((String) -> Void)? = nil
     
     var contentTextClear: String {
         return showText ? contentText : String(repeating: "*", count: contentText.count)
     }
     
-    func convertStringToQRCode() -> Image {
-        let data = contentText.data(using: .ascii)
-        let filter = CIFilter(name: "CIQRCodeGenerator")
-        filter?.setValue(data, forKey: "inputMessage")
-        let transform = CGAffineTransform(scaleX: 10, y: 10)
-        let image = filter?.outputImage?.transformed(by: transform)
-        
-        return Image(uiImage: UIImage(ciImage: image!))
+    public func getQRfromText(text: String) -> CGImage? {
+        do {
+            let doc = try QRCode.Document(utf8String: text, errorCorrection: .high)
+            doc.design.foregroundColor(Color.black.cgColor!)
+            doc.design.backgroundColor(Color.white.cgColor!)
+            let generated = try doc.cgImage(CGSize(width: 200, height: 200))
+            return generated
+        } catch {
+            return nil
+        }
     }
     
     var body: some View {
@@ -197,38 +228,59 @@ struct SKSecretViewer: View {
                 .fill(Colors.purpleBtn.opacity(0.2))
             
             VStack {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        // copy to clipboard
-                    }) {
-                        Image(systemName: "square.on.square")
-                            .foregroundColor(.white)
-                            .padding(5)
+                if !shouldShowQRCode {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            UIPasteboard.general.string = contentText
+                        }) {
+                            Image(systemName: "square.on.square")
+                                .foregroundColor(.white)
+                                .padding(5)
+                        }
+                        Button(action: {
+                            showText.toggle()
+                        }) {
+                            Image(systemName: showText ? "eye.slash" : "eye")
+                                .foregroundColor(.white)
+                                .padding(5)
+                        }
                     }
-                    Button(action: {
-                        showText.toggle()
-                    }) {
-                        Image(systemName: showText ? "eye.slash" : "eye")
-                            .foregroundColor(.white)
-                            .padding(5)
-                    }
+                    .padding(.top, 10)
+                    .padding(.trailing, 10)
                 }
-                .padding(.top, 10)
-                .padding(.trailing, 10)
                 
                 Spacer()
                 
-                if shouldShowQRCode {
-                    convertStringToQRCode()
-                        .resizable()
-                        .frame(width: 200, height: 200)
+                if isEditable {
+                    TextField("", text: $contentText, onEditingChanged: { (editingChanged) in
+                        if editingChanged {
+                            print("TextField focused")
+                        } else {
+                            print("TextField focus removed")
+                            userInputResult?(contentText)
+                        }
+                        
+                    })
                         .padding()
+                        .background(.clear)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    Text(contentTextClear)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding()
+                    if shouldShowQRCode {
+                        if let cgImage = self.getQRfromText(text: contentText) {
+                            Image(uiImage: UIImage(cgImage: cgImage))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 219, height: 219, alignment: .center)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                        }
+                    } else {
+                        Text(contentTextClear)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+                    
                 }
                 
                 Spacer()

@@ -11,7 +11,10 @@ import SwiftUI
 enum PinCodeNavigationPath: Hashable {
     case createPinCode
     case confirmPinCode
-    case updatePinCode
+    case updatePinCodeDefineNew
+    case updatePinCodeConfirmNew
+    case createPinCodeForBackupCard
+    case confirmPinCodeForBackupCard
 }
 
 struct PinCodeNavigationData: Hashable {
@@ -25,6 +28,57 @@ struct CreatePinCodeView: View {
     @State private var pinCode: String = ""
     @State private var shouldShowPinCodeError: Bool = false
     var pinCodeNavigationData: PinCodeNavigationData
+    
+    func getViewTitle() -> String {
+        switch pinCodeNavigationData.mode {
+        case .createPinCode:
+            return "createPinCode"
+        case .confirmPinCode:
+            return "confirmPinCode"
+        case .updatePinCodeDefineNew:
+            return "updatePinCodeDefineNew"
+        case .updatePinCodeConfirmNew:
+            return "updatePinCodeConfirmNew"
+        case .createPinCodeForBackupCard:
+            return "createPinCodeForBackupCard"
+        case .confirmPinCodeForBackupCard:
+            return "confirmPinCodeForBackupCard"
+        }
+    }
+    
+    func getViewSubtitle() -> String {
+        switch pinCodeNavigationData.mode {
+        case .createPinCode:
+            return "createPinCodeSubtitle"
+        case .confirmPinCode:
+            return "confirmPinCodeSubtitle"
+        case .updatePinCodeDefineNew:
+            return "updatePinCodeDefineNewSubtitle"
+        case .updatePinCodeConfirmNew:
+            return "updatePinCodeConfirmNewSubtitle"
+        case .createPinCodeForBackupCard:
+            return "createPinCodeForBackupCardSubtitle"
+        case .confirmPinCodeForBackupCard:
+            return "confirmPinCodeForBackupCardSubtitle"
+        }
+    }
+    
+    func getPlaceHolder() -> String {
+        switch pinCodeNavigationData.mode {
+        case .createPinCode:
+            return "placeholder.enterPinCode"
+        case .confirmPinCode:
+            return "placeholder.confirmPinCode"
+        case .updatePinCodeDefineNew:
+            return "placeholder.updatePinCodeDefineNew"
+        case .updatePinCodeConfirmNew:
+            return "placeholder.updatePinCodeConfirmNew"
+        case .createPinCodeForBackupCard:
+            return "placeholder.enterPinCode"
+        case .confirmPinCodeForBackupCard:
+            return "placeholder.confirmPinCode"
+        }
+    }
         
     var body: some View {
         ZStack {
@@ -35,15 +89,15 @@ struct CreatePinCodeView: View {
             VStack {
                 Spacer()
                 
-                SatoText(text: pinCodeNavigationData.mode == .createPinCode ? "createPinCode" : "editPinCode", style: .title)
+                SatoText(text: self.getViewTitle(), style: .title)
                 
                 Spacer().frame(height: 10)
                 
-                SatoText(text: pinCodeNavigationData.mode == .createPinCode ? "createPinCodeSubtitle" : "editPinCodeSubtitle", style: .SKMenuItemTitle)
+                SatoText(text: self.getViewSubtitle(), style: .SKMenuItemTitle)
                 
                 Spacer().frame(height: 24)
                 
-                SecureTextInput(placeholder: String(localized: pinCodeNavigationData.mode == .createPinCode ?  "placeholder.enterPinCode" : "placeholder.currentPinCode"), text: $pinCode)
+                SecureTextInput(placeholder: self.getPlaceHolder(), text: $pinCode)
                 
                 if shouldShowPinCodeError {
                     Text(String(localized: "invalidPinCode"))
@@ -59,7 +113,26 @@ struct CreatePinCodeView: View {
                         shouldShowPinCodeError = true
                         return
                     }
-                    homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCode, pinCode: pinCode)))
+                    if pinCodeNavigationData.mode == .createPinCode {
+                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCode, pinCode: pinCode)))
+                    } else if pinCodeNavigationData.mode == .createPinCodeForBackupCard {
+                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCodeForBackupCard, pinCode: pinCode)))
+                    }
+                    // Update pin code
+                    else if pinCodeNavigationData.mode == .updatePinCodeDefineNew {
+                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .updatePinCodeConfirmNew, pinCode: pinCode)))
+                    }
+                    
+                    
+                    /* else if pinCodeNavigationData.mode == .updatePinCode {
+                        homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .updatePinCodeDefineNew, pinCode: pinCode)))
+                    } else if pinCodeNavigationData.mode == .updatePinCodeDefineNew {
+                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .updatePinCodeConfirmNew, pinCode: pinCode)))
+                    }*/
+                    
+                    /*else {
+                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmUpdatePinCode, pinCode: pinCode)))
+                    }*/
                 })
                 
                 Spacer().frame(height: 16)

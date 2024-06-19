@@ -10,6 +10,7 @@ import SwiftUI
 
 struct HeaderView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     // MARK: - Literals
     let viewTitle: String = "Seedkeeper"
@@ -27,6 +28,19 @@ struct HeaderView: View {
             SatoText(text: viewTitle, style: .title)
             
             Spacer()
+            
+            if let _ = cardState.cardStatus {
+                Button(action: {
+                    cardState.scan()
+                }) {
+                    Image("ic_refresh_dark")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                
+                Spacer()
+                    .frame(width: 8)
+            }
             
             // Menu button
             Button(action: {

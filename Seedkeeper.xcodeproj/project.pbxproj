@@ -32,6 +32,8 @@
 		D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141782BF4E54200A4939A /* ShowSecretView.swift */; };
 		D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */; };
 		D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */; };
+		D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */; };
+		D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = D08722522C1A02FC00E0FBE5 /* QRCode */; };
 		D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */; };
 		D0BA41402BCFDDF000FD25B9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */; };
 		D0BA41422BCFDDF200FD25B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BA41412BCFDDF200FD25B9 /* Assets.xcassets */; };
@@ -46,6 +48,10 @@
 		D0C939D82BD6A35900F2A17B /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C939D72BD6A35900F2A17B /* Validator.swift */; };
 		D0C939E02BD6AB4700F2A17B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0C939DB2BD6AB4700F2A17B /* Localizable.strings */; };
 		D0C939E12BD6AB4700F2A17B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0C939DE2BD6AB4700F2A17B /* Localizable.strings */; };
+		D0D832372C20A8B400AE2984 /* CardState+Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D832362C20A8B400AE2984 /* CardState+Backup.swift */; };
+		D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D832382C20AA3500AE2984 /* CardState+Pin.swift */; };
+		D0D8323B2C20AA9200AE2984 /* CardState+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8323A2C20AA9200AE2984 /* CardState+Helpers.swift */; };
+		D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8323C2C20ABD600AE2984 /* CardState+Secrets.swift */; };
 		D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E4337E2BD3F9FD008DBAA6 /* HeaderView.swift */; };
 		D0E433812BD3FA48008DBAA6 /* SatoStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E433802BD3FA48008DBAA6 /* SatoStatusView.swift */; };
 		D0E433832BD3FB08008DBAA6 /* SatoText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E433822BD3FB08008DBAA6 /* SatoText.swift */; };
@@ -109,6 +115,7 @@
 		D07141782BF4E54200A4939A /* ShowSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSecretView.swift; sourceTree = "<group>"; };
 		D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateSecretTypeView.swift; sourceTree = "<group>"; };
 		D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateGeneratorView.swift; sourceTree = "<group>"; };
+		D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKMnemonicHelper.swift; sourceTree = "<group>"; };
 		D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seedkeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedkeeperApp.swift; sourceTree = "<group>"; };
 		D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -127,6 +134,10 @@
 		D0C939D72BD6A35900F2A17B /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		D0C939DA2BD6AB4700F2A17B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		D0C939DD2BD6AB4700F2A17B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizable.strings; sourceTree = "<group>"; };
+		D0D832362C20A8B400AE2984 /* CardState+Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+Backup.swift"; sourceTree = "<group>"; };
+		D0D832382C20AA3500AE2984 /* CardState+Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+Pin.swift"; sourceTree = "<group>"; };
+		D0D8323A2C20AA9200AE2984 /* CardState+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+Helpers.swift"; sourceTree = "<group>"; };
+		D0D8323C2C20ABD600AE2984 /* CardState+Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+Secrets.swift"; sourceTree = "<group>"; };
 		D0E4337E2BD3F9FD008DBAA6 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		D0E433802BD3FA48008DBAA6 /* SatoStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatoStatusView.swift; sourceTree = "<group>"; };
 		D0E433822BD3FB08008DBAA6 /* SatoText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatoText.swift; sourceTree = "<group>"; };
@@ -154,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */,
 				D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,6 +192,7 @@
 			children = (
 				D0C939D72BD6A35900F2A17B /* Validator.swift */,
 				D03110972BE417A000ED0997 /* Formatter.swift */,
+				D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -197,6 +210,10 @@
 			isa = PBXGroup;
 			children = (
 				D05EB84B2BFE4E86006B84BB /* CardState.swift */,
+				D0D8323A2C20AA9200AE2984 /* CardState+Helpers.swift */,
+				D0D832362C20A8B400AE2984 /* CardState+Backup.swift */,
+				D0D832382C20AA3500AE2984 /* CardState+Pin.swift */,
+				D0D8323C2C20ABD600AE2984 /* CardState+Secrets.swift */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -429,6 +446,7 @@
 			name = Seedkeeper;
 			packageProductDependencies = (
 				D05EB8482BFE4DEA006B84BB /* SatochipSwift */,
+				D08722522C1A02FC00E0FBE5 /* QRCode */,
 			);
 			productName = Seedkeeper;
 			productReference = D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */;
@@ -505,6 +523,7 @@
 			mainGroup = D0BA41312BCFDDF000FD25B9;
 			packageReferences = (
 				D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */,
+				D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */,
 			);
 			productRefGroup = D0BA413B2BCFDDF000FD25B9 /* Products */;
 			projectDirPath = "";
@@ -580,10 +599,13 @@
 				D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */,
 				D0E433A52BD423B0008DBAA6 /* SettingsView.swift in Sources */,
 				D07141772BF4DFC000A4939A /* Dimensions.swift in Sources */,
+				D0D8323B2C20AA9200AE2984 /* CardState+Helpers.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
+				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,
 				D071415F2BF2599100A4939A /* DataController.swift in Sources */,
 				D0E4339E2BD3FE27008DBAA6 /* ScanButton.swift in Sources */,
+				D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */,
 				D0C939D82BD6A35900F2A17B /* Validator.swift in Sources */,
 				D0BEA31A2BF5193100BD05D7 /* GenerateSuccessView.swift in Sources */,
 				D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */,
@@ -593,9 +615,11 @@
 				D03110952BE40D2400ED0997 /* LogsView.swift in Sources */,
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
+				D0D832372C20A8B400AE2984 /* CardState+Backup.swift in Sources */,
 				D0C939D42BD687D400F2A17B /* SecureTextInput.swift in Sources */,
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
+				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
@@ -977,6 +1001,14 @@
 				kind = branch;
 			};
 		};
+		D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dagronf/QRCode";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -984,6 +1016,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */;
 			productName = SatochipSwift;
+		};
+		D08722522C1A02FC00E0FBE5 /* QRCode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */;
+			productName = QRCode;
 		};
 /* End XCSwiftPackageProductDependency section */
 

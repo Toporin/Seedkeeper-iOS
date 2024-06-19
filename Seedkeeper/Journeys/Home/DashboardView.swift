@@ -39,6 +39,20 @@ struct SeedkeeperSecretHeaderDto: Hashable {
         self.fingerprintBytes = secretHeader.fingerprintBytes
         self.label = secretHeader.label
     }
+    
+    func toSeedkeeperSecretHeader() -> SeedkeeperSecretHeader {
+        return SeedkeeperSecretHeader(sid: sid,
+                                       type: type,
+                                       subtype: subtype,
+                                       origin: origin,
+                                       exportRights: exportRights,
+                                       nbExportPlaintext: nbExportPlaintext,
+                                       nbExportEncrypted: nbExportEncrypted,
+                                       useCounter: useCounter,
+                                       rfu2: rfu2,
+                                       fingerprintBytes: fingerprintBytes,
+                                       label: label)
+    }
 }
 
 struct DashboardView: View {

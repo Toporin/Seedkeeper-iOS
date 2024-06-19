@@ -39,11 +39,14 @@ struct PinCodeView: View {
                 
                 SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, action: {
                     print("Pin code: \(pinCode)")
-                    cardState.pinForMasterCard = pinCode
                     switch actionAfterPin {
                     case .rescanCard:
+                        cardState.pinForMasterCard = pinCode
                         homeNavigationPath = .init()
                         cardState.scan()
+                    case .continueBackupFlow:
+                        cardState.pinForBackupCard = pinCode
+                        homeNavigationPath.removeLast()
                     }
                 })
                 

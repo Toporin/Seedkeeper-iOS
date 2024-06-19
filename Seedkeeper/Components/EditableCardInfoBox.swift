@@ -12,6 +12,7 @@ enum EditableCardInfoBoxContentMode  {
     case text(String)
     case pin
     case dropdown(PickerOptions)
+    case fixedText(String)
 }
 
 struct EditableCardInfoBox: View {
@@ -38,6 +39,8 @@ struct EditableCardInfoBox: View {
             _editableText = State(initialValue: "")
         case .pin:
             _editableText = State(initialValue: "Update PIN code")
+        case .fixedText(let initialText):
+            _editableText = State(initialValue: initialText)
         case .dropdown(let options):
             if let placeholder = options.selectedOption {
                 editableText = placeholder
@@ -59,9 +62,14 @@ struct EditableCardInfoBox: View {
                                 .fontWeight(.light)
                                 .foregroundColor(Color.white.opacity(0.8))
                         }
-                        TextField("", text: $editableText, onCommit: {
-                            isEditing = false
-                            action(.text(editableText))
+                        TextField("", text: $editableText, onEditingChanged: {(editingChanged) in
+                            if editingChanged {
+                                print("TextField focused")
+                            } else {
+                                print("TextField focus removed")
+                                action(.text(editableText))
+                                isEditing = false
+                            }
                         })
                         .textFieldStyle(PlainTextFieldStyle())
                         .padding(.leading, 16)
@@ -107,7 +115,10 @@ struct EditableCardInfoBox: View {
             }) {
                 if case .dropdown = mode {
                     Image("ic_arrowdown")
-                } else {
+                } else if case .fixedText = mode {
+                    // nothing
+                }
+                else {
                     Image(systemName: "pencil")
                 }
             }

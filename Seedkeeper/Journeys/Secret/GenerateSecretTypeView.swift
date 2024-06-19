@@ -13,6 +13,7 @@ struct GenerateSecretTypeView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State private var showPickerSheet = false
     @State var phraseTypeOptions = PickerOptions(placeHolder: "typeOfSecret", items: GeneratorMode.allCases.map { $0.rawValue })
+    var secretCreationMode: SecretCreationMode
     
     var body: some View {
         ZStack {
@@ -50,7 +51,7 @@ struct GenerateSecretTypeView: View {
                         return
                     }
 
-                    homeNavigationPath.append(NavigationRoutes.generateGenerator(mode))
+                    homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: mode, secretCreationMode: secretCreationMode)))
                 })
                 
                 Spacer().frame(height: 16)
@@ -66,7 +67,7 @@ struct GenerateSecretTypeView: View {
         })
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: "generateSecretViewTitle", style: .lightTitleDark)
+                SatoText(text: secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
         .sheet(isPresented: $showPickerSheet) {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "ffbd2de825abf46c897bcb9829f316b4befed4d8dc8536f76d1c83561568fccd",
+  "originHash" : "52611e062504a71ebf25c067e7555e231f8fe4952e48c41884fcc3c3d496a01c",
   "pins" : [
     {
       "identity" : "bigint",
@@ -29,12 +29,21 @@
       }
     },
     {
+      "identity" : "qrcode",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dagronf/QRCode",
+      "state" : {
+        "revision" : "8163f868e7fbcdfdf981332265f83c5fbee69f8c",
+        "version" : "20.0.0"
+      }
+    },
+    {
       "identity" : "satochipswift",
       "kind" : "localSourceControl",
       "location" : "/Users/lioneldelvaux/Projects/SatochipSwift",
       "state" : {
         "branch" : "support-seedkeeper",
-        "revision" : "8497d4b0c9939b8cd3a79acf604828320d98b197"
+        "revision" : "29af8af0f24c13c2897c294a7f3f970b13c8a872"
       }
     },
     {
@@ -53,6 +62,24 @@
       "state" : {
         "revision" : "60f13f60c4d093691934dc6cfdf5f508ada1f894",
         "version" : "2.6.0"
+      }
+    },
+    {
+      "identity" : "swift-qrcode-generator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dagronf/swift-qrcode-generator",
+      "state" : {
+        "revision" : "2b1980b825f08a81ccc762b0c4d17fcde9d5e953",
+        "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "swiftimagereadwrite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dagronf/SwiftImageReadWrite",
+      "state" : {
+        "revision" : "016a9cb842038e4078a91e506e35cef4f4ff76ff",
+        "version" : "1.7.2"
       }
     },
     {

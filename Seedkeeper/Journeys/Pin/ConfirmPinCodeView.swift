@@ -53,8 +53,14 @@ struct ConfirmPinCodeView: View {
                     if pinCodeConfirmation == pinCodeToValidate {
                         print("Pin codes matches: \(pinCodeConfirmation) == \(pinCodeToValidate)")
                         cardState.pinCodeToSetup = pinCodeConfirmation
-                        cardState.requestInitPinOnCard()
-                        // homeNavigationPath.append(NavigationRoutes.setupFaceId(pinCodeConfirmation))
+                        if pinCodeNavigationData.mode == .confirmPinCode {
+                            cardState.requestInitPinOnCard()
+                        } else if pinCodeNavigationData.mode == .updatePinCodeConfirmNew {
+                            cardState.requestUpdatePinOnCard(newPin: pinCodeToValidate)
+                        } else if pinCodeNavigationData.mode == .confirmPinCodeForBackupCard {
+                            cardState.requestInitPinOnBackupCard()
+                        }
+                        
                     } else {
                         print("Pin code does not match")
                     }

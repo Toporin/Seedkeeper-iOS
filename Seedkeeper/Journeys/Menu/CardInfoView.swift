@@ -64,10 +64,11 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 14)
 
-                EditableCardInfoBox(mode: .text(self.cardState.getCardLabel()), backgroundColor: Colors.lightMenuButton) { result in
+                EditableCardInfoBox(mode: .text(self.cardState.cardLabel), backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .text(let value):
                         print("Edited text : \(value)")
+                        self.cardState.requestSetCardLabel(label: value)
                     default:
                         break
                     }
@@ -82,6 +83,9 @@ struct CardInfoView: View {
                 EditableCardInfoBox(mode: .pin, backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .pin:
+                        guard let cardStatus = cardState.cardStatus else {
+                            return
+                        }
                         homeNavigationPath.append(NavigationRoutes.editPinCode)
                     default:
                         break

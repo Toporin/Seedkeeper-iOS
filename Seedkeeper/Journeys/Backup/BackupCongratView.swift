@@ -10,6 +10,7 @@ import SwiftUI
 
 struct BackupCongratsView: View {
     // MARK: - Properties
+    @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     
     var body: some View {
@@ -39,6 +40,7 @@ struct BackupCongratsView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "home"), style: .regular, horizontalPadding: 66, action: {
+                    cardState.resetStateForBackupCard(clearPin: true)
                     homeNavigationPath = .init()
                 })
                 

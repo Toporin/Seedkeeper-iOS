@@ -35,7 +35,7 @@ struct AddSecretView: View {
                     iconHeight: 50,
                     backgroundColor: Colors.purpleBtn,
                     action: {
-                        homeNavigationPath.append(NavigationRoutes.generateSecretType)
+                        homeNavigationPath.append(NavigationRoutes.generateSecretType(.generate))
                     },
                     forcedHeight: 100,
                     subTitle: String(localized: "generateASecretSubtitle")
@@ -51,7 +51,7 @@ struct AddSecretView: View {
                     iconHeight: 50,
                     backgroundColor: Colors.lightMenuButton,
                     action: {
-                        
+                        homeNavigationPath.append(NavigationRoutes.generateSecretType(.manualImport))
                     },
                     forcedHeight: 100,
                     subTitle: String(localized: "importASecretSubtitle")
