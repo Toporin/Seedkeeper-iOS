@@ -11,8 +11,82 @@ import SwiftUI
 enum EditableCardInfoBoxContentMode  {
     case text(String)
     case pin
-    case dropdown(PickerOptions)
     case fixedText(String)
+}
+
+enum SelectableCardInfoBoxContentMode<T: CaseIterable & Hashable & HumanReadable> {
+    case dropdown(PickerOptions<T>)
+}
+
+struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
+    
+    @State private var editableText: String
+    
+    let mode: SelectableCardInfoBoxContentMode<T>
+    let backgroundColor: Color
+    var backgroundColorOpacity: Double?
+    var width: CGFloat?
+    var height: CGFloat?
+    var action: (SelectableCardInfoBoxContentMode<T>) -> Void
+    
+    init(mode: SelectableCardInfoBoxContentMode<T>, backgroundColor: Color, width: CGFloat? = nil, height: CGFloat? = nil, backgroundColorOpacity: Double? = nil, action: @escaping (SelectableCardInfoBoxContentMode<T>) -> Void) {
+        self.mode = mode
+        self.backgroundColor = backgroundColor
+        self.width = width
+        self.action = action
+        self.height = height
+        self.backgroundColorOpacity = backgroundColorOpacity
+        
+        switch mode {
+        case .dropdown(let options):
+            if let placeholder = options.selectedOption?.humanReadableName() {
+                editableText = placeholder
+                _editableText = State(initialValue: placeholder)
+            } else {
+                _editableText = State(initialValue: options.placeHolder)
+            }
+        }
+    }
+    
+    var body: some View {
+        HStack {
+            Group {
+                if case .dropdown(let pickerOptions) = mode, let text = pickerOptions.selectedOption?.humanReadableName() {
+                        Text(text)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .lineLimit(1)
+                            .padding(.leading, 16)
+                } else {
+                    Text(editableText)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .lineLimit(1)
+                        .fontWeight(.light)
+                        .foregroundColor(Color.white.opacity(0.8))
+                        .padding(.leading, 16)
+                }
+            }
+            .onTapGesture {
+                if case .dropdown = mode {
+                    action(mode)
+                }
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                if case .dropdown = mode {
+                    action(mode)
+                }
+            }) {
+                Image("ic_arrowdown")
+            }
+            .padding(.trailing, 12)
+        }
+        .frame(width: width, height: height ?? 55)
+        .background(backgroundColor.opacity(backgroundColorOpacity ?? 1.0))
+        .cornerRadius(20)
+        .foregroundColor(.white)
+    }
 }
 
 struct EditableCardInfoBox: View {
@@ -41,13 +115,6 @@ struct EditableCardInfoBox: View {
             _editableText = State(initialValue: "Update PIN code")
         case .fixedText(let initialText):
             _editableText = State(initialValue: initialText)
-        case .dropdown(let options):
-            if let placeholder = options.selectedOption {
-                editableText = placeholder
-                _editableText = State(initialValue: placeholder)
-            } else {
-                _editableText = State(initialValue: options.placeHolder)
-            }
         }
     }
     
@@ -74,12 +141,7 @@ struct EditableCardInfoBox: View {
                         .textFieldStyle(PlainTextFieldStyle())
                         .padding(.leading, 16)
                     }
-
-                } else if case .dropdown(let pickerOptions) = mode, let text = pickerOptions.selectedOption {
-                        Text(text)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .lineLimit(1)
-                            .padding(.leading, 16)
+                    
                 } else {
                     Text(editableText)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -94,8 +156,6 @@ struct EditableCardInfoBox: View {
                     isEditing = true
                 } else if case .pin = mode {
                     action(.pin)
-                } else if case .dropdown = mode {
-                    action(mode)
                 }
             }
             
@@ -109,13 +169,9 @@ struct EditableCardInfoBox: View {
                     }
                 } else if case .pin = mode {
                     action(.pin)
-                } else if case .dropdown = mode {
-                    action(mode)
                 }
             }) {
-                if case .dropdown = mode {
-                    Image("ic_arrowdown")
-                } else if case .fixedText = mode {
+                if case .fixedText = mode {
                     // nothing
                 }
                 else {

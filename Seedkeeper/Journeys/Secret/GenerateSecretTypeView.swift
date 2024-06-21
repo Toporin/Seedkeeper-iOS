@@ -12,7 +12,7 @@ struct GenerateSecretTypeView: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
     @State private var showPickerSheet = false
-    @State var phraseTypeOptions = PickerOptions(placeHolder: "typeOfSecret", items: GeneratorMode.allCases.map { $0.rawValue })
+    @State var phraseTypeOptions = PickerOptions(placeHolder: String(localized: "typeOfSecret"), items: GeneratorMode.self)
     var secretCreationMode: SecretCreationMode
     
     var body: some View {
@@ -32,7 +32,7 @@ struct GenerateSecretTypeView: View {
                 
                 Spacer().frame(height: 16)
                 
-                EditableCardInfoBox(mode: .dropdown(self.phraseTypeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
+                SelectableCardInfoBox(mode: .dropdown(self.phraseTypeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                     showPickerSheet = true
                 }
 
@@ -47,11 +47,11 @@ struct GenerateSecretTypeView: View {
                 Spacer().frame(height: 16)
                 
                 SKButton(text: String(localized: "next"), style: .regular, horizontalPadding: 66, action: {
-                    guard phraseTypeOptions.isItemSelected, let selectedOption = phraseTypeOptions.selectedOption, let mode = GeneratorMode(rawValue: selectedOption) else {
+                    guard phraseTypeOptions.isItemSelected, let selectedOption = phraseTypeOptions.selectedOption else {
                         return
                     }
 
-                    homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: mode, secretCreationMode: secretCreationMode)))
+                    homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: selectedOption, secretCreationMode: secretCreationMode)))
                 })
                 
                 Spacer().frame(height: 16)
@@ -76,8 +76,8 @@ struct GenerateSecretTypeView: View {
     }
 }
 
-struct OptionSelectorView: View {
-    @Binding var pickerOptions: PickerOptions
+struct OptionSelectorView<T: CaseIterable & Hashable & HumanReadable>: View {
+    @Binding var pickerOptions: PickerOptions<T>
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -90,7 +90,7 @@ struct OptionSelectorView: View {
                         pickerOptions.selectedOption = item
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text(item)
+                        Text(item.humanReadableName())
                             .font(.headline)
                             .foregroundColor(.white)
                             .background(Color.clear)
@@ -105,18 +105,22 @@ struct OptionSelectorView: View {
     }
 }
 
-struct PickerOptions {
+protocol HumanReadable {
+    func humanReadableName() -> String
+}
+
+struct PickerOptions<T: CaseIterable & Hashable & HumanReadable> {
     let placeHolder: String
-    let items: [String]
-    var selectedOption: String?
+    let items: [T]
+    var selectedOption: T?
     
     var isItemSelected: Bool {
         return selectedOption != nil
     }
     
-    init(placeHolder: String, items: [String], selectedOption: String? = nil) {
+    init(placeHolder: String, items: T.Type, selectedOption: T? = nil) {
         self.placeHolder = placeHolder
-        self.items = items
+        self.items = Array(items.allCases)
         self.selectedOption = selectedOption
     }
 }

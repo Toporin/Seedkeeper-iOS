@@ -39,7 +39,7 @@ struct ShowSecretView: View {
                 
                 if secret.type == .bip39Mnemonic {
                     
-                    SKLabel(title: "mnemonicSize", content: cardState.currentMnemonicCardData?.getMnemonicSize()?.humanReadableName ?? "(none)")
+                    SKLabel(title: "mnemonicSize", content: cardState.currentMnemonicCardData?.getMnemonicSize()?.humanReadableName() ?? "(none)")
                     
                     SKLabel(title: "passphrase", content: cardState.currentMnemonicCardData?.passphrase ?? "(none)")
                     

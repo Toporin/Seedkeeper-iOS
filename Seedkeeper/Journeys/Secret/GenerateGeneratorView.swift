@@ -25,11 +25,11 @@ struct GeneratorModeNavData: Hashable {
     }
 }
 
-enum GeneratorMode: String, CaseIterable, Hashable {
+enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
     case mnemonic
     case password
     
-    var humanReadableName: String {
+    func humanReadableName() -> String {
         switch self {
         case .mnemonic:
             return String(localized: "mnemonicPhrase")
@@ -39,12 +39,12 @@ enum GeneratorMode: String, CaseIterable, Hashable {
     }
 }
 
-enum MnemonicSize: String, CaseIterable, Hashable {
+enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
     case twelveWords
     case eighteenWords
     case twentyFourWords
     
-    var humanReadableName: String {
+    func humanReadableName() -> String {
         switch self {
         case .twelveWords:
             return String(localized: "12words")
@@ -291,7 +291,8 @@ struct GenerateGeneratorView: View {
             return String(localized: "import")
         }
     }
-    @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.allCases.map { $0.rawValue })
+    
+    @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
     
     var canGeneratePassword: Bool {
         if let labelText = labelText {
@@ -337,11 +338,11 @@ struct GenerateGeneratorView: View {
     func generateMnemonic() -> String? {
         do {
             
-            guard let mnemonicSizeOptions = mnemonicSizeOptions.selectedOption,
-                  let mnemonicSize = MnemonicSize(rawValue: mnemonicSizeOptions)?.toBits() else {
+            guard let mnemonicSizeOptions = mnemonicSizeOptions.selectedOption else {
                 return nil
             }
-
+            
+            let mnemonicSize = mnemonicSizeOptions.toBits()
             let mnemonic = try Mnemonic.generateMnemonic(strength: mnemonicSize)
             return mnemonic
             
@@ -447,7 +448,7 @@ struct GenerateGeneratorView: View {
                     .frame(height: 16)
                 
                 if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode != .manualImport {
-                    EditableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
+                    SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                         showPickerSheet = true
                     }
                 } else if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode == .manualImport {
@@ -498,7 +499,6 @@ struct GenerateGeneratorView: View {
                     .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
                 
                 SKSecretViewer(shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                    // seedPhrase = result
                 }
 
                 Spacer()
@@ -543,7 +543,7 @@ struct GenerateGeneratorView: View {
                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
                                 
                                 mnemonicPayload = MnemonicPayload(label: labelText!,
-                                                                  mnemonicSize: MnemonicSize(rawValue: mnemonicSizeOptions.selectedOption!)!,
+                                                                  mnemonicSize: mnemonicSizeOptions.selectedOption!,
                                                                   passphrase: passphraseText,
                                                                   result: seedPhrase)
                             }
