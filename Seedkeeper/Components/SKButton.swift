@@ -19,7 +19,7 @@ enum ButtonStyle {
         case .confirm:
             return Colors.buttonDefault
         case .inform:
-            return Colors.buttonDefault
+            return Colors.buttonInform
         case .danger:
             return Colors.buttonDefault
         case .regular:

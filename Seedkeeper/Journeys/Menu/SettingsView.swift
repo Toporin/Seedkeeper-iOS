@@ -53,6 +53,7 @@ struct SettingsView: View {
                                    backgroundColor: Colors.lightMenuButton,
                                    isOn: $starterIntroIsOn,
                                    onToggle: { newValue in
+                        UserDefaults.standard.set(newValue, forKey: Constants.Keys.firstTimeUse)
                         
                     })
                     

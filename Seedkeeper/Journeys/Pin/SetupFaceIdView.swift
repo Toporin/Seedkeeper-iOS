@@ -8,10 +8,15 @@
 import Foundation
 import SwiftUI
 
+struct FaceIdNavData: Hashable {
+    let pinCode: String
+    let authentiKey: String
+}
+
 struct SetupFaceIdView: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
-    var pinCode: String
+    var navData: FaceIdNavData
     
     var body: some View {
         ZStack {

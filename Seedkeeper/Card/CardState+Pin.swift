@@ -74,7 +74,8 @@ extension CardState {
             print("Pin Set")
             let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetSuccess"))
-            homeNavigationPath.append(NavigationRoutes.setupFaceId(pin))
+            homeNavigationPath = .init()
+            // homeNavigationPath.append(NavigationRoutes.setupFaceId(pin))
         } catch let error {
             print("Error: \(error)")
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetFailed"))

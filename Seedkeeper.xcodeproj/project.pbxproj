@@ -13,7 +13,7 @@
 		D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */; };
 		D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540122C04A3DC00ABF9C7 /* BackupView.swift */; };
 		D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540142C04D2B700ABF9C7 /* PinCodeView.swift */; };
-		D03540172C04D80C00ABF9C7 /* BackupCongratView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */; };
+		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
 		D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D05EB8482BFE4DEA006B84BB /* SatochipSwift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
 		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
@@ -32,6 +32,16 @@
 		D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141782BF4E54200A4939A /* ShowSecretView.swift */; };
 		D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */; };
 		D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */; };
+		D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD642C260A8E00B50489 /* KeychainHelper.swift */; };
+		D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD672C260DB200B50489 /* OnboardingContainerView.swift */; };
+		D080FD6A2C260DD100B50489 /* OnBoardingWelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD692C260DD100B50489 /* OnBoardingWelcomeView.swift */; };
+		D080FD6C2C260DF200B50489 /* OnboardingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD6B2C260DF200B50489 /* OnboardingInfoView.swift */; };
+		D080FD6E2C260E1100B50489 /* OnboardingNFCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD6D2C260E1100B50489 /* OnboardingNFCView.swift */; };
+		D080FD702C260ED000B50489 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD6F2C260ED000B50489 /* Constants.swift */; };
+		D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD712C261CBC00B50489 /* SKLabel.swift */; };
+		D080FD742C261CD600B50489 /* SKActionButtonSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD732C261CD600B50489 /* SKActionButtonSmall.swift */; };
+		D080FD762C261CF600B50489 /* SKSecretViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD752C261CF600B50489 /* SKSecretViewer.swift */; };
+		D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD772C261D1E00B50489 /* OptionSelectorView.swift */; };
 		D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */; };
 		D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = D08722522C1A02FC00E0FBE5 /* QRCode */; };
 		D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */; };
@@ -97,7 +107,7 @@
 		D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorBox.swift; sourceTree = "<group>"; };
 		D03540122C04A3DC00ABF9C7 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		D03540142C04D2B700ABF9C7 /* PinCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeView.swift; sourceTree = "<group>"; };
-		D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratView.swift; sourceTree = "<group>"; };
+		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
 		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -115,6 +125,16 @@
 		D07141782BF4E54200A4939A /* ShowSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSecretView.swift; sourceTree = "<group>"; };
 		D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateSecretTypeView.swift; sourceTree = "<group>"; };
 		D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateGeneratorView.swift; sourceTree = "<group>"; };
+		D080FD642C260A8E00B50489 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		D080FD672C260DB200B50489 /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
+		D080FD692C260DD100B50489 /* OnBoardingWelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingWelcomeView.swift; sourceTree = "<group>"; };
+		D080FD6B2C260DF200B50489 /* OnboardingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInfoView.swift; sourceTree = "<group>"; };
+		D080FD6D2C260E1100B50489 /* OnboardingNFCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNFCView.swift; sourceTree = "<group>"; };
+		D080FD6F2C260ED000B50489 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		D080FD712C261CBC00B50489 /* SKLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKLabel.swift; sourceTree = "<group>"; };
+		D080FD732C261CD600B50489 /* SKActionButtonSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKActionButtonSmall.swift; sourceTree = "<group>"; };
+		D080FD752C261CF600B50489 /* SKSecretViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSecretViewer.swift; sourceTree = "<group>"; };
+		D080FD772C261D1E00B50489 /* OptionSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorView.swift; sourceTree = "<group>"; };
 		D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKMnemonicHelper.swift; sourceTree = "<group>"; };
 		D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seedkeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedkeeperApp.swift; sourceTree = "<group>"; };
@@ -193,6 +213,7 @@
 				D0C939D72BD6A35900F2A17B /* Validator.swift */,
 				D03110972BE417A000ED0997 /* Formatter.swift */,
 				D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */,
+				D080FD642C260A8E00B50489 /* KeychainHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -201,7 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				D03540122C04A3DC00ABF9C7 /* BackupView.swift */,
-				D03540162C04D80C00ABF9C7 /* BackupCongratView.swift */,
+				D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */,
 			);
 			path = Backup;
 			sourceTree = "<group>";
@@ -245,6 +266,17 @@
 				D0BEA3192BF5193100BD05D7 /* GenerateSuccessView.swift */,
 			);
 			path = Secret;
+			sourceTree = "<group>";
+		};
+		D080FD662C260D8B00B50489 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				D080FD672C260DB200B50489 /* OnboardingContainerView.swift */,
+				D080FD692C260DD100B50489 /* OnBoardingWelcomeView.swift */,
+				D080FD6B2C260DF200B50489 /* OnboardingInfoView.swift */,
+				D080FD6D2C260E1100B50489 /* OnboardingNFCView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		D0BA41312BCFDDF000FD25B9 = {
@@ -350,6 +382,7 @@
 		D0E4337B2BD3F978008DBAA6 /* Journeys */ = {
 			isa = PBXGroup;
 			children = (
+				D080FD662C260D8B00B50489 /* Onboarding */,
 				D03540112C04A3B300ABF9C7 /* Backup */,
 				D07141732BF4DC7400A4939A /* Secret */,
 				D0C939D02BD685F900F2A17B /* Pin */,
@@ -372,6 +405,10 @@
 				D071416B2BF272F300A4939A /* CardInfoBox.swift */,
 				D071416D2BF2772600A4939A /* EditableCardInfoBox.swift */,
 				D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */,
+				D080FD712C261CBC00B50489 /* SKLabel.swift */,
+				D080FD732C261CD600B50489 /* SKActionButtonSmall.swift */,
+				D080FD752C261CF600B50489 /* SKSecretViewer.swift */,
+				D080FD772C261D1E00B50489 /* OptionSelectorView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -392,6 +429,7 @@
 				D0E433852BD3FBC6008DBAA6 /* Fonts */,
 				D0E4339F2BD4088E008DBAA6 /* Colors.swift */,
 				D07141762BF4DFC000A4939A /* Dimensions.swift */,
+				D080FD6F2C260ED000B50489 /* Constants.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -587,10 +625,16 @@
 				D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */,
 				D0E433A02BD4088E008DBAA6 /* Colors.swift in Sources */,
 				D0E433812BD3FA48008DBAA6 /* SatoStatusView.swift in Sources */,
+				D080FD6C2C260DF200B50489 /* OnboardingInfoView.swift in Sources */,
 				D07141572BF2533700A4939A /* LogModel.swift in Sources */,
+				D080FD6A2C260DD100B50489 /* OnBoardingWelcomeView.swift in Sources */,
 				D071416E2BF2772600A4939A /* EditableCardInfoBox.swift in Sources */,
 				D0E433832BD3FB08008DBAA6 /* SatoText.swift in Sources */,
 				D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */,
+				D080FD742C261CD600B50489 /* SKActionButtonSmall.swift in Sources */,
+				D080FD6E2C260E1100B50489 /* OnboardingNFCView.swift in Sources */,
+				D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */,
+				D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */,
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
 				D0E433A32BD40B56008DBAA6 /* MenuView.swift in Sources */,
 				D07141752BF4DC8500A4939A /* AddSecretView.swift in Sources */,
@@ -600,6 +644,7 @@
 				D0E433A52BD423B0008DBAA6 /* SettingsView.swift in Sources */,
 				D07141772BF4DFC000A4939A /* Dimensions.swift in Sources */,
 				D0D8323B2C20AA9200AE2984 /* CardState+Helpers.swift in Sources */,
+				D080FD702C260ED000B50489 /* Constants.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
 				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,
@@ -611,13 +656,16 @@
 				D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */,
 				D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */,
 				D0E4339C2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift in Sources */,
-				D03540172C04D80C00ABF9C7 /* BackupCongratView.swift in Sources */,
+				D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */,
 				D03110952BE40D2400ED0997 /* LogsView.swift in Sources */,
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
+				D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */,
+				D080FD762C261CF600B50489 /* SKSecretViewer.swift in Sources */,
 				D0D832372C20A8B400AE2984 /* CardState+Backup.swift in Sources */,
 				D0C939D42BD687D400F2A17B /* SecureTextInput.swift in Sources */,
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
+				D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
@@ -812,6 +860,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC is used to scan Satochip card";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face Id to store your pin codes";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -850,6 +899,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC is used to scan Satochip card";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face Id to store your pin codes";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

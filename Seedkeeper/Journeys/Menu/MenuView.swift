@@ -87,7 +87,9 @@ struct MenuView: View {
                             iconHeight: 34,
                             backgroundColor: Colors.lightMenuButton,
                             action: {
-                                self.homeNavigationPath.append(NavigationRoutes.backup)
+                                if let _ = cardState.cardStatus {
+                                    self.homeNavigationPath.append(NavigationRoutes.backup)
+                                }
                             },
                             forcedHeight: 108
                         )

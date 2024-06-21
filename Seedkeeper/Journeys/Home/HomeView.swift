@@ -19,11 +19,12 @@ enum SecretCreationMode {
 
 enum NavigationRoutes: Hashable {
     case home
+    case onboarding
     case menu
     case settings
     case createPinCode(PinCodeNavigationData)
     case confirmPinCode(PinCodeNavigationData)
-    case setupFaceId(String)
+    case setupFaceId(FaceIdNavData)
     case logs
     case cardInfo
     case authenticity
@@ -48,7 +49,12 @@ struct HomeView: View {
     }
     
     @State private var showSetupFlow = false
-        
+    
+    func isFirstTimeUse() -> Bool {
+        let firstTimeUse = UserDefaults.standard.bool(forKey: Constants.Keys.firstTimeUse)
+        return firstTimeUse
+    }
+      
     var body: some View {
         NavigationStack(path: $cardState.homeNavigationPath) {
             ZStack {
@@ -76,6 +82,8 @@ struct HomeView: View {
                 switch route {
                 case .home:
                     HomeView()
+                case .onboarding:
+                    OnboardingContainerView()
                 case .menu:
                     MenuView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .settings:
@@ -85,7 +93,7 @@ struct HomeView: View {
                 case .confirmPinCode(let pinCodeNavigationData):
                     ConfirmPinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: pinCodeNavigationData)
                 case .setupFaceId(let pinCode):
-                    SetupFaceIdView(homeNavigationPath: $cardState.homeNavigationPath, pinCode: pinCode)
+                    SetupFaceIdView(homeNavigationPath: $cardState.homeNavigationPath, navData: pinCode)
                 case .pinCode(let action):
                     PinCodeView(homeNavigationPath: $cardState.homeNavigationPath, actionAfterPin: action)
                 case .logs:
@@ -114,6 +122,9 @@ struct HomeView: View {
             }
         }
         .onAppear {
+            if isFirstTimeUse() {
+                cardState.homeNavigationPath.append(NavigationRoutes.onboarding)
+            }
             // Can be used to test logging
             // managedObjectContext.saveLogEntry(log: LogModel(type: .info, message: "Home view loaded"))
         }

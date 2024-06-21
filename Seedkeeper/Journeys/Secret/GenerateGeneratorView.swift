@@ -10,239 +10,6 @@ import SwiftUI
 import SatochipSwift
 import MnemonicSwift
 
-enum GenerateBtnMode {
-    case willGenerate
-    case willImport
-}
-
-struct GeneratorModeNavData: Hashable {
-    let generatorMode: GeneratorMode
-    let secretCreationMode: SecretCreationMode
-    
-    init(generatorMode: GeneratorMode, secretCreationMode: SecretCreationMode) {
-        self.generatorMode = generatorMode
-        self.secretCreationMode = secretCreationMode
-    }
-}
-
-enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
-    case mnemonic
-    case password
-    
-    func humanReadableName() -> String {
-        switch self {
-        case .mnemonic:
-            return String(localized: "mnemonicPhrase")
-        case .password:
-            return String(localized: "loginPasswordPhrase")
-        }
-    }
-}
-
-enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
-    case twelveWords
-    case eighteenWords
-    case twentyFourWords
-    
-    func humanReadableName() -> String {
-        switch self {
-        case .twelveWords:
-            return String(localized: "12words")
-        case .eighteenWords:
-            return String(localized: "18words")
-        case .twentyFourWords:
-            return String(localized: "24words")
-        }
-    }
-        
-    func toBits() -> Int {
-        switch self {
-        case .twelveWords:
-            return 128
-        case .eighteenWords:
-            return 192
-        case .twentyFourWords:
-            return 256
-        }
-    }
-}
-
-struct MnemonicCardData {
-    let mnemonic: String
-    let passphrase: String?
-    
-    func getMnemonicSize() -> MnemonicSize? {
-        let mnemonicWords = mnemonic.split(separator: " ")
-        switch mnemonicWords.count {
-        case 12:
-            return .twelveWords
-        case 18:
-            return .eighteenWords
-        case 24:
-            return .twentyFourWords
-        default:
-            return nil
-        }
-    }
-    
-    func getSeedQRContent() -> String {
-        let wordlist = SKMnemonicEnglish.words
-        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
-        let combinedString = indices.map { String($0) }.joined(separator: " ")
-        
-        return combinedString
-    }
-    
-    func getSeedQRImage() -> UIImage? {
-        let wordlist = SKMnemonicEnglish.words
-        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
-        let combinedString = indices.map { String($0) }.joined(separator: " ")
-
-        guard let data = combinedString.data(using: .ascii) else { return nil }
-        
-        // Create a QR code filter
-        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("Q", forKey: "inputCorrectionLevel")
-        
-        guard let ciImage = filter.outputImage else { return nil }
-        
-        let transform = CGAffineTransform(scaleX: 10, y: 10)
-        let scaledCIImage = ciImage.transformed(by: transform)
-        
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(scaledCIImage, from: scaledCIImage.extent) else { return nil }
-        
-        return UIImage(cgImage: cgImage)
-    }
-    
-    private func mnemonicToIndices(mnemonic: String, wordlist: [String]) -> [Int] {
-        return mnemonic.split(separator: " ").compactMap { word in
-            wordlist.firstIndex(of: String(word))
-        }
-    }
-}
-
-struct MnemonicPayload {
-    var label: String
-    var mnemonicSize: MnemonicSize
-    var passphrase: String?
-    var result: String
-    
-    func getPayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
-        var payload: [UInt8] = []
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
-        
-        if let passphrase = passphrase {
-            let passphraseBytes = [UInt8](passphrase.utf8)
-            let passphraseSize = UInt8(passphraseBytes.count)
-            payload.append(passphraseSize)
-            payload.append(contentsOf: passphraseBytes)
-        }
-
-        return payload
-    }
-}
-
-struct MnemonicManualImportPayload {
-    var label: String
-    var passphrase: String?
-    var result: String
-    
-    func getPayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
-        var payload: [UInt8] = []
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
-        
-        if let passphrase = passphrase {
-            let passphraseBytes = [UInt8](passphrase.utf8)
-            let passphraseSize = UInt8(passphraseBytes.count)
-            payload.append(passphraseSize)
-            payload.append(contentsOf: passphraseBytes)
-        }
-
-        return payload
-    }
-}
-
-struct PasswordCardData {
-    let password: String
-    let login: String
-    let url: String
-}
-
-struct PasswordPayload {
-    var label: String
-    var login: String?
-    var url: String?
-    var passwordLength: Double
-    var result: String
-    
-    func getPayloadBytes() -> [UInt8] {
-        let passwordBytes = [UInt8](result.utf8)
-        let passwordSize = UInt8(passwordBytes.count)
-
-        var payload: [UInt8] = []
-        payload.append(passwordSize)
-        payload.append(contentsOf: passwordBytes)
-        
-        if let login = login {
-            let loginBytes = [UInt8](login.utf8)
-            let loginSize = UInt8(loginBytes.count)
-            payload.append(loginSize)
-            payload.append(contentsOf: loginBytes)
-        }
-
-        if let url = url {
-            let urlBytes = [UInt8](url.utf8)
-            let urlSize = UInt8(urlBytes.count)
-            payload.append(urlSize)
-            payload.append(contentsOf: urlBytes)
-        }
-
-        return payload
-    }
-}
-
-struct PasswordManualImportPayload {
-    var label: String
-    var login: String?
-    var url: String?
-    var result: String
-    
-    func getPayloadBytes() -> [UInt8] {
-        let passwordBytes = [UInt8](result.utf8)
-        let passwordSize = UInt8(passwordBytes.count)
-
-        var payload: [UInt8] = []
-        payload.append(passwordSize)
-        payload.append(contentsOf: passwordBytes)
-        
-        if let login = login {
-            let loginBytes = [UInt8](login.utf8)
-            let loginSize = UInt8(loginBytes.count)
-            payload.append(loginSize)
-            payload.append(contentsOf: loginBytes)
-        }
-
-        if let url = url {
-            let urlBytes = [UInt8](url.utf8)
-            let urlSize = UInt8(urlBytes.count)
-            payload.append(urlSize)
-            payload.append(contentsOf: urlBytes)
-        }
-
-        return payload
-    }
-}
-
 struct GenerateGeneratorView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
@@ -602,3 +369,236 @@ struct GenerateGeneratorView: View {
     }
 }
 
+
+enum GenerateBtnMode {
+    case willGenerate
+    case willImport
+}
+
+struct GeneratorModeNavData: Hashable {
+    let generatorMode: GeneratorMode
+    let secretCreationMode: SecretCreationMode
+    
+    init(generatorMode: GeneratorMode, secretCreationMode: SecretCreationMode) {
+        self.generatorMode = generatorMode
+        self.secretCreationMode = secretCreationMode
+    }
+}
+
+enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
+    case mnemonic
+    case password
+    
+    func humanReadableName() -> String {
+        switch self {
+        case .mnemonic:
+            return String(localized: "mnemonicPhrase")
+        case .password:
+            return String(localized: "loginPasswordPhrase")
+        }
+    }
+}
+
+enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
+    case twelveWords
+    case eighteenWords
+    case twentyFourWords
+    
+    func humanReadableName() -> String {
+        switch self {
+        case .twelveWords:
+            return String(localized: "12words")
+        case .eighteenWords:
+            return String(localized: "18words")
+        case .twentyFourWords:
+            return String(localized: "24words")
+        }
+    }
+        
+    func toBits() -> Int {
+        switch self {
+        case .twelveWords:
+            return 128
+        case .eighteenWords:
+            return 192
+        case .twentyFourWords:
+            return 256
+        }
+    }
+}
+
+struct MnemonicCardData {
+    let mnemonic: String
+    let passphrase: String?
+    
+    func getMnemonicSize() -> MnemonicSize? {
+        let mnemonicWords = mnemonic.split(separator: " ")
+        switch mnemonicWords.count {
+        case 12:
+            return .twelveWords
+        case 18:
+            return .eighteenWords
+        case 24:
+            return .twentyFourWords
+        default:
+            return nil
+        }
+    }
+    
+    func getSeedQRContent() -> String {
+        let wordlist = SKMnemonicEnglish.words
+        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
+        let combinedString = indices.map { String($0) }.joined(separator: " ")
+        
+        return combinedString
+    }
+    
+    func getSeedQRImage() -> UIImage? {
+        let wordlist = SKMnemonicEnglish.words
+        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
+        let combinedString = indices.map { String($0) }.joined(separator: " ")
+
+        guard let data = combinedString.data(using: .ascii) else { return nil }
+        
+        // Create a QR code filter
+        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
+        filter.setValue(data, forKey: "inputMessage")
+        filter.setValue("Q", forKey: "inputCorrectionLevel")
+        
+        guard let ciImage = filter.outputImage else { return nil }
+        
+        let transform = CGAffineTransform(scaleX: 10, y: 10)
+        let scaledCIImage = ciImage.transformed(by: transform)
+        
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(scaledCIImage, from: scaledCIImage.extent) else { return nil }
+        
+        return UIImage(cgImage: cgImage)
+    }
+    
+    private func mnemonicToIndices(mnemonic: String, wordlist: [String]) -> [Int] {
+        return mnemonic.split(separator: " ").compactMap { word in
+            wordlist.firstIndex(of: String(word))
+        }
+    }
+}
+
+struct MnemonicPayload {
+    var label: String
+    var mnemonicSize: MnemonicSize
+    var passphrase: String?
+    var result: String
+    
+    func getPayloadBytes() -> [UInt8] {
+        let mnemonicBytes = [UInt8](result.utf8)
+        let mnemonicSize = UInt8(mnemonicBytes.count)
+        
+        var payload: [UInt8] = []
+        payload.append(mnemonicSize)
+        payload.append(contentsOf: mnemonicBytes)
+        
+        if let passphrase = passphrase {
+            let passphraseBytes = [UInt8](passphrase.utf8)
+            let passphraseSize = UInt8(passphraseBytes.count)
+            payload.append(passphraseSize)
+            payload.append(contentsOf: passphraseBytes)
+        }
+
+        return payload
+    }
+}
+
+struct MnemonicManualImportPayload {
+    var label: String
+    var passphrase: String?
+    var result: String
+    
+    func getPayloadBytes() -> [UInt8] {
+        let mnemonicBytes = [UInt8](result.utf8)
+        let mnemonicSize = UInt8(mnemonicBytes.count)
+        
+        var payload: [UInt8] = []
+        payload.append(mnemonicSize)
+        payload.append(contentsOf: mnemonicBytes)
+        
+        if let passphrase = passphrase {
+            let passphraseBytes = [UInt8](passphrase.utf8)
+            let passphraseSize = UInt8(passphraseBytes.count)
+            payload.append(passphraseSize)
+            payload.append(contentsOf: passphraseBytes)
+        }
+
+        return payload
+    }
+}
+
+struct PasswordCardData {
+    let password: String
+    let login: String
+    let url: String
+}
+
+struct PasswordPayload {
+    var label: String
+    var login: String?
+    var url: String?
+    var passwordLength: Double
+    var result: String
+    
+    func getPayloadBytes() -> [UInt8] {
+        let passwordBytes = [UInt8](result.utf8)
+        let passwordSize = UInt8(passwordBytes.count)
+
+        var payload: [UInt8] = []
+        payload.append(passwordSize)
+        payload.append(contentsOf: passwordBytes)
+        
+        if let login = login {
+            let loginBytes = [UInt8](login.utf8)
+            let loginSize = UInt8(loginBytes.count)
+            payload.append(loginSize)
+            payload.append(contentsOf: loginBytes)
+        }
+
+        if let url = url {
+            let urlBytes = [UInt8](url.utf8)
+            let urlSize = UInt8(urlBytes.count)
+            payload.append(urlSize)
+            payload.append(contentsOf: urlBytes)
+        }
+
+        return payload
+    }
+}
+
+struct PasswordManualImportPayload {
+    var label: String
+    var login: String?
+    var url: String?
+    var result: String
+    
+    func getPayloadBytes() -> [UInt8] {
+        let passwordBytes = [UInt8](result.utf8)
+        let passwordSize = UInt8(passwordBytes.count)
+
+        var payload: [UInt8] = []
+        payload.append(passwordSize)
+        payload.append(contentsOf: passwordBytes)
+        
+        if let login = login {
+            let loginBytes = [UInt8](login.utf8)
+            let loginSize = UInt8(loginBytes.count)
+            payload.append(loginSize)
+            payload.append(contentsOf: loginBytes)
+        }
+
+        if let url = url {
+            let urlBytes = [UInt8](url.utf8)
+            let urlSize = UInt8(urlBytes.count)
+            payload.append(urlSize)
+            payload.append(contentsOf: urlBytes)
+        }
+
+        return payload
+    }
+}

@@ -18,6 +18,7 @@ struct Colors {
     static let ledRed: Color = Color.fromHex("#FF2D52")
     static let buttonDefault: Color = Color.fromHex("#595D70")
     static let buttonRegular: Color = Color.fromHex("#372352")
+    static let buttonInform: Color = Color.fromHex("#525684")
     static let separator: Color = Color.fromHex("#585D72")
     static let purpleBtn: Color = Color.fromHex("#3B2055")
 }
