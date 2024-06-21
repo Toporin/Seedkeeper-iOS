@@ -24,7 +24,7 @@ struct BackupCongratsView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                SatoText(text: "**congrats**", style: .SKStrongBodyDark)
+                SatoText(text: "congratsBold", style: .SKStrongBodyDark)
                 
                 Spacer()
                     .frame(height: 16)

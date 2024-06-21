@@ -102,7 +102,7 @@ struct ShowSecretView: View {
                 
                 HStack {
                     if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
-                        SKActionButtonSmall(title: "Delete", icon: "ic_trash") {
+                        SKActionButtonSmall(title: "delete", icon: "ic_trash") {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()
                         }
@@ -110,7 +110,7 @@ struct ShowSecretView: View {
                     
                     Spacer()
                     
-                    SKActionButtonSmall(title: "Show", icon: "ic_eye") {
+                    SKActionButtonSmall(title: "show", icon: "ic_eye") {
                         cardState.requestGetSecret(with: secret)
                     }
                 }

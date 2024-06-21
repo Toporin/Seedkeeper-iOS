@@ -25,11 +25,24 @@ struct BackupView: View {
         case .start:
             return "start"
         case .pairBackupCard:
-            return "scan my backup card"
+            return "next"
         case .backupImport:
-            return "scan my master card again"
+            return "backupImportBtn"
         case .backupExport:
-            return "backup"
+            return "backupExportBtn"
+        }
+    }
+    
+    func getViewSubtitle() -> String {
+        switch cardState.mode {
+        case .start:
+            return "backupStartSubtitle"
+        case .pairBackupCard:
+            return "backupPairBackupCardSubtitle"
+        case .backupImport:
+            return "backupImportSubtitle"
+        case .backupExport:
+            return "backupExportSubtitle"
         }
     }
     
@@ -57,7 +70,7 @@ struct BackupView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                SatoText(text: "backupInfoSubtitle", style: .SKStrongBodyDark)
+                SatoText(text: getViewSubtitle(), style: .SKStrongBodyDark)
                 
                 Spacer()
                     

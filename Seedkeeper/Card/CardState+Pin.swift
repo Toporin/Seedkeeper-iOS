@@ -21,7 +21,7 @@ extension CardState {
     func requestUpdatePinOnCard(newPin: String) {
         pinCodeToSetup = newPin
         session = SatocardController(onConnect: onUpdatePinCode, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanMasterCard")
     }
     
     private func onUpdatePinCode(cardChannel: CardChannel) -> Void {
@@ -38,13 +38,13 @@ extension CardState {
         let pinBytesNew = Array(pinCodeToSetup.utf8)
                 
         do {
-            // var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
             var rapdu = try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
             print("Pin Updated")
             homeNavigationPath.removeLast()
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateSuccess"))
         } catch let error {
             print("Error: \(error)")
+            logEvent(log: LogModel(type: .error, message: "onUpdatePinCode : \(error.localizedDescription)"))
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateFailed"))
         }
     }
@@ -54,7 +54,7 @@ extension CardState {
     // *********************************************************
     func requestInitPinOnCard() {
         session = SatocardController(onConnect: onSetPinCode, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanMasterCard")
     }
     
     
@@ -72,6 +72,7 @@ extension CardState {
         do {
             rapdu = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
             print("Pin Set")
+            let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetSuccess"))
             homeNavigationPath.append(NavigationRoutes.setupFaceId(pin))
         } catch let error {
@@ -88,7 +89,7 @@ extension CardState {
     
     func requestInitPinOnBackupCard() {
         session = SatocardController(onConnect: onSetPinCodeForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your backup card")
+        session?.start(alertMessage: "nfcScanBackupCard")
     }
     
     private func onSetPinCodeForBackupCard(cardChannel: CardChannel) -> Void {

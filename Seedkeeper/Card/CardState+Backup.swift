@@ -19,7 +19,7 @@ extension CardState {
     // *********************************************************
     func requestImportSecretsToBackupCard() {
         session = SatocardController(onConnect: onImportSecretsToBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanBackupCardForImport")
     }
     
     func onImportSecretsToBackupCard(cardChannel: CardChannel) -> Void {
@@ -43,6 +43,7 @@ extension CardState {
             
             homeNavigationPath.append(NavigationRoutes.backupSuccess)
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
@@ -57,7 +58,7 @@ extension CardState {
     
     func onFetchSecretsForBackup(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
-            session?.stop(errorMessage: String(localized: "nfcPinCodeError"))
+            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
             return
         }
         
@@ -85,6 +86,7 @@ extension CardState {
             mode = .backupExport
             session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
@@ -97,7 +99,7 @@ extension CardState {
             self.resetStateForBackupCard()
         }
         session = SatocardController(onConnect: onConnectionForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your backup card")
+        session?.start(alertMessage: "nfcScanBackupCard")
     }
     
     func resetStateForBackupCard(clearPin: Bool = false) {
@@ -117,6 +119,7 @@ extension CardState {
                 DispatchQueue.main.async {
                     self.errorMessage = "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)"
                 }
+                logEvent(log: LogModel(type: .error, message: "onConnectionForBackupCard : \(error.localizedDescription)"))
                 session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             }
         }
@@ -154,6 +157,7 @@ extension CardState {
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             } catch {
                 self.pinForBackupCard = nil
+                self.logEvent(log: LogModel(type: .error, message: "handleConnectionForBackupCard : \(error.localizedDescription)"))
                 self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 return
             }

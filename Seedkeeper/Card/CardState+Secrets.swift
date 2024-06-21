@@ -58,10 +58,10 @@ extension CardState {
         switch secretType {
         case .bip39Mnemonic:
             session = SatocardController(onConnect: onManualImportMnemonicSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "Scan your card")
+            session?.start(alertMessage: "nfcScanMasterCard")
         case .password:
             session = SatocardController(onConnect: onAddPasswordSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "Scan your card")
+            session?.start(alertMessage: "nfcScanMasterCard")
         default:
             print("requestAddSecret : No action defined for \(secretType.rawValue)")
         }
@@ -76,6 +76,7 @@ extension CardState {
         
         guard let passwordPayload = passwordManualImportPayload else {
             session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : passwordPayload is not defined"))
             return
         }
         
@@ -109,6 +110,7 @@ extension CardState {
             
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : \(error.localizedDescription)"))
         }
         
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
@@ -126,6 +128,7 @@ extension CardState {
         
         guard let mnemonicPayload = mnemonicManualImportPayload else {
             session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : mnemonicPayload is not defined"))
             return
         }
         
@@ -159,6 +162,7 @@ extension CardState {
             
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : \(error.localizedDescription)"))
         }
         
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
@@ -171,10 +175,10 @@ extension CardState {
         switch secretType {
         case .bip39Mnemonic:
             session = SatocardController(onConnect: onAddMnemonicSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "Scan your card")
+            session?.start(alertMessage: "nfcScanMasterCard")
         case .password:
             session = SatocardController(onConnect: onAddPasswordSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "Scan your card")
+            session?.start(alertMessage: "nfcScanMasterCard")
         default:
             print("requestAddSecret : No action defined for \(secretType.rawValue)")
         }
@@ -191,6 +195,7 @@ extension CardState {
         
         guard let mnemonicPayload = mnemonicPayloadToImportOnCard else {
             session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+            logEvent(log: LogModel(type: .error, message: "onAddMnemonicSecret : mnemonicPayload is not defined"))
             return
         }
         
@@ -224,6 +229,7 @@ extension CardState {
             
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+            logEvent(log: LogModel(type: .error, message: "onAddMnemonicSecret : \(error.localizedDescription)"))
         }
         
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
@@ -238,6 +244,7 @@ extension CardState {
         
         guard let passwordPayload = passwordPayloadToImportOnCard else {
             session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+            logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret : passwordPayload is not defined"))
             return
         }
         
@@ -271,6 +278,7 @@ extension CardState {
             
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+            logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret : \(error.localizedDescription)"))
         }
         
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
@@ -282,7 +290,7 @@ extension CardState {
     func requestGetSecret(with secretHeader: SeedkeeperSecretHeaderDto) {
         currentSecretHeader = secretHeader
         session = SatocardController(onConnect: onGetSecret, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanMasterCard")
     }
     
     private func onGetSecret(cardChannel: CardChannel) -> Void {
@@ -304,6 +312,7 @@ extension CardState {
             session?.stop(alertMessage: "Secret fetched")
             print("seedkeeperExportSecret : \(result)")
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onGetSecret : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
@@ -314,7 +323,7 @@ extension CardState {
     // *********************************************************
     func requestFetchSecrets() {
         session = SatocardController(onConnect: onFetchSecrets, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanMasterCard")
     }
     
     private func onFetchSecrets(cardChannel: CardChannel) -> Void  {
@@ -339,6 +348,7 @@ extension CardState {
             session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
             print("Secrets: \(secrets)")
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onFetchSecrets : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
@@ -368,8 +378,9 @@ extension CardState {
             var rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             homeNavigationPath.removeLast()
-            session?.stop(alertMessage: "Secret deleted")
+            session?.stop(alertMessage: "nfcSecretDeleted")
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onDeleteSecret : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
@@ -380,7 +391,7 @@ extension CardState {
     // TODO: Not supported for v1
     func requestGetXpub() {
         session = SatocardController(onConnect: onGetXpub, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: "nfcScanMasterCard")
     }
     
     private func onGetXpub(cardChannel: CardChannel) -> Void {
@@ -401,6 +412,7 @@ extension CardState {
             currentSecretString = xpub
             session?.stop(alertMessage: "nfcXpubFetchSuccess")
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onGetXpub : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }

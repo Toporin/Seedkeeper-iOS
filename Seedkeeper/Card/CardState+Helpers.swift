@@ -189,4 +189,17 @@ extension CardState {
 
         return MnemonicCardData(mnemonic: mnemonic, passphrase: passphrase)
     }
+    
+    func getReasonFromPkiReturnCode(pkiReturnCode: PkiReturnCode) -> String {
+        switch(pkiReturnCode) {
+        case PkiReturnCode.FailedToVerifyDeviceCertificate:
+            return "_reason_wrong_sig"
+        case PkiReturnCode.FailedChallengeResponse:
+            return "_reason_wrong_challenge"
+        case PkiReturnCode.unknown:
+            return "_reason_unknown"
+        default:
+            return "Reason: \(pkiReturnCode)"
+        }
+    }
 }

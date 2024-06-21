@@ -25,6 +25,8 @@ enum ScannedCardType {
 }
 
 class CardState: ObservableObject {
+    var dataControllerContext = DataController().container.viewContext
+    
     var cmdSet: SatocardCommandSet!
     
     @Published var cardStatus: CardStatus?
@@ -81,6 +83,10 @@ class CardState: ObservableObject {
     
     var mnemonicManualImportPayload: MnemonicManualImportPayload?
     var passwordManualImportPayload: PasswordManualImportPayload?
+    
+    func logEvent(log: LogModel) {
+        dataControllerContext.saveLogEntry(log: log)
+    }
 
     // *********************************************************
     // MARK: - Master card connection
@@ -99,6 +105,8 @@ class CardState: ObservableObject {
             do {
                 try await handleConnection(cardChannel: cardChannel)
             } catch {
+                logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
+                
                 DispatchQueue.main.async {
                     self.errorMessage = "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)"
                 }
@@ -115,15 +123,15 @@ class CardState: ObservableObject {
         cardStatus = try CardStatus(rapdu: statusApdu)
         
         if let cardStatus = cardStatus, !cardStatus.setupDone {
-            let version = getCardVersionInt(cardStatus: cardStatus)
-            if version <= 0x00010001 {
+            // let version = getCardVersionInt(cardStatus: cardStatus)
+            // if version <= 0x00010001 {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
                 }
-                session?.stop(alertMessage: String(localized: "nfcSatodimeNeedsSetup"))
+                session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
                 return
-            }
+            // }
         } else {
             guard let pinForMasterCard = pinForMasterCard else {
                 session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
@@ -141,6 +149,7 @@ class CardState: ObservableObject {
             } catch {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
+                logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
                 self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 return
             }
@@ -160,6 +169,7 @@ class CardState: ObservableObject {
             self.cardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
             print("Secrets: \(secrets)")
         } catch let error {
+            logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
         

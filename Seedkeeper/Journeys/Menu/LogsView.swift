@@ -25,7 +25,7 @@ struct LogsView: View {
                         .frame(height: 16)
                     
                     HStack {
-                        Text("number of entries : \(logEntries.count)")
+                        Text("\(String(localized: "logsNumberOfEntries")) : \(logEntries.count)")
                             .font(.custom("OpenSans-light", size: 16))
                             .fontWeight(.thin)
                             .multilineTextAlignment(.center)

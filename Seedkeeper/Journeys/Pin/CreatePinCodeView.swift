@@ -70,9 +70,9 @@ struct CreatePinCodeView: View {
         case .confirmPinCode:
             return "placeholder.confirmPinCode"
         case .updatePinCodeDefineNew:
-            return "placeholder.updatePinCodeDefineNew"
+            return "placeholder.enterPinCode"
         case .updatePinCodeConfirmNew:
-            return "placeholder.updatePinCodeConfirmNew"
+            return "placeholder.confirmPinCode"
         case .createPinCodeForBackupCard:
             return "placeholder.enterPinCode"
         case .confirmPinCodeForBackupCard:
@@ -122,17 +122,6 @@ struct CreatePinCodeView: View {
                     else if pinCodeNavigationData.mode == .updatePinCodeDefineNew {
                         homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .updatePinCodeConfirmNew, pinCode: pinCode)))
                     }
-                    
-                    
-                    /* else if pinCodeNavigationData.mode == .updatePinCode {
-                        homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .updatePinCodeDefineNew, pinCode: pinCode)))
-                    } else if pinCodeNavigationData.mode == .updatePinCodeDefineNew {
-                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .updatePinCodeConfirmNew, pinCode: pinCode)))
-                    }*/
-                    
-                    /*else {
-                        homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmUpdatePinCode, pinCode: pinCode)))
-                    }*/
                 })
                 
                 Spacer().frame(height: 16)

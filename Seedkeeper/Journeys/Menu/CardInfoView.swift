@@ -52,7 +52,7 @@ struct CardInfoView: View {
                     .frame(height: 66)
                 
                 // CARD VERSION
-                SatoText(text: "**\(cardVersionTitle)**", style: .lightSubtitleDark)
+                SatoText(text: "cardVersionTitle", style: .lightSubtitleDark)
                 Spacer()
                     .frame(height: 14)
                 CardInfoBox(text: self.getCardVersionString(), backgroundColor: Colors.lightMenuButton)
@@ -60,7 +60,7 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 20)
                 
-                SatoText(text: "**Card label**", style: .lightSubtitleDark)
+                SatoText(text: "cardLabel", style: .lightSubtitleDark)
                 Spacer()
                     .frame(height: 14)
 
@@ -77,7 +77,7 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 20)
                 
-                SatoText(text: "**Pin code**", style: .lightSubtitleDark)
+                SatoText(text: "pinCodeBold", style: .lightSubtitleDark)
                 Spacer()
                     .frame(height: 14)
                 EditableCardInfoBox(mode: .pin, backgroundColor: Colors.lightMenuButton) { result in
@@ -125,7 +125,7 @@ struct CardInfoView: View {
         })
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: "cardInfoViewTitle", style: .lightTitleDark)
+                SatoText(text: title, style: .lightTitleDark)
             }
         }
     }
