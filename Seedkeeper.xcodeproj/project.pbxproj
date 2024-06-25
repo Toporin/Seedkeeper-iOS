@@ -81,6 +81,9 @@
 		D0E433A32BD40B56008DBAA6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E433A22BD40B56008DBAA6 /* MenuView.swift */; };
 		D0E433A52BD423B0008DBAA6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E433A42BD423B0008DBAA6 /* SettingsView.swift */; };
 		D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E433A62BD425AA008DBAA6 /* SKButton.swift */; };
+		D0F727AD2C2B121900C05DB4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0F727AC2C2B121900C05DB4 /* GoogleService-Info.plist */; };
+		D0F727B02C2B144200C05DB4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F727AF2C2B144200C05DB4 /* AppDelegate.swift */; };
+		D0F727B22C2B155300C05DB4 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = D0F727B12C2B155300C05DB4 /* FirebaseAppCheck */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +181,8 @@
 		D0E433A22BD40B56008DBAA6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		D0E433A42BD423B0008DBAA6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D0E433A62BD425AA008DBAA6 /* SKButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKButton.swift; sourceTree = "<group>"; };
+		D0F727AC2C2B121900C05DB4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D0F727AF2C2B144200C05DB4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */,
+				D0F727B22C2B155300C05DB4 /* FirebaseAppCheck in Frameworks */,
 				D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,6 +317,8 @@
 				D0E4337C2BD3F984008DBAA6 /* Components */,
 				D0E4337B2BD3F978008DBAA6 /* Journeys */,
 				D0BA41672BCFE40900FD25B9 /* Seedkeeper.entitlements */,
+				D0F727AF2C2B144200C05DB4 /* AppDelegate.swift */,
+				D0F727AC2C2B121900C05DB4 /* GoogleService-Info.plist */,
 				D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */,
 				D0BA41412BCFDDF200FD25B9 /* Assets.xcassets */,
 				D0BA41432BCFDDF300FD25B9 /* Preview Content */,
@@ -476,6 +484,7 @@
 				D0BA41362BCFDDF000FD25B9 /* Sources */,
 				D0BA41372BCFDDF000FD25B9 /* Frameworks */,
 				D0BA41382BCFDDF000FD25B9 /* Resources */,
+				D0F727B32C2B15B800C05DB4 /* Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -485,6 +494,7 @@
 			packageProductDependencies = (
 				D05EB8482BFE4DEA006B84BB /* SatochipSwift */,
 				D08722522C1A02FC00E0FBE5 /* QRCode */,
+				D0F727B12C2B155300C05DB4 /* FirebaseAppCheck */,
 			);
 			productName = Seedkeeper;
 			productReference = D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */;
@@ -562,6 +572,7 @@
 			packageReferences = (
 				D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */,
 				D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */,
+				D0F727AE2C2B143100C05DB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = D0BA413B2BCFDDF000FD25B9 /* Products */;
 			projectDirPath = "";
@@ -580,6 +591,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0E433932BD3FBE8008DBAA6 /* Outfit-Bold.ttf in Resources */,
+				D0F727AD2C2B121900C05DB4 /* GoogleService-Info.plist in Resources */,
 				D0BA41452BCFDDF300FD25B9 /* Preview Assets.xcassets in Resources */,
 				D0E433942BD3FBE8008DBAA6 /* OpenSans-SemiBold.ttf in Resources */,
 				D0C939E12BD6AB4700F2A17B /* Localizable.strings in Resources */,
@@ -614,6 +626,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D0F727B32C2B15B800C05DB4 /* Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = Crashlytics;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D0BA41362BCFDDF000FD25B9 /* Sources */ = {
@@ -672,6 +710,7 @@
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
 				D0C939D22BD6860700F2A17B /* CreatePinCodeView.swift in Sources */,
+				D0F727B02C2B144200C05DB4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1059,6 +1098,14 @@
 				minimumVersion = 20.0.0;
 			};
 		};
+		D0F727AE2C2B143100C05DB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.28.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1071,6 +1118,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */;
 			productName = QRCode;
+		};
+		D0F727B12C2B155300C05DB4 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0F727AE2C2B143100C05DB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
 		};
 /* End XCSwiftPackageProductDependency section */
 

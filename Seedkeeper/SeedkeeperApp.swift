@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct SeedkeeperApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var dataController = DataController.shared
     @StateObject var cardState = CardState()
 
