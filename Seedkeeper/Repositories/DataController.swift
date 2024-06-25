@@ -9,9 +9,15 @@ import Foundation
 import CoreData
 
 class DataController: ObservableObject {
-    let container = NSPersistentContainer(name: "Seedkeeper")
     
-    init() {
+    // MARK: - Singleton Instance
+    static let shared = DataController()
+    
+    let container: NSPersistentContainer
+    
+    // MARK: - Private Initializer
+    private init() {
+        container = NSPersistentContainer(name: "Seedkeeper")
         container.loadPersistentStores { description, error in
             if let error = error {
                 print("Core Data failed to load: \(error.localizedDescription)")
@@ -19,6 +25,7 @@ class DataController: ObservableObject {
         }
     }
     
+    // MARK: - Core Data Saving support
     func save() {
         if container.viewContext.hasChanges {
             do {
@@ -29,6 +36,7 @@ class DataController: ObservableObject {
         }
     }
     
+    // MARK: - Core Data Deleting support
     func delete(_ object: NSManagedObject) {
         container.viewContext.delete(object)
         save()

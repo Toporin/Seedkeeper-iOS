@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct SeedkeeperApp: App {
-    @StateObject private var dataController = DataController()
+    @StateObject private var dataController = DataController.shared
     @StateObject var cardState = CardState()
 
     var body: some Scene {

@@ -25,7 +25,7 @@ enum ScannedCardType {
 }
 
 class CardState: ObservableObject {
-    var dataControllerContext = DataController().container.viewContext
+    var dataControllerContext = DataController.shared.container.viewContext
     
     var cmdSet: SatocardCommandSet!
     
