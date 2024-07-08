@@ -34,6 +34,7 @@ struct EmptyScanStateOverlay: View {
                 }) {
                     HStack {
                         Text(String(localized: "noSeedKeeperYet"))
+                            .multilineTextAlignment(.leading)
                         Image(systemName: "cart")
                             .resizable()
                             .scaledToFit()
