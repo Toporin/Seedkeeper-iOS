@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum SatochipURL: String {
-    case howToUse = "https://satochip.io/setup-use-satodime-on-mobile/"
+    case howToUse = "https://satochip.io/setup-use-seedkeeper-on-mobile/"
     case terms = "https://satochip.io/terms-of-service/"
     case privacy = "https://satochip.io/privacy-policy/"
     case products = "https://satochip.io/shop/"
@@ -23,6 +23,16 @@ struct MenuView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
+    @State var showCardNeedsToBeScannedAlert: Bool = false
+    
+    // MARK: - Alerts
+    let cardNeedToBeScannedAlert = SatoAlert(
+        title: "cardNeedToBeScannedTitle",
+        message: "cardNeedToBeScannedMessage",
+        buttonTitle: "",
+        buttonAction: {},
+        isMoreInfoBtnVisible: false
+    )
     
     // MARK: - Helpers
     func openURL(_ satochipURL: SatochipURL) {
@@ -62,6 +72,8 @@ struct MenuView: View {
                             action: {
                                 if let _ = cardState.cardStatus {
                                     self.homeNavigationPath.append(NavigationRoutes.cardInfo)
+                                } else {
+                                    self.showCardNeedsToBeScannedAlert = true
                                 }
                             },
                             forcedHeight: 90
@@ -89,6 +101,8 @@ struct MenuView: View {
                             action: {
                                 if let _ = cardState.cardStatus {
                                     self.homeNavigationPath.append(NavigationRoutes.backup)
+                                } else {
+                                    self.showCardNeedsToBeScannedAlert = true
                                 }
                             },
                             forcedHeight: 108
@@ -125,7 +139,7 @@ struct MenuView: View {
                             iconWidth: 34, iconHeight: 34,
                             backgroundColor: Colors.lightMenuButton,
                             action: {
-                                
+                                self.openURL(.howToUse)
                             },
                             forcedHeight: 58
                         )
@@ -177,6 +191,21 @@ struct MenuView: View {
                 
             }
         }
+        .overlay(
+            Group {
+                if showCardNeedsToBeScannedAlert {
+                    ZStack {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                showCardNeedsToBeScannedAlert = false
+                            }
+                        
+                        SatoAlertView(isPresented: $showCardNeedsToBeScannedAlert, alert: cardNeedToBeScannedAlert)
+                            .padding([.leading, .trailing], 24)
+                    }
+                }
+            })
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             homeNavigationPath.removeLast()
