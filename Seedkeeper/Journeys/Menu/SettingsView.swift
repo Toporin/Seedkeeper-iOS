@@ -17,7 +17,6 @@ struct SettingsView: View {
     @Binding var homeNavigationPath: NavigationPath
     
     @State var starterIntroIsOn: Bool = false
-    @State var expertModeIsOn: Bool = false
     @State var debugModeIsOn: Bool = false
 
     // MARK: - Literals
@@ -54,22 +53,6 @@ struct SettingsView: View {
                                    isOn: $starterIntroIsOn,
                                    onToggle: { newValue in
                         UserDefaults.standard.set(newValue, forKey: Constants.Keys.firstTimeUse)
-                        
-                    })
-                    
-                    Spacer()
-                        .frame(height: SettingsView.dimensions.verticalGroupSeparator)
-                    
-                    SatoText(text: "settings.expertMode", style: .SKMenuItemTitle)
-                    Spacer()
-                        .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
-                    SatoText(text: "settings.expertModeSubtitle", style: .SKMenuItemSubtitle)
-                    Spacer()
-                        .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
-                    SettingsToggle(title: "settings.expertMode",
-                                   backgroundColor: Colors.lightMenuButton,
-                                   isOn: $expertModeIsOn,
-                                   onToggle: { newValue in
                         
                     })
                     
