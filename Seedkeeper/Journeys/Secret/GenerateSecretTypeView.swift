@@ -24,11 +24,11 @@ struct GenerateSecretTypeView: View {
             VStack {
                 Spacer().frame(height: 60)
                 
-                SatoText(text: "generateSecret", style: .SKStrongBodyDark)
+                SatoText(text: secretCreationMode == .generate ? "generateSecret" : "importASecret", style: .SKStrongBodyDark)
                 
                 Spacer().frame(height: 16)
                 
-                SatoText(text: "generateSecretInfoSubtitle", style: .SKStrongBodyDark)
+                SatoText(text: secretCreationMode == .generate ? "generateSecretInfoSubtitle" : "importASecretSubtitle", style: .SKStrongBodyDark)
                 
                 Spacer().frame(height: 16)
                 
