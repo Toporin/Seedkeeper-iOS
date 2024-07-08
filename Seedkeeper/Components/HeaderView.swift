@@ -12,6 +12,8 @@ struct HeaderView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
+    @Binding var showCardNeedsToBeScannedAlert: Bool
+    
     // MARK: - Literals
     let viewTitle: String = "Seedkeeper"
     
@@ -21,6 +23,13 @@ struct HeaderView: View {
             // Logo with authenticity status
             SatoStatusView()
                 .padding(.leading, 22)
+                .onTapGesture(count: 1){
+                    if let _ = cardState.cardStatus {
+                        homeNavigationPath.append(NavigationRoutes.authenticity)
+                    } else {
+                        showCardNeedsToBeScannedAlert = true
+                    }
+                }
             
             Spacer()
             

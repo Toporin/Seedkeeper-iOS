@@ -21,6 +21,7 @@ struct Colors {
     static let buttonInform: Color = Color.fromHex("#525684")
     static let separator: Color = Color.fromHex("#585D72")
     static let purpleBtn: Color = Color.fromHex("#3B2055")
+    static let ledBlue: Color = Color.fromHex("#65BBE0")
 }
 
 import SwiftUI

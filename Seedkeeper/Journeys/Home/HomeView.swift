@@ -43,6 +43,7 @@ struct HomeView: View {
     // MARK: - Properties
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var cardState: CardState
+    @State var showCardNeedsToBeScannedAlert: Bool = false
     
     private var isCardScanned: Bool {
         return cardState.cardStatus != nil && cardState.isPinVerificationSuccess
@@ -63,7 +64,7 @@ struct HomeView: View {
                     .edgesIgnoringSafeArea(.all)
 
                 VStack {
-                    HeaderView(homeNavigationPath: $cardState.homeNavigationPath)
+                    HeaderView(homeNavigationPath: $cardState.homeNavigationPath, showCardNeedsToBeScannedAlert: self.$showCardNeedsToBeScannedAlert)
                  
                     Spacer()
                     
@@ -76,6 +77,14 @@ struct HomeView: View {
                     }
                 }
             }
+            .overlay(
+                Group {
+                    // Use AlertsHandler to show one or more alerts when needed
+                    AlertsHandlerView(
+                        showCardNeedsToBeScannedAlert: self.$showCardNeedsToBeScannedAlert
+                        )
+                }
+            )
             .navigationBarTitle("")
             .navigationBarHidden(true)
             .navigationDestination(for: NavigationRoutes.self) { route in
