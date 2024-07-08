@@ -14,6 +14,7 @@
 		D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540122C04A3DC00ABF9C7 /* BackupView.swift */; };
 		D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540142C04D2B700ABF9C7 /* PinCodeView.swift */; };
 		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
+		D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */; };
 		D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D05EB8482BFE4DEA006B84BB /* SatochipSwift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
 		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
@@ -111,6 +112,7 @@
 		D03540122C04A3DC00ABF9C7 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		D03540142C04D2B700ABF9C7 /* PinCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeView.swift; sourceTree = "<group>"; };
 		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
+		D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsHandlerView.swift; sourceTree = "<group>"; };
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
 		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				D080FD732C261CD600B50489 /* SKActionButtonSmall.swift */,
 				D080FD752C261CF600B50489 /* SKSecretViewer.swift */,
 				D080FD772C261D1E00B50489 /* OptionSelectorView.swift */,
+				D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -696,6 +699,7 @@
 				D0E4339C2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift in Sources */,
 				D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */,
 				D03110952BE40D2400ED0997 /* LogsView.swift in Sources */,
+				D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */,
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
 				D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */,

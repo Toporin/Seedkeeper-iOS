@@ -10,6 +10,7 @@ import SwiftUI
 
 enum SatoTextStyle {
     case title
+    case titleWhite
     case lightTitle
     case lightTitleDark
     case lightTitleSmall
@@ -31,7 +32,7 @@ enum SatoTextStyle {
     
     var lineHeight: CGFloat {
         switch self {
-        case .title:
+        case .title, .titleWhite:
             return 38
         case .subtitle, .lightSubtitle, .lightSubtitleDark:
             return 20
@@ -66,7 +67,7 @@ enum SatoTextStyle {
     
     var fontSize: CGFloat {
         switch self {
-        case .title:
+        case .title, .titleWhite:
             return 30
         case .subtitle:
             return 15
@@ -103,7 +104,7 @@ enum SatoTextStyle {
 
     var font: Font {
         switch self {
-        case .title, .cellTitle, .balanceLarge, .lightTitle, .lightTitleDark, .lightTitleSmall, .cellSmallTitle, .extraLightSubtitle:
+        case .title, .titleWhite, .cellTitle, .balanceLarge, .lightTitle, .lightTitleDark, .lightTitleSmall, .cellSmallTitle, .extraLightSubtitle:
             return .custom("Outfit-Medium", size: self.fontSize)
         case .subtitle, .SKMenuItemTitle:
             return .custom("OpenSans-variable", size: self.fontSize)
@@ -124,6 +125,8 @@ enum SatoTextStyle {
         switch self {
         case .title, .lightTitle, .lightTitleSmall, .lightTitleDark, .lightSubtitleDark:
             return .black
+        case .titleWhite:
+            return .white
         case .subtitle, .lightSubtitle, .extraLightSubtitle:
             return .white
         case .subtitleBold:
@@ -149,7 +152,7 @@ enum SatoTextStyle {
 
     var fontWeight: Font.Weight {
         switch self {
-        case .title, .subtitleBold:
+        case .title, .titleWhite, .subtitleBold:
             return .bold
         case .subtitle, .lightSubtitle, .cellTitle, .extraLightSubtitle, .lightSubtitleDark:
             return .regular
