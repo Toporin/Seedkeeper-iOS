@@ -26,9 +26,9 @@ struct CardInfoView: View {
     
     let cardVersionTitle = "cardVersion"
     
-    let cardGenuineTitle = "**cardAuthenticity**"
-    let cardGenuineText = "thisCardIsGenuine"
-    let cardNotGenuineText = "thisCardIsNotGenuine"
+    let cardGenuineTitle = String(localized: "cardAuthenticity")
+    let cardGenuineText = String(localized: "thisCardIsGenuine")
+    let cardNotGenuineText = String(localized: "thisCardIsNotGenuine")
     let certButtonTitle = "certDetails"
     
     func getCardVersionString() -> String {
