@@ -21,7 +21,7 @@ extension CardState {
     func requestUpdatePinOnCard(newPin: String) {
         pinCodeToSetup = newPin
         session = SatocardController(onConnect: onUpdatePinCode, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanMasterCard")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     private func onUpdatePinCode(cardChannel: CardChannel) -> Void {
@@ -54,7 +54,7 @@ extension CardState {
     // *********************************************************
     func requestInitPinOnCard() {
         session = SatocardController(onConnect: onSetPinCode, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanMasterCard")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     
