@@ -52,12 +52,14 @@ struct SKSecretViewer: View {
                                 .foregroundColor(.white)
                                 .padding(5)
                         }
-                        Button(action: {
-                            showText.toggle()
-                        }) {
-                            Image(systemName: showText ? "eye.slash" : "eye")
-                                .foregroundColor(.white)
-                                .padding(5)
+                        if !isEditable {
+                            Button(action: {
+                                showText.toggle()
+                            }) {
+                                Image(systemName: showText ? "eye.slash" : "eye")
+                                    .foregroundColor(.white)
+                                    .padding(5)
+                            }
                         }
                     }
                     .padding(.top, 10)
@@ -67,7 +69,7 @@ struct SKSecretViewer: View {
                 Spacer()
                 
                 if isEditable {
-                    TextField("", text: $contentText, onEditingChanged: { (editingChanged) in
+                    TextField(String(localized: "placeholder.yourSecret"), text: $contentText, onEditingChanged: { (editingChanged) in
                         if editingChanged {
                             print("TextField focused")
                         } else {
@@ -78,6 +80,8 @@ struct SKSecretViewer: View {
                     })
                         .padding()
                         .background(.clear)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     if shouldShowQRCode {

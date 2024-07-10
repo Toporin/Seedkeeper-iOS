@@ -58,10 +58,10 @@ extension CardState {
         switch secretType {
         case .bip39Mnemonic:
             session = SatocardController(onConnect: onManualImportMnemonicSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "nfcScanMasterCard")
+            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
         case .password:
-            session = SatocardController(onConnect: onAddPasswordSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "nfcScanMasterCard")
+            session = SatocardController(onConnect: onManualImportPasswordSecret, onFailure: onDisconnection)
+            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
         default:
             print("requestAddSecret : No action defined for \(secretType.rawValue)")
         }
@@ -175,10 +175,10 @@ extension CardState {
         switch secretType {
         case .bip39Mnemonic:
             session = SatocardController(onConnect: onAddMnemonicSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "nfcScanMasterCard")
+            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
         case .password:
             session = SatocardController(onConnect: onAddPasswordSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: "nfcScanMasterCard")
+            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
         default:
             print("requestAddSecret : No action defined for \(secretType.rawValue)")
         }
@@ -290,7 +290,7 @@ extension CardState {
     func requestGetSecret(with secretHeader: SeedkeeperSecretHeaderDto) {
         currentSecretHeader = secretHeader
         session = SatocardController(onConnect: onGetSecret, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanMasterCard")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     private func onGetSecret(cardChannel: CardChannel) -> Void {
@@ -323,7 +323,7 @@ extension CardState {
     // *********************************************************
     func requestFetchSecrets() {
         session = SatocardController(onConnect: onFetchSecrets, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanMasterCard")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     private func onFetchSecrets(cardChannel: CardChannel) -> Void  {
@@ -391,7 +391,7 @@ extension CardState {
     // TODO: Not supported for v1
     func requestGetXpub() {
         session = SatocardController(onConnect: onGetXpub, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanMasterCard")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     private func onGetXpub(cardChannel: CardChannel) -> Void {

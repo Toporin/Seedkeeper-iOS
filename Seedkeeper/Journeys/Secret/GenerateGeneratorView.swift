@@ -205,7 +205,7 @@ struct GenerateGeneratorView: View {
                 Spacer()
                     .frame(height: 30)
                 
-                EditableCardInfoBox(mode: .text("[LABEL]"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { labelTextResult in
+                EditableCardInfoBox(mode: .text("Label"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { labelTextResult in
                     if case .text(let customLabelText) = labelTextResult {
                         labelText = customLabelText
                     }
