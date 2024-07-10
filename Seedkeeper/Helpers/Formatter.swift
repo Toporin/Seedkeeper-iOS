@@ -18,3 +18,9 @@ public class Formatter {
         return formatter.string(from: date)
     }
 }
+
+extension String {
+    func showWithFirstLetterAsCapital() -> String {
+        return prefix(1).capitalized + dropFirst()
+    }
+}

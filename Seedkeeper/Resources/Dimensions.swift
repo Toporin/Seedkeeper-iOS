@@ -19,4 +19,6 @@ struct Dimensions {
     
     static let firstButtonPadding: CGFloat = 50.0
     static let secondButtonPadding: CGFloat = 30.0
+    
+    static let optionSelectorSheetHeight: CGFloat = 250.0
 }

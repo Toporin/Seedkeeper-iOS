@@ -362,6 +362,8 @@ struct GenerateGeneratorView: View {
         }
         .sheet(isPresented: $showPickerSheet) {
             OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
+                .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                .presentationBackground(.ultraThinMaterial)
         }
         .onDisappear {
             cardState.cleanPayloadToImportOnCard()
