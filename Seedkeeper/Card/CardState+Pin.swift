@@ -34,16 +34,24 @@ extension CardState {
             return
         }
         
+        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+        
         let pinBytes = Array(pinForMasterCard.utf8)
         let pinBytesNew = Array(pinCodeToSetup.utf8)
                 
         do {
+            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             var rapdu = try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
             print("Pin Updated")
-            homeNavigationPath.removeLast()
+            self.pinForMasterCard = pinCodeToSetup
+            self.pinCodeToSetup = nil
+            DispatchQueue.main.async { [weak self] in
+                self?.homeNavigationPath = .init()
+            }
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateSuccess"))
         } catch let error {
             print("Error: \(error)")
+            self.pinCodeToSetup = nil
             logEvent(log: LogModel(type: .error, message: "onUpdatePinCode : \(error.localizedDescription)"))
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateFailed"))
         }
