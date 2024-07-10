@@ -58,7 +58,7 @@ extension CardState {
         var statusApdu: APDUResponse?
         var cardType: CardType?
         
-        (statusApdu, cardType) = try cmdSet.selectApplet(cardType: .anycard)
+        (statusApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
         
         statusApdu = try cmdSet.cardGetStatus()
         
