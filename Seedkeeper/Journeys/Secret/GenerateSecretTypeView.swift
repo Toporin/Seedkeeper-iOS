@@ -72,6 +72,8 @@ struct GenerateSecretTypeView: View {
         }
         .sheet(isPresented: $showPickerSheet) {
             OptionSelectorView(pickerOptions: $phraseTypeOptions)
+                .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                .presentationBackground(.ultraThinMaterial)
         }
     }
 }

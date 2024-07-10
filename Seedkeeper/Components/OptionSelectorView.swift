@@ -34,15 +34,13 @@ struct OptionSelectorView<T: CaseIterable & Hashable & HumanReadable>: View {
     
     var body: some View {
         ZStack {
-            Colors.purpleBtn.edgesIgnoringSafeArea(.all)
-            
             VStack {
                 List(pickerOptions.items, id: \.self) { item in
                     Button(action: {
                         pickerOptions.selectedOption = item
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text(item.humanReadableName())
+                        Text(item.humanReadableName().showWithFirstLetterAsCapital())
                             .font(.headline)
                             .foregroundColor(.white)
                             .background(Color.clear)
@@ -53,6 +51,47 @@ struct OptionSelectorView<T: CaseIterable & Hashable & HumanReadable>: View {
                 .listStyle(PlainListStyle())
                 .background(Color.clear)
             }
+            .background(Color.clear)
         }
+        .background(Color.clear)
     }
+}
+
+extension View {
+    func blurredSheet<Content: View>(_ style: AnyShapeStyle, show: Binding<Bool>, onDismiss: @escaping ()->(), @ViewBuilder content: @escaping ()->Content) -> some View {
+        self
+            .sheet(isPresented: show, onDismiss: onDismiss) {
+                content()
+                    .background(RemoveBackgroundColor())
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background {
+                        Rectangle()
+                            .fill(style)
+                            .ignoresSafeArea(.container, edges: .all)
+                    }
+            }
+    }
+}
+
+fileprivate struct RemoveBackgroundColor: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        DispatchQueue.main.async {
+            view.superview?.superview?.backgroundColor = .clear
+        }
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
+    /*func makeUIView(context: Context) -> some UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+        DispatchQueue.main.async {
+            uiView.superview?.superview?.backgroundColor = .clear
+        }
+    }*/
 }
