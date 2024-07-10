@@ -16,7 +16,7 @@ struct SatoStatusView: View {
         case .unknown:
             return "satochip_logo_dark"
         case .success:
-            return "il_authenitc"
+            return "il_authentic"
         default:
             return "il_not_authentic"
         }
