@@ -66,17 +66,17 @@ struct CreatePinCodeView: View {
     func getPlaceHolder() -> String {
         switch pinCodeNavigationData.mode {
         case .createPinCode:
-            return "placeholder.enterPinCode"
+            return String(localized: "placeholder.enterPinCode")
         case .confirmPinCode:
-            return "placeholder.confirmPinCode"
+            return String(localized: "placeholder.confirmPinCode")
         case .updatePinCodeDefineNew:
-            return "placeholder.enterPinCode"
+            return String(localized: "placeholder.enterPinCode")
         case .updatePinCodeConfirmNew:
-            return "placeholder.confirmPinCode"
+            return String(localized: "placeholder.confirmPinCode")
         case .createPinCodeForBackupCard:
-            return "placeholder.enterPinCode"
+            return String(localized: "placeholder.enterPinCode")
         case .confirmPinCodeForBackupCard:
-            return "placeholder.confirmPinCode"
+            return String(localized: "placeholder.confirmPinCode")
         }
     }
         
