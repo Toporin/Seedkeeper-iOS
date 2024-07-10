@@ -98,7 +98,7 @@ extension CardState {
     
     func requestInitPinOnBackupCard() {
         session = SatocardController(onConnect: onSetPinCodeForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanBackupCard")
+        session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
     }
     
     private func onSetPinCodeForBackupCard(cardChannel: CardChannel) -> Void {
@@ -116,6 +116,7 @@ extension CardState {
             rapdu = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
             print("Pin Set")
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetSuccess"))
+            self.pinForBackupCard = pin
             popToBackupFlow()
         } catch let error {
             print("Error: \(error)")

@@ -19,7 +19,7 @@ extension CardState {
     // *********************************************************
     func requestImportSecretsToBackupCard() {
         session = SatocardController(onConnect: onImportSecretsToBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanBackupCardForImport")
+        session?.start(alertMessage: String(localized: "nfcScanBackupCardForImport"))
     }
     
     func onImportSecretsToBackupCard(cardChannel: CardChannel) -> Void {
@@ -83,7 +83,7 @@ extension CardState {
             self.secretsForBackup = fetchedSecretsFromCard
             
             print("secretsToImport : \(fetchedSecretsFromCard)")
-            mode = .backupExport
+            mode = .backupExportReady
             session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
         } catch let error {
             logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
@@ -99,13 +99,14 @@ extension CardState {
             self.resetStateForBackupCard()
         }
         session = SatocardController(onConnect: onConnectionForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: "nfcScanBackupCard")
+        session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
     }
     
     func resetStateForBackupCard(clearPin: Bool = false) {
         certificateCodeForBackup = .unknown
         authentikeyHexForBackup = ""
         secretsForBackup = [:]
+        mode = .start
         if clearPin {
             pinForBackupCard = nil
         }
@@ -133,15 +134,15 @@ extension CardState {
         backupCardStatus = try CardStatus(rapdu: statusApdu)
         
         if let cardStatus = backupCardStatus, !cardStatus.setupDone {
-            let version = getCardVersionInt(cardStatus: cardStatus)
-            if version <= 0x00010001 {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCodeForBackupCard, pinCode: nil)))
-                }
-                session?.stop(alertMessage: String(localized: "nfcSatodimeNeedsSetup"))
-                return
+            // let version = getCardVersionInt(cardStatus: cardStatus)
+            // if version <= 0x00010001 {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCodeForBackupCard, pinCode: nil)))
             }
+            session?.stop(alertMessage: String(localized: "nfcSatodimeNeedsSetup"))
+            return
+            // }
         } else {
             guard let pinForBackupCard = pinForBackupCard else {
                 session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))

@@ -12,7 +12,8 @@ enum BackupMode {
     case start
     case pairBackupCard
     case backupImport
-    case backupExport
+    case backupExportReady
+    case initiateBackupExport
 }
 
 struct BackupView: View {
@@ -23,13 +24,15 @@ struct BackupView: View {
     func getActionButtonTitle() -> String {
         switch cardState.mode {
         case .start:
-            return "start"
+            return String(localized: "start")
         case .pairBackupCard:
-            return "next"
+            return String(localized: "next")
         case .backupImport:
-            return "backupImportBtn"
-        case .backupExport:
-            return "backupExportBtn"
+            return String(localized: "backupImportBtn")
+        case .backupExportReady:
+            return String(localized: "backupExportBtn")
+        case .initiateBackupExport:
+            return String(localized: "next")
         }
     }
     
@@ -41,8 +44,10 @@ struct BackupView: View {
             return "backupPairBackupCardSubtitle"
         case .backupImport:
             return "backupImportSubtitle"
-        case .backupExport:
+        case .backupExportReady:
             return "backupExportSubtitle"
+        case .initiateBackupExport:
+            return "backupInitiateExportSubtitle"
         }
     }
     
@@ -54,8 +59,10 @@ struct BackupView: View {
             return "il_backup_backup"
         case .backupImport:
             return "il_backup_master_backup"
-        case .backupExport:
+        case .backupExportReady:
             return "il_backup_master_backup"
+        case .initiateBackupExport:
+            return "il_backup_backup"
         }
     }
     
@@ -81,6 +88,7 @@ struct BackupView: View {
                 Spacer()
                 
                 Button(action: {
+                    cardState.resetStateForBackupCard(clearPin: true)
                     homeNavigationPath.removeLast()
                 }) {
                     SatoText(text: "back", style: .SKMenuItemTitle)
@@ -97,7 +105,9 @@ struct BackupView: View {
                         cardState.scanBackupCard()
                     case .backupImport:
                         cardState.requestFetchSecretsForBackup()
-                    case .backupExport:
+                    case .backupExportReady:
+                        cardState.mode = .initiateBackupExport
+                    case .initiateBackupExport:
                         cardState.requestImportSecretsToBackupCard()
                     }
                 })
@@ -110,6 +120,7 @@ struct BackupView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
+            cardState.resetStateForBackupCard(clearPin: true)
             homeNavigationPath.removeLast()
         }) {
             Image("ic_back_dark")
