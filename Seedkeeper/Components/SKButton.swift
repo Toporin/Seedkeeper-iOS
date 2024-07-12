@@ -13,6 +13,7 @@ enum ButtonStyle {
     case inform
     case danger
     case regular
+    case satoGreen
 
     var backgroundColor: Color {
         switch self {
@@ -24,6 +25,8 @@ enum ButtonStyle {
             return Colors.buttonDefault
         case .regular:
             return Colors.buttonRegular
+        case .satoGreen:
+            return Colors.satoGreen
         }
     }
 

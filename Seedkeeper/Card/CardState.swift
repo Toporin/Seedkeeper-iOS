@@ -134,7 +134,7 @@ class CardState: ObservableObject {
             // }
         } else {
             guard let pinForMasterCard = pinForMasterCard else {
-                session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+                session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))

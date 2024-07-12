@@ -37,11 +37,7 @@ struct OnboardingWelcomeView: View {
             .padding([.leading, .trailing], Dimensions.defaultSideMargin)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }.background {
-            Image("bg_glow")
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
+            Color.clear
         }
     }
 }
