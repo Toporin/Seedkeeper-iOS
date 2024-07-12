@@ -20,9 +20,29 @@ struct OnboardingNFCView: View {
         }
     }
     
+    func goToTutorial() {
+        if let url = URL(string: String(localized: "url.tutorial")) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
     // MARK: - View
     var body: some View {
         ZStack(alignment: .bottom) {
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Image("il-onboard-3")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 412)
+                }
+                Spacer()
+                    .frame(height: 40)
+            }
+            .ignoresSafeArea()
             
             VStack {
                 Image("logo_seedkeeper_dark")
@@ -43,20 +63,16 @@ struct OnboardingNFCView: View {
                     goToMoreInfo()
                 }
                 Spacer()
-                    .frame(height: 55)
-                Image("il-onboard-3")
-                    .resizable()
-                    .scaledToFit()
+                    .frame(height: 12)
+                SKButton(text: String(localized: "tutorialBtn"), style: .satoGreen, horizontalPadding: Dimensions.secondButtonPadding) {
+                    goToTutorial()
+                }
                 Spacer()
             }
             .padding([.leading, .trailing], Dimensions.defaultSideMargin)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }.background {
-            Image("bg_glow")
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
+            Color.clear
         }
     }
 }
