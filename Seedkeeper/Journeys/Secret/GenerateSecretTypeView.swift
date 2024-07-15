@@ -71,9 +71,19 @@ struct GenerateSecretTypeView: View {
             }
         }
         .sheet(isPresented: $showPickerSheet) {
-            OptionSelectorView(pickerOptions: $phraseTypeOptions)
-                .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
-                .presentationBackground(.ultraThinMaterial)
+            if #available(iOS 16.4, *) {
+                OptionSelectorView(pickerOptions: $phraseTypeOptions)
+                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                    .presentationBackground(.ultraThinMaterial)
+            } else {
+                OptionSelectorView(pickerOptions: $phraseTypeOptions)
+                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                    .background(Image("bg-glow-small")
+                        .resizable()
+                        .scaledToFill()
+                        .blur(radius: 10)
+                        .edgesIgnoringSafeArea(.all))
+            }
         }
     }
 }

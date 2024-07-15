@@ -361,9 +361,19 @@ struct GenerateGeneratorView: View {
             }
         }
         .sheet(isPresented: $showPickerSheet) {
-            OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
-                .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
-                .presentationBackground(.ultraThinMaterial)
+            if #available(iOS 16.4, *) {
+                OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
+                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                    .presentationBackground(.ultraThinMaterial)
+            } else {
+                OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
+                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
+                    .background(Image("bg-glow-small")
+                        .resizable()
+                        .scaledToFill()
+                        .blur(radius: 10)
+                        .edgesIgnoringSafeArea(.all))
+            }
         }
         .onDisappear {
             cardState.cleanPayloadToImportOnCard()
