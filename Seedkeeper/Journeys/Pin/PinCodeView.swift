@@ -33,7 +33,7 @@ struct PinCodeView: View {
                 
                 Spacer().frame(height: 24)
                 
-                SecureTextInput(placeholder: String(localized: "placeholder.pinCode"), text: $pinCode)
+                SecureTextInput(placeholder: String(localized: "placeholder.enterPinCode"), text: $pinCode)
                 
                 Spacer()
                 

@@ -97,7 +97,7 @@ class CardState: ObservableObject {
             self.resetState()
         }
         session = SatocardController(onConnect: onConnection, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     func onConnection(cardChannel: CardChannel) -> Void {
@@ -146,11 +146,17 @@ class CardState: ObservableObject {
             do {
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                 self.isPinVerificationSuccess = true
+            } catch CardError.wrongPIN(let retryCounter){ 
+                self.pinForMasterCard = nil
+                self.isPinVerificationSuccess = false
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                return
             } catch {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
-                logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(error.localizedDescription)"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPin"))")
                 return
             }
         }

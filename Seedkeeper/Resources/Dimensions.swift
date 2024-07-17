@@ -13,7 +13,7 @@ struct Dimensions {
     static let defaultSideMargin: CGFloat = 20
     static let satoDimeLogoHeight: CGFloat = 120
     static let verticalLogoSpacing: CGFloat = 36
-    static let subtitleSpacing: CGFloat = 10
+    static let subtitleSpacing: CGFloat = 32
     static let verticalIllustrationSpacing: CGFloat = 20
     static let defaultBottomMargin: CGFloat = 47.0
     

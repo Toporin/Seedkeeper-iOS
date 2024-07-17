@@ -27,7 +27,7 @@ struct OnboardingContainerView: View {
     // MARK: - Literals
     let onboardingPages: [OnboardingViewType] = [.welcome, .info, .nfc]
     var numberOfPages: Int { onboardingPages.count }
-    let startButtonTitle = String(localized: "start")
+    let startButtonTitle = String(localized: "onBoardingStartBtn")
 
     func goToNextPage() {
         if currentPageIndex < numberOfPages - 1 {
