@@ -76,7 +76,7 @@ struct DashboardView: View {
             
             List {
                 ForEach(cardState.masterSecretHeaders, id: \.self) { secret in
-                    SKSecretButton(secret: secret.label) {
+                    SKSecretButton(secret: secret) {
                         homeNavigationPath.append(NavigationRoutes.showSecret(secret))
                     }
                     .listRowBackground(Color.clear)
@@ -117,8 +117,19 @@ struct DashboardView: View {
 }
 
 struct SKSecretButton: View {
-    let secret: String
+    let secret: SeedkeeperSecretHeaderDto
     let action: () -> Void
+    
+    func getSecretIcon(secretType: SeedkeeperSecretType) -> String {
+        switch secretType {
+        case .bip39Mnemonic:
+            return "ic_leaf"
+        case .password:
+            return "ic_3DotsUnderlined"
+        default:
+            return ""
+        }
+    }
     
     var body: some View {
         Button(action: {
@@ -127,8 +138,7 @@ struct SKSecretButton: View {
             HStack {
                 Spacer()
                     .frame(width: 12)
-                
-                Image("ic_leaf")
+                Image(self.getSecretIcon(secretType: secret.type))
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
@@ -136,7 +146,7 @@ struct SKSecretButton: View {
                 
                 Spacer()
 
-                SatoText(text: secret, style: .SKStrongBodyLight)
+                SatoText(text: secret.label, style: .SKStrongBodyLight)
                 
                 Spacer()
 
