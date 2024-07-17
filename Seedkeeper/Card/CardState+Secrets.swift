@@ -20,7 +20,7 @@ extension CardState {
     func requestSetCardLabel(label: String) {
         self.cardLabelToSet = label
         session = SatocardController(onConnect: onSetCardLabel, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     func onSetCardLabel(cardChannel: CardChannel) -> Void {
@@ -309,7 +309,7 @@ extension CardState {
             var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
             var result = try cmdSet.seedkeeperExportSecret(sid: currentSecretHeader.sid)
             self.currentSecretObject = result
-            session?.stop(alertMessage: "Secret fetched")
+            session?.stop(alertMessage: String(localized: "nfcSecretFetched"))
             print("seedkeeperExportSecret : \(result)")
         } catch let error {
             logEvent(log: LogModel(type: .error, message: "onGetSecret : \(error.localizedDescription)"))
@@ -359,7 +359,7 @@ extension CardState {
     // TODO: Not supported for v1
     func requestDeleteSecret() {
         session = SatocardController(onConnect: onDeleteSecret, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     private func onDeleteSecret(cardChannel: CardChannel) -> Void {
