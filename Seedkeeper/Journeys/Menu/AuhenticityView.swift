@@ -77,7 +77,7 @@ struct AuthenticityView: View {
                     // DEVICE CERT
                     CardInfoBox(
                         text: self.shouldShowDeviceInfo ? "hideDeviceCert" : "showDeviceCert",
-                        backgroundColor: cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed)
+                        backgroundColor: cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed)
                     {
                         self.shouldShowDeviceInfo.toggle()
                     }
@@ -104,7 +104,7 @@ struct AuthenticityView: View {
                         .padding(30)
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed, lineWidth: 4)
+                                .stroke(cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed, lineWidth: 4)
                                 .padding(15)
                         )
                     }
@@ -114,7 +114,7 @@ struct AuthenticityView: View {
                     
                     CardInfoBox(
                         text: self.shouldShowSubcaInfo ? "hideSubcaCert" : "showSubcaCert",
-                        backgroundColor: cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed)
+                        backgroundColor: cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed)
                     {
                         self.shouldShowSubcaInfo.toggle()
                     }
@@ -147,7 +147,7 @@ struct AuthenticityView: View {
                         .padding(30)
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed, lineWidth: 4)
+                                .stroke(cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed, lineWidth: 4)
                                 .padding(15)
                         )
                     }

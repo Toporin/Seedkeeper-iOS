@@ -107,7 +107,7 @@ struct CardInfoView: View {
                     .frame(height: 14)
                 CardInfoBox(
                     text: cardState.certificateCode == .success ? cardGenuineText : cardNotGenuineText,
-                    backgroundColor: cardState.certificateCode == .success ? Colors.ledGreen : Colors.ledRed)
+                    backgroundColor: cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed)
                 {
                     self.homeNavigationPath.append(NavigationRoutes.authenticity)
                 }
