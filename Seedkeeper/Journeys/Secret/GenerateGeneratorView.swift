@@ -87,7 +87,7 @@ struct GenerateGeneratorView: View {
     
     var canManualImportPassword: Bool {
         if let labelText = labelText {
-            return !labelText.isEmpty && seedPhrase.count >= 8 && seedPhrase.count <= 16
+            return !labelText.isEmpty && seedPhrase.count >= 1
         } else {
             return false
         }
