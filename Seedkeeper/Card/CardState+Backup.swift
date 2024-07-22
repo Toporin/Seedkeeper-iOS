@@ -156,10 +156,20 @@ extension CardState {
             let pinBytes = Array(pinForBackupCard.utf8)
             do {
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            } catch CardError.wrongPIN(let retryCounter){
+                self.pinForBackupCard = nil
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                return
+            } catch CardError.pinBlocked {
+                self.pinForBackupCard = nil
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(String(localized: "nfcWrongPinBlocked"))"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                return
             } catch {
                 self.pinForBackupCard = nil
-                self.logEvent(log: LogModel(type: .error, message: "handleConnectionForBackupCard : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(error.localizedDescription)"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPin"))")
                 return
             }
         }

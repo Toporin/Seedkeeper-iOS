@@ -146,11 +146,17 @@ class CardState: ObservableObject {
             do {
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                 self.isPinVerificationSuccess = true
-            } catch CardError.wrongPIN(let retryCounter){ 
+            } catch CardError.wrongPIN(let retryCounter){
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
                 self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                return
+            } catch CardError.pinBlocked {
+                self.pinForMasterCard = nil
+                self.isPinVerificationSuccess = false
+                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
                 return
             } catch {
                 self.pinForMasterCard = nil
