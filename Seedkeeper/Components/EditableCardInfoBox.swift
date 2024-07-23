@@ -40,7 +40,7 @@ struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
         switch mode {
         case .dropdown(let options):
             if let placeholder = options.selectedOption?.humanReadableName() {
-                editableText = placeholder
+//                editableText = placeholder
                 _editableText = State(initialValue: placeholder)
             } else {
                 _editableText = State(initialValue: options.placeHolder)

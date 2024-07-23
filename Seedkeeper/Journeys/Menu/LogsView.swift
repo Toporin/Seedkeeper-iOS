@@ -55,7 +55,7 @@ struct LogsView: View {
                             let log = LogModel(logEntry: logEntry)
                             VStack(alignment: .center) {
                                 
-                                Text("\(Formatter().dateTimeToString(date: log.date)) - \(log.type)")
+                                Text("\(Formatter().dateTimeToString(date: log.date)) - \(log.type.rawValue)")
                                     .font(.custom("OpenSans-regular", size: 16))
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity, alignment: .center)
