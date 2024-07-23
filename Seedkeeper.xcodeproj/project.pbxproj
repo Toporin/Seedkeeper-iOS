@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D8D22C62C415D7D00A3D249 /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0D8D22C52C415D7D00A3D249 /* SatochipSwift */; };
+		0D8D22C92C415E1500A3D249 /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -16,11 +18,9 @@
 		D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540142C04D2B700ABF9C7 /* PinCodeView.swift */; };
 		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
 		D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */; };
-		D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D05EB8482BFE4DEA006B84BB /* SatochipSwift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
 		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
-		D07141622BF259CF00A4939A /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */; };
 		D07141662BF26DFD00A4939A /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */; };
 		D07141672BF26DFF00A4939A /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141652BF26D9000A4939A /* OpenSans-Medium.ttf */; };
 		D07141682BF26E0200A4939A /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141642BF26D9000A4939A /* OpenSans-Light.ttf */; };
@@ -106,6 +106,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -118,7 +119,6 @@
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
 		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
-		D07141612BF259CF00A4939A /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
 		D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		D07141642BF26D9000A4939A /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		D07141652BF26D9000A4939A /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Medium.ttf"; sourceTree = "<group>"; };
@@ -194,9 +194,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D8D22C62C415D7D00A3D249 /* SatochipSwift in Frameworks */,
 				D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */,
 				D0F727B22C2B155300C05DB4 /* FirebaseAppCheck in Frameworks */,
-				D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,8 +260,8 @@
 		D07141582BF255B100A4939A /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */,
 				D071415E2BF2599100A4939A /* DataController.swift */,
-				D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -498,9 +498,9 @@
 			);
 			name = Seedkeeper;
 			packageProductDependencies = (
-				D05EB8482BFE4DEA006B84BB /* SatochipSwift */,
 				D08722522C1A02FC00E0FBE5 /* QRCode */,
 				D0F727B12C2B155300C05DB4 /* FirebaseAppCheck */,
+				0D8D22C52C415D7D00A3D249 /* SatochipSwift */,
 			);
 			productName = Seedkeeper;
 			productReference = D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */;
@@ -576,9 +576,9 @@
 			);
 			mainGroup = D0BA41312BCFDDF000FD25B9;
 			packageReferences = (
-				D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */,
 				D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */,
 				D0F727AE2C2B143100C05DB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0D8D22C42C415D7D00A3D249 /* XCLocalSwiftPackageReference "../SatochipSwift" */,
 			);
 			productRefGroup = D0BA413B2BCFDDF000FD25B9 /* Products */;
 			projectDirPath = "";
@@ -683,7 +683,6 @@
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
 				D0E433A32BD40B56008DBAA6 /* MenuView.swift in Sources */,
 				D07141752BF4DC8500A4939A /* AddSecretView.swift in Sources */,
-				D07141622BF259CF00A4939A /* Seedkeeper.xcdatamodeld in Sources */,
 				D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */,
 				D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */,
 				D0E433A52BD423B0008DBAA6 /* SettingsView.swift in Sources */,
@@ -716,6 +715,7 @@
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
+				0D8D22C92C415E1500A3D249 /* Seedkeeper.xcdatamodeld in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
 				D0C939D22BD6860700F2A17B /* CreatePinCodeView.swift in Sources */,
 				D0F727B02C2B144200C05DB4 /* AppDelegate.swift in Sources */,
@@ -902,7 +902,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Seedkeeper/Preview Content\"";
-				DEVELOPMENT_TEAM = 68UCR527YD;
+				DEVELOPMENT_TEAM = F75Z9LY9DQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
@@ -919,8 +919,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dlvx.Seedkeeper;
+				MARKETING_VERSION = 0.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.satochip.app.Seedkeeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -938,10 +938,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Seedkeeper/Seedkeeper.entitlements;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Seedkeeper/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = F75Z9LY9DQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seedkeeper/Info.plist;
@@ -958,7 +959,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.satochip.app.Seedkeeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1089,15 +1090,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = /Users/lioneldelvaux/Projects/SatochipSwift;
-			requirement = {
-				branch = "support-seedkeeper";
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		0D8D22C42C415D7D00A3D249 /* XCLocalSwiftPackageReference "../SatochipSwift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../SatochipSwift;
 		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
 		D08722512C1A02FC00E0FBE5 /* XCRemoteSwiftPackageReference "QRCode" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dagronf/QRCode";
@@ -1117,9 +1117,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D05EB8482BFE4DEA006B84BB /* SatochipSwift */ = {
+		0D8D22C52C415D7D00A3D249 /* SatochipSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D05EB8472BFE4DEA006B84BB /* XCRemoteSwiftPackageReference "SatochipSwift" */;
 			productName = SatochipSwift;
 		};
 		D08722522C1A02FC00E0FBE5 /* QRCode */ = {
@@ -1135,14 +1134,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */ = {
+		0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				D07141612BF259CF00A4939A /* Seedkeeper.xcdatamodel */,
+				0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */,
 			);
-			currentVersion = D07141612BF259CF00A4939A /* Seedkeeper.xcdatamodel */;
+			currentVersion = 0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */;
 			name = Seedkeeper.xcdatamodeld;
-			path = "/Users/lioneldelvaux/Projects/Seedkeeper-iOS/Seedkeeper/Repositories/Seedkeeper.xcdatamodeld";
+			path = ../../../../satochip/Seedkeeper.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

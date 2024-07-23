@@ -1,5 +1,4 @@
 {
-  "originHash" : "40571df3a85071efd842b1070021453469def3caa7729c35da3ad44098a9696a",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -24,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/attaswift/BigInt.git",
       "state" : {
-        "revision" : "0ed110f7555c34ff468e72e1686e59721f2b0da6",
-        "version" : "5.3.0"
+        "revision" : "793a7fac0bfc318e85994bf6900652e827aef33e",
+        "version" : "5.4.1"
       }
     },
     {
@@ -42,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "e57841b296d04370ea23580f908881b0ccab17b9",
-        "version" : "10.28.1"
+        "revision" : "eca84fd638116dd6adb633b5a3f31cc7befcbb7d",
+        "version" : "10.29.0"
       }
     },
     {
@@ -87,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "0382ca27f22fb3494cf657d8dc356dc282cd1193",
-        "version" : "3.4.1"
+        "revision" : "a2ab612cb980066ee56d90d60d8462992c07f24b",
+        "version" : "3.5.0"
       }
     },
     {
@@ -141,17 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dagronf/QRCode",
       "state" : {
-        "revision" : "8163f868e7fbcdfdf981332265f83c5fbee69f8c",
-        "version" : "20.0.0"
-      }
-    },
-    {
-      "identity" : "satochipswift",
-      "kind" : "localSourceControl",
-      "location" : "/Users/lioneldelvaux/Projects/SatochipSwift",
-      "state" : {
-        "branch" : "support-seedkeeper",
-        "revision" : "29af8af0f24c13c2897c294a7f3f970b13c8a872"
+        "revision" : "6aec3d9c50f4c36798e2bb4c6dfbfd6b00bff96e",
+        "version" : "20.1.3"
       }
     },
     {
@@ -177,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "9f0c76544701845ad98716f3f6a774a892152bcb",
-        "version" : "1.26.0"
+        "revision" : "d57a5aecf24a25b32ec4a74be2f5d0a995a47c4b",
+        "version" : "1.27.0"
       }
     },
     {
@@ -218,5 +208,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
