@@ -106,6 +106,8 @@ extension CardState {
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
+            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+            
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
         } catch let error {
@@ -157,6 +159,8 @@ extension CardState {
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
+            
+            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
                         
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
@@ -224,6 +228,8 @@ extension CardState {
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
+            
+            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
                         
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
@@ -274,6 +280,8 @@ extension CardState {
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
+            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+            
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
         } catch let error {
@@ -282,6 +290,13 @@ extension CardState {
         }
         
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+    }
+    
+    private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return}
+            masterSecretHeaders.append(secretHeader)
+        }
     }
     
     // *********************************************************
