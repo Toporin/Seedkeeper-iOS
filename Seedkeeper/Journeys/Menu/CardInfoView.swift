@@ -83,10 +83,10 @@ struct CardInfoView: View {
                 EditableCardInfoBox(mode: .pin, backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .pin:
-                        guard let cardStatus = cardState.cardStatus else {
+                        guard let _ = cardState.cardStatus else {
                             return
                         }
-                        homeNavigationPath.append(NavigationRoutes.editPinCode)
+                        homeNavigationPath.append(NavigationRoutes.editPinCodeRequest)
                     default:
                         break
                     }

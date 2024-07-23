@@ -47,6 +47,9 @@ struct PinCodeView: View {
                     case .continueBackupFlow:
                         cardState.pinForBackupCard = pinCode
                         homeNavigationPath.removeLast()
+                    case .editPinCode:
+                        cardState.pinForMasterCard = pinCode
+                        homeNavigationPath.append(NavigationRoutes.editPinCode)
                     }
                 })
                 
