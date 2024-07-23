@@ -10,6 +10,7 @@ import SwiftUI
 enum ActionAfterPin {
     case rescanCard
     case continueBackupFlow
+    case editPinCode
 }
 
 enum SecretCreationMode {
@@ -28,6 +29,7 @@ enum NavigationRoutes: Hashable {
     case logs
     case cardInfo
     case authenticity
+    case editPinCodeRequest
     case editPinCode
     case pinCode(ActionAfterPin)
     case addSecret
@@ -111,6 +113,8 @@ struct HomeView: View {
                     CardInfoView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .authenticity:
                     AuthenticityView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .editPinCodeRequest:
+                    PinCodeView(homeNavigationPath: $cardState.homeNavigationPath, actionAfterPin: .editPinCode)
                 case .editPinCode:
                     CreatePinCodeView(homeNavigationPath: $cardState.homeNavigationPath, pinCodeNavigationData: PinCodeNavigationData(mode: .updatePinCodeDefineNew, pinCode: nil))
                 case .addSecret:
