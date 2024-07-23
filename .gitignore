@@ -15,6 +15,4 @@ UserInterfaceState.xcuserstate
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 # api keys
-Satodime/Apikeys-Info.plist
-Satodime/GoogleService-Info.plist
 Seedkeeper/GoogleService-Info.plist
