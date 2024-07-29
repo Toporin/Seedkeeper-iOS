@@ -110,7 +110,7 @@ struct ShowSecretView: View {
                     
                     Spacer()
                     
-                    SKActionButtonSmall(title: "show", icon: "ic_eye") {
+                    SKActionButtonSmall(title: String(localized: "show"), icon: "ic_eye") {
                         cardState.requestGetSecret(with: secret)
                     }
                 }

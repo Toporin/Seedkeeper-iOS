@@ -11,6 +11,7 @@
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
 		D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */; };
+		D0344C122C57D10B00C3002E /* memorable-pwd.txt in Resources */ = {isa = PBXBuildFile; fileRef = D0344C112C57D10B00C3002E /* memorable-pwd.txt */; };
 		D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540122C04A3DC00ABF9C7 /* BackupView.swift */; };
 		D03540152C04D2B700ABF9C7 /* PinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540142C04D2B700ABF9C7 /* PinCodeView.swift */; };
 		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
@@ -109,6 +110,7 @@
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorBox.swift; sourceTree = "<group>"; };
+		D0344C112C57D10B00C3002E /* memorable-pwd.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "memorable-pwd.txt"; sourceTree = "<group>"; };
 		D03540122C04A3DC00ABF9C7 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		D03540142C04D2B700ABF9C7 /* PinCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeView.swift; sourceTree = "<group>"; };
 		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 		D0E433842BD3FBC1008DBAA6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D0344C112C57D10B00C3002E /* memorable-pwd.txt */,
 				D0C939D92BD6AB3600F2A17B /* Localization */,
 				D0E433852BD3FBC6008DBAA6 /* Fonts */,
 				D0E4339F2BD4088E008DBAA6 /* Colors.swift */,
@@ -594,6 +597,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0E433932BD3FBE8008DBAA6 /* Outfit-Bold.ttf in Resources */,
+				D0344C122C57D10B00C3002E /* memorable-pwd.txt in Resources */,
 				D0F727AD2C2B121900C05DB4 /* GoogleService-Info.plist in Resources */,
 				D0BA41452BCFDDF300FD25B9 /* Preview Assets.xcassets in Resources */,
 				D0E433942BD3FBE8008DBAA6 /* OpenSans-SemiBold.ttf in Resources */,

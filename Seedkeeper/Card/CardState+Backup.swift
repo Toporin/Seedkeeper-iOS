@@ -53,12 +53,13 @@ extension CardState {
     // *********************************************************
     func requestFetchSecretsForBackup() {
         session = SatocardController(onConnect: onFetchSecretsForBackup, onFailure: onDisconnection)
-        session?.start(alertMessage: "Scan your card")
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     func onFetchSecretsForBackup(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -95,9 +96,6 @@ extension CardState {
     // *********************************************************
     func scanBackupCard() {
         print("CardState scan()")
-        DispatchQueue.main.async {
-            self.resetStateForBackupCard()
-        }
         session = SatocardController(onConnect: onConnectionForBackupCard, onFailure: onDisconnection)
         session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
     }

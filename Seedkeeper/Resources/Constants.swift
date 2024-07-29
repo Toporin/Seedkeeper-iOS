@@ -13,4 +13,7 @@ struct Constants {
     struct Keys {
         static let firstTimeUse = "isFirstTimeUse"
     }
+    
+    static let minSecretsCountToDisplayFilterSearch = 5
+    static let pinExpirationInSeconds = 180
 }

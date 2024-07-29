@@ -11,6 +11,7 @@ enum ActionAfterPin {
     case rescanCard
     case continueBackupFlow
     case editPinCode
+    case dismiss
 }
 
 enum SecretCreationMode {
