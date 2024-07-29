@@ -59,6 +59,7 @@ extension CardState {
     func onFetchSecretsForBackup(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         

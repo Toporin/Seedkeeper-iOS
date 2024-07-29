@@ -52,8 +52,39 @@ class CardState: ObservableObject {
     private(set) var isPinVerificationSuccess: Bool = false
     
     var pinCodeToSetup: String?
-    var pinForMasterCard: String?
+    private var _pinForMasterCard: String?
+    var pinForMasterCard: String? {
+        set {
+            print("(set) - Setting pin for master")
+            _pinForMasterCard = newValue
+            lastTimeForMasterCardPin = Date()
+        }
+        get {
+            if isPinExpired() {
+                print("(get) - Pin is expired!")
+                _pinForMasterCard = nil
+                return nil
+            } else {
+                print("(get) - refreshing pin expiry")
+                refreshPinExpiry()
+                return _pinForMasterCard
+            }
+        }
+    }
+    var lastTimeForMasterCardPin: Date?
     var pinForBackupCard: String?
+    
+    func isPinExpired() -> Bool {
+        guard let lastTimeForMasterCardPin = lastTimeForMasterCardPin else {
+            return true
+        }
+        let diff = Calendar.current.dateComponents([.second], from: lastTimeForMasterCardPin, to: Date())
+        return diff.second! > Constants.pinExpirationInSeconds
+    }
+    
+    func refreshPinExpiry() {
+        lastTimeForMasterCardPin = Date()
+    }
     
     @Published var masterSecretHeaders: [SeedkeeperSecretHeaderDto] = []
     

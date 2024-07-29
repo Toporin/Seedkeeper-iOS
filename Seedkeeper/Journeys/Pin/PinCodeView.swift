@@ -50,6 +50,9 @@ struct PinCodeView: View {
                     case .editPinCode:
                         cardState.pinForMasterCard = pinCode
                         homeNavigationPath.append(NavigationRoutes.editPinCode)
+                    case .dismiss:
+                        cardState.pinForMasterCard = pinCode
+                        homeNavigationPath.removeLast()
                     }
                 })
                 

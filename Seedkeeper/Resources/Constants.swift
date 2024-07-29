@@ -15,4 +15,5 @@ struct Constants {
     }
     
     static let minSecretsCountToDisplayFilterSearch = 5
+    static let pinExpirationInSeconds = 180
 }

@@ -26,6 +26,7 @@ extension CardState {
     func onSetCardLabel(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -71,6 +72,7 @@ extension CardState {
     private func onManualImportPasswordSecret(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -193,6 +195,7 @@ extension CardState {
         print("onAddMnemonicSecret")
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
             return
         }
@@ -245,6 +248,7 @@ extension CardState {
     private func onAddPasswordSecret(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -312,7 +316,7 @@ extension CardState {
         guard let pinForMasterCard = self.pinForMasterCard,
               let currentSecretHeader = self.currentSecretHeader else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-            // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -344,6 +348,7 @@ extension CardState {
     private func onFetchSecrets(cardChannel: CardChannel) -> Void  {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
             return
         }
@@ -381,6 +386,7 @@ extension CardState {
         guard let pinForMasterCard = pinForMasterCard,
               let currentSecretHeader = self.currentSecretHeader else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
@@ -413,6 +419,7 @@ extension CardState {
         guard let pinForMasterCard = pinForMasterCard,
               let currentSecretHeader = self.currentSecretHeader else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
             return
         }
         
