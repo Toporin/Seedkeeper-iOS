@@ -53,12 +53,12 @@ struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
             Group {
                 if case .dropdown(let pickerOptions) = mode, let text = pickerOptions.selectedOption?.humanReadableName() {
                         Text(text)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(1)
                             .padding(.leading, 16)
                 } else {
                     Text(editableText)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
                         .fontWeight(.light)
                         .foregroundColor(Color.white.opacity(0.8))
