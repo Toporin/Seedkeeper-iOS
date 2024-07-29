@@ -58,7 +58,7 @@ struct BackupView: View {
         case .pairBackupCard:
             return "il_backup_backup"
         case .backupImport:
-            return "il_backup_master_backup"
+            return "il_backup_master"
         case .backupExportReady:
             return "il_backup_master_backup"
         case .initiateBackupExport:

@@ -57,7 +57,11 @@ class CardState: ObservableObject {
     
     @Published var masterSecretHeaders: [SeedkeeperSecretHeaderDto] = []
     
-    @Published var mode: BackupMode = .start
+    @Published var mode: BackupMode = .start {
+        didSet {
+            print("backup mode is set to : \(mode)")
+        }
+    }
     
     var secretsForBackup: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
     
