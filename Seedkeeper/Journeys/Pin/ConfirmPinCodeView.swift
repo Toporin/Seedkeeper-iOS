@@ -16,6 +16,10 @@ struct ConfirmPinCodeView: View {
     @State private var pinCodeConfirmation: String = ""
     @State private var shouldShowPinCodeError: Bool = false
     var pinCodeNavigationData: PinCodeNavigationData
+    
+    var isContinueBtnEnabled: Bool {
+        return !pinCodeConfirmation.isEmpty
+    }
         
     var body: some View {
         ZStack {
@@ -44,7 +48,7 @@ struct ConfirmPinCodeView: View {
                 
                 Spacer()
                 
-                SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, action: {
+                SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
                     guard let pinCodeToValidate = self.pinCodeNavigationData.pinCode, Validator.isPinValid(pin: pinCodeConfirmation) && pinCodeConfirmation == pinCodeToValidate else {
                         shouldShowPinCodeError = true
                         return

@@ -29,6 +29,10 @@ struct CreatePinCodeView: View {
     @State private var shouldShowPinCodeError: Bool = false
     var pinCodeNavigationData: PinCodeNavigationData
     
+    var isContinueBtnEnabled: Bool {
+        return !pinCode.isEmpty
+    }
+    
     func getViewTitle() -> String {
         switch pinCodeNavigationData.mode {
         case .createPinCode:
@@ -107,7 +111,7 @@ struct CreatePinCodeView: View {
                 
                 Spacer()
                 
-                SKButton(text: String(localized: "next"), style: .regular, horizontalPadding: 66, action: {
+                SKButton(text: String(localized: "next"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
                     print("pinCode: \(pinCode)")
                     guard Validator.isPinValid(pin: pinCode) else {
                         shouldShowPinCodeError = true

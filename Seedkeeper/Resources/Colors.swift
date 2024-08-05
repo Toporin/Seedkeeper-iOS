@@ -23,7 +23,7 @@ struct Colors {
     static let purpleBtn: Color = Color.fromHex("#3B2055")
     static let ledBlue: Color = Color.fromHex("#65BBE0")
     static let satoGreen: Color = Color.fromHex("#25B59A")
-    static let authenticGreen: Color = Color.fromHex("##24B59B")
+    static let authenticGreen: Color = Color.fromHex("#24B59B")
 }
 
 import SwiftUI

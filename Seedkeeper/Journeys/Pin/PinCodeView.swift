@@ -15,6 +15,9 @@ struct PinCodeView: View {
     @State private var pinCode: String = ""
     
     var actionAfterPin: ActionAfterPin
+    var isContinueBtnEnabled: Bool {
+        return !pinCode.isEmpty
+    }
         
     var body: some View {
         ZStack {
@@ -37,7 +40,7 @@ struct PinCodeView: View {
                 
                 Spacer()
                 
-                SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, action: {
+                SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
                     print("Pin code: \(pinCode)")
                     switch actionAfterPin {
                     case .rescanCard:

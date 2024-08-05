@@ -11,11 +11,14 @@ import SwiftUI
 struct SKActionButtonSmall: View {
     let title: String
     let icon: String
+    @Binding var isEnabled: Bool
     let action: () -> Void
     
     var body: some View {
         Button(action: {
-            action()
+            if isEnabled {
+                action()
+            }
         }) {
             HStack {
                 Text(title)
@@ -35,6 +38,7 @@ struct SKActionButtonSmall: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 40)
             .background(Colors.purpleBtn)
+            .opacity(isEnabled ? 1.0 : 0.5)
             .cornerRadius(20)
         }
     }

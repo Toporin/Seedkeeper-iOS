@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class PasswordOptions: ObservableObject {
+class PasswordOptions: ObservableObject, Equatable {
     @Published var passwordLength: Double = 8
     @Published var includeLowercase: Bool = true
     @Published var includeUppercase: Bool = false
@@ -18,6 +18,15 @@ class PasswordOptions: ObservableObject {
     
     func userSelectedAtLeastOneIncludeOption() -> Bool {
         return includeLowercase || includeUppercase || includeNumbers || includeSymbols || isMemorablePassword
+    }
+    
+    static func == (lhs: PasswordOptions, rhs: PasswordOptions) -> Bool {
+        return lhs.passwordLength == rhs.passwordLength &&
+            lhs.includeLowercase == rhs.includeLowercase &&
+            lhs.includeUppercase == rhs.includeUppercase &&
+            lhs.includeNumbers == rhs.includeNumbers &&
+            lhs.includeSymbols == rhs.includeSymbols &&
+            lhs.isMemorablePassword == rhs.isMemorablePassword
     }
 }
 

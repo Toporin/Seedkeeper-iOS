@@ -16,6 +16,7 @@ struct ShowSecretView: View {
     @Binding var homeNavigationPath: NavigationPath
     var secret: SeedkeeperSecretHeaderDto
     @State var shouldShowSeedQR: Bool = false
+    @State var isSecretHeaderFetched: Bool = false
     
     var body: some View {
         ZStack {
@@ -55,7 +56,7 @@ struct ShowSecretView: View {
                         .frame(height: 30)
                     
                     HStack {
-                        SKActionButtonSmall(title: "Seed", icon: "ic_bip85") {
+                        SKActionButtonSmall(title: "Seed", icon: "ic_bip85", isEnabled: $isSecretHeaderFetched) {
                             guard let _ = cardState.currentMnemonicCardData else {
                                 return
                             }
@@ -64,7 +65,7 @@ struct ShowSecretView: View {
                         
                         Spacer()
                         
-                        SKActionButtonSmall(title: "SeedQR", icon: "ic_qr") {
+                        SKActionButtonSmall(title: "SeedQR", icon: "ic_qr", isEnabled: $isSecretHeaderFetched) {
                             guard let _ = cardState.currentMnemonicCardData else {
                                 return
                             }
@@ -74,7 +75,7 @@ struct ShowSecretView: View {
                         if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
                             Spacer()
                             
-                            SKActionButtonSmall(title: "Xpub", icon: "ic_xpub") {
+                            SKActionButtonSmall(title: "Xpub", icon: "ic_xpub", isEnabled: $isSecretHeaderFetched) {
                                 shouldShowSeedQR = false
                                 cardState.requestGetXpub()
                             }
@@ -102,7 +103,7 @@ struct ShowSecretView: View {
                 
                 HStack {
                     if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
-                        SKActionButtonSmall(title: "delete", icon: "ic_trash") {
+                        SKActionButtonSmall(title: "delete", icon: "ic_trash", isEnabled: .constant(true)) {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()
                         }
@@ -110,8 +111,9 @@ struct ShowSecretView: View {
                     
                     Spacer()
                     
-                    SKActionButtonSmall(title: String(localized: "show"), icon: "ic_eye") {
+                    SKActionButtonSmall(title: String(localized: "show"), icon: "ic_eye", isEnabled: .constant(true)) {
                         cardState.requestGetSecret(with: secret)
+                        isSecretHeaderFetched = true
                     }
                 }
                 .padding([.leading, .trailing], 0)

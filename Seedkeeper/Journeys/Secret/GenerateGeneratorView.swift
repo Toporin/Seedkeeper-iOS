@@ -19,7 +19,7 @@ struct GenerateGeneratorView: View {
     @State private var showPickerSheet = false
     @State private var generateBtnMode = GenerateBtnMode.willGenerate
     
-    @State var passwordOptions = PasswordOptions()
+    @StateObject var passwordOptions = PasswordOptions()
     
     @State private var passphraseText: String?
     @State private var labelText: String?
@@ -63,14 +63,14 @@ struct GenerateGeneratorView: View {
     
     var canGeneratePassword: Bool {
         if let labelText = labelText {
-            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption()
+            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption() && generatorModeNavData.generatorMode == .password
         } else {
             return false
         }
     }
     
     var canGenerateMnemonic: Bool {
-        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption {
+        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption, generatorModeNavData.generatorMode == .mnemonic {
             return !labelText.isEmpty
         } else {
             return false
@@ -378,6 +378,27 @@ struct GenerateGeneratorView: View {
                 }
                 .padding([.leading, .trailing], Dimensions.lateralPadding)
             }
+        }
+        .onChange(of: self.passwordOptions.passwordLength) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.passwordOptions.isMemorablePassword) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.passwordOptions.includeLowercase) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.passwordOptions.includeNumbers) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.passwordOptions.includeSymbols) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.passwordOptions.includeUppercase) { newValue in
+            self.generateBtnMode = .willGenerate
+        }
+        .onChange(of: self.mnemonicSizeOptions.selectedOption) { newValue in
+            self.generateBtnMode = .willGenerate
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
