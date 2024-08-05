@@ -157,6 +157,11 @@ class CardState: ObservableObject {
 
         cardStatus = try CardStatus(rapdu: statusApdu)
         
+        //FaceId integration seems to not be possible for the desired flow, needs further discussion
+        /*let authentikey = try await getAuthentikeyHexSilently()
+        
+        print("*** AuthentiKey : \(authentikey)")*/
+        
         if let cardStatus = cardStatus, !cardStatus.setupDone {
             // let version = getCardVersionInt(cardStatus: cardStatus)
             // if version <= 0x00010001 {
@@ -185,7 +190,12 @@ class CardState: ObservableObject {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                if retryCounter == 0 {
+                    logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
+                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                } else {
+                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                }
                 return
             } catch CardError.pinBlocked {
                 self.pinForMasterCard = nil

@@ -157,7 +157,12 @@ extension CardState {
             } catch CardError.wrongPIN(let retryCounter){
                 self.pinForBackupCard = nil
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                if retryCounter == 0 {
+                    logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
+                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                } else {
+                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                }
                 return
             } catch CardError.pinBlocked {
                 self.pinForBackupCard = nil

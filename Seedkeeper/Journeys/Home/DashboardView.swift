@@ -165,7 +165,7 @@ struct DashboardView: View {
                 .listRowSeparator(.hidden)
                 
                 ForEach(cardState.masterSecretHeaders.filter { secret in
-                    searchText.isEmpty || secret.label.lowercased().contains(searchText.lowercased())
+                    (searchText.isEmpty || secret.label.lowercased().contains(searchText.lowercased())) && matchesSearchMode(secret: secret)
                 }, id: \.self) { secret in
                     if searchText.isEmpty || matchesSearchMode(secret: secret) {
                         showSecretView(secret: secret)

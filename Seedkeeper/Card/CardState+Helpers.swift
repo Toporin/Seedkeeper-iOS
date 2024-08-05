@@ -95,6 +95,11 @@ extension CardState {
         }
     }
     
+    internal func getAuthentikeyHexSilently() async throws -> String {
+        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        return authentikeyHex
+    }
+    
     func getCardVersionInt(cardStatus: CardStatus) -> Int {
         return Int(cardStatus.protocolMajorVersion) * (1<<24) +
                Int(cardStatus.protocolMinorVersion) * (1<<16) +
