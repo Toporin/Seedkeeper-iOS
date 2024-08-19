@@ -46,9 +46,9 @@ struct ShowSecretView: View {
                     
                 } else if secret.type == .password {
                     
-                    SKLabel(title: "login", content: cardState.currentPasswordCardData?.login ?? "(none)")
+                    SKLabel(title: "Login", content: cardState.currentPasswordCardData?.login ?? "(none)")
                     
-                    SKLabel(title: "Url:", content: cardState.currentPasswordCardData?.url ?? "(none)")
+                    SKLabel(title: "Url", content: cardState.currentPasswordCardData?.url ?? "(none)")
                 }
                 
                 if secret.type == .bip39Mnemonic {
@@ -103,7 +103,7 @@ struct ShowSecretView: View {
                 
                 HStack {
                     if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
-                        SKActionButtonSmall(title: "delete", icon: "ic_trash", isEnabled: .constant(true)) {
+                        SKActionButtonSmall(title: String(localized: "delete"), icon: "ic_trash", isEnabled: .constant(true)) {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()
                         }
