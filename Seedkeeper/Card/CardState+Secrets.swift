@@ -399,7 +399,7 @@ extension CardState {
             var rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             homeNavigationPath.removeLast()
-            session?.stop(alertMessage: "nfcSecretDeleted")
+            session?.stop(alertMessage: String(localized: "nfcSecretDeleted"))
         } catch let error {
             logEvent(log: LogModel(type: .error, message: "onDeleteSecret : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
