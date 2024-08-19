@@ -10,11 +10,17 @@ import SwiftUI
 
 class PasswordOptions: ObservableObject, Equatable {
     @Published var passwordLength: Double = 8
+    @Published var minPasswordLength: Double = 8
     @Published var includeLowercase: Bool = true
     @Published var includeUppercase: Bool = false
     @Published var includeNumbers: Bool = false
     @Published var includeSymbols: Bool = false
-    @Published var isMemorablePassword: Bool = false
+    @Published var isMemorablePassword: Bool = false {
+        didSet {
+            passwordLength = isMemorablePassword ? 4 : 8
+            minPasswordLength = isMemorablePassword ? 4 : 8
+        }
+    }
     
     func userSelectedAtLeastOneIncludeOption() -> Bool {
         return includeLowercase || includeUppercase || includeNumbers || includeSymbols || isMemorablePassword
@@ -38,62 +44,61 @@ struct PasswordGeneratorBox: View {
             Text(String(localized: "passwordLength"))
                 .foregroundColor(.white)
             
-            Slider(value: $options.passwordLength, in: 8...16, step: 1)
+            Slider(value: $options.passwordLength, in: options.minPasswordLength...16, step: 1)
                 .accentColor(.gray)
             
             SatoText(text: String(format: "%.0f", options.passwordLength), style: .lightSubtitle)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(0)
-            if !options.isMemorablePassword {
-                HStack() {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Toggle("", isOn: $options.includeLowercase)
-                            Spacer()
-                        }
-                        
-                        SatoText(text: "abc", style: .lightSubtitle)
-                            .frame(maxWidth: .infinity, alignment: .center)
+            
+            HStack() {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Toggle("", isOn: $options.includeLowercase)
+                        Spacer()
                     }
                     
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Toggle("", isOn: $options.includeUppercase)
-                            Spacer()
-                        }
-                        
-                        SatoText(text: "ABC", style: .lightSubtitle)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Toggle("", isOn: $options.includeNumbers)
-                            Spacer()
-                        }
-                        
-                        SatoText(text: "123", style: .lightSubtitle)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Toggle("", isOn: $options.includeSymbols)
-                            Spacer()
-                        }
-                        
-                        SatoText(text: "$#!", style: .lightSubtitle)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    
+                    SatoText(text: "abc", style: .lightSubtitle)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .toggleStyle(SwitchToggleStyle(tint: .white))
-                .foregroundColor(.white)
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Toggle("", isOn: $options.includeUppercase)
+                        Spacer()
+                    }
+                    
+                    SatoText(text: "ABC", style: .lightSubtitle)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Toggle("", isOn: $options.includeNumbers)
+                        Spacer()
+                    }
+                    
+                    SatoText(text: "123", style: .lightSubtitle)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Toggle("", isOn: $options.includeSymbols)
+                        Spacer()
+                    }
+                    
+                    SatoText(text: "$#!", style: .lightSubtitle)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                
             }
+            .toggleStyle(SwitchToggleStyle(tint: .white))
+            .foregroundColor(.white)
             
             Spacer()
                 .frame(height: 6)

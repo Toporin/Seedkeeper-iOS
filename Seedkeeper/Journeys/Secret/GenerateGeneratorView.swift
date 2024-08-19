@@ -132,7 +132,18 @@ struct GenerateGeneratorView: View {
         }
     }
     
+    private func formatRandomWord(randomWord: String, isUppercased: Bool, shouldIncludeNumber: Bool) -> String {
+        var randomWordResult = isUppercased ? randomWord.showWithFirstLetterAsCapital() : randomWord
+        if shouldIncludeNumber {
+            randomWordResult.append("\(Int.random(in: 0...9))")
+        }
+        return randomWordResult
+    }
+        
     func generatePassword(options: PasswordOptions) -> String {
+        let numberSet = "0123456789"
+        let symbolSet = "!@#$%^&*()-_=+{}[]|;:'\",.<>?/`~"
+        
         var characterSet = ""
         
         if options.isMemorablePassword {
@@ -142,7 +153,14 @@ struct GenerateGeneratorView: View {
             
             for _ in 0..<length {
                 if let randomWord = words.randomElement() {
-                    password.append("\(randomWord)-")
+                    
+                    let separator = options.includeSymbols ? symbolSet.randomElement() ?? "!" : "-"
+                    
+                    let randomWordResult = formatRandomWord(randomWord: randomWord,
+                                                            isUppercased: options.includeUppercase,
+                                                            shouldIncludeNumber: options.includeNumbers)
+                    
+                    password.append("\(randomWordResult)\(separator)")
                 }
             }
             
@@ -159,11 +177,11 @@ struct GenerateGeneratorView: View {
         }
         
         if options.includeNumbers {
-            characterSet += "0123456789"
+            characterSet += numberSet
         }
         
         if options.includeSymbols {
-            characterSet += "!@#$%^&*()-_=+{}[]|;:'\",.<>?/`~"
+            characterSet += symbolSet
         }
         
         guard !characterSet.isEmpty else {
