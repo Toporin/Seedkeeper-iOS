@@ -82,6 +82,7 @@ struct SKSecretViewer: View {
                         .background(.clear)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
+                        .disableAutocorrection(true)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     if shouldShowQRCode {

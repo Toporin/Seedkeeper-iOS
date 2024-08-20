@@ -138,6 +138,7 @@ struct EditableCardInfoBox: View {
                                 isEditing = false
                             }
                         })
+                        .disableAutocorrection(true)
                         .textFieldStyle(PlainTextFieldStyle())
                         .padding(.leading, 16)
                     }
