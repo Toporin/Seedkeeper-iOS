@@ -323,7 +323,7 @@ struct GenerateGeneratorView: View {
                         Spacer()
                             .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
                         
-                        SKSecretViewer(shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
                         
                         Spacer()
@@ -538,16 +538,20 @@ struct MnemonicCardData {
         }
     }
     
-    func getSeedQRContent() -> String {
-        let wordlist = SKMnemonicEnglish.words
+    func getSeedQRContent() -> [UInt8]? {
+        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
+        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
+        return byteArray
+        /*let wordlist = SKMnemonicEnglish.wordList
         let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
         let combinedString = indices.map { String($0) }.joined(separator: " ")
         
-        return combinedString
+        return combinedString*/
+        
     }
     
     func getSeedQRImage() -> UIImage? {
-        let wordlist = SKMnemonicEnglish.words
+        let wordlist = SKMnemonicEnglish.wordList
         let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
         let combinedString = indices.map { String($0) }.joined(separator: " ")
 

@@ -9,8 +9,15 @@ import Foundation
 import SwiftUI
 import QRCode
 
+enum SecretType {
+    case unknown
+    case password
+    case bip39Mnemonic
+}
+
 struct SKSecretViewer: View {
     @State private var showText: Bool = false
+    var secretType: SecretType
     @Binding var shouldShowQRCode: Bool
     @Binding var contentText: String {
         didSet {
@@ -19,6 +26,7 @@ struct SKSecretViewer: View {
     }
     var isEditable: Bool = false
     var userInputResult: ((String) -> Void)? = nil
+    var mnemonicData: [UInt8]? = nil
     
     var contentTextClear: String {
         return showText ? contentText : String(repeating: "*", count: contentText.count)
@@ -36,35 +44,60 @@ struct SKSecretViewer: View {
         }
     }
     
+    private func generateMnemonicSeedQR(with data: [UInt8]) -> UIImage? {
+        do {
+            let doc = try QRCode.Document(Data(data))
+            doc.design.foregroundColor(Color.black.cgColor!)
+            doc.design.backgroundColor(Color.white.cgColor!)
+            let generated = try doc.cgImage(CGSize(width: 200, height: 200))
+            let image = UIImage(cgImage: generated)
+            return image
+        } catch {
+            print("Failed to generate QR code: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Colors.purpleBtn.opacity(0.2))
             
             VStack {
-                if !shouldShowQRCode {
+                
                     HStack {
                         Spacer()
-                        Button(action: {
-                            UIPasteboard.general.string = contentText
-                        }) {
-                            Image(systemName: "square.on.square")
-                                .foregroundColor(.white)
-                                .padding(5)
-                        }
-                        if !isEditable {
+                        if !isEditable, secretType == .password {
                             Button(action: {
-                                showText.toggle()
+                                shouldShowQRCode.toggle()
                             }) {
-                                Image(systemName: showText ? "eye.slash" : "eye")
+                                Image("ic_qr")
                                     .foregroundColor(.white)
                                     .padding(5)
+                            }
+                        }
+                        
+                        if !shouldShowQRCode {
+                            Button(action: {
+                                UIPasteboard.general.string = contentText
+                            }) {
+                                Image(systemName: "square.on.square")
+                                    .foregroundColor(.white)
+                                    .padding(5)
+                            }
+                            if !isEditable {
+                                Button(action: {
+                                    showText.toggle()
+                                }) {
+                                    Image(systemName: showText ? "eye.slash" : "eye")
+                                        .foregroundColor(.white)
+                                        .padding(5)
+                                }
                             }
                         }
                     }
                     .padding(.top, 10)
                     .padding(.trailing, 10)
-                }
                 
                 Spacer()
                 
@@ -86,12 +119,25 @@ struct SKSecretViewer: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     if shouldShowQRCode {
-                        if let cgImage = self.getQRfromText(text: contentText) {
+                        if secretType == .bip39Mnemonic,
+                           let mnemonicData = self.mnemonicData,
+                           let seedQRImage = self.generateMnemonicSeedQR(with: mnemonicData)  {
+                            
+                            Image(uiImage: seedQRImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 219, height: 219, alignment: .center)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                            
+                        } else if secretType == .password,
+                                  let cgImage = self.getQRfromText(text: contentText) {
+                            
                             Image(uiImage: UIImage(cgImage: cgImage))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 219, height: 219, alignment: .center)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
+                            
                         }
                     } else {
                         Text(contentTextClear)

@@ -88,13 +88,16 @@ struct ShowSecretView: View {
                     .frame(height: 30)
                 
                 if let password = cardState.currentPasswordCardData?.password {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText:  .constant(password) )
+                    SKSecretViewer(secretType: .password, shouldShowQRCode: $shouldShowSeedQR, contentText:  .constant(password) )
                     
                 } else if let mnemonicCardData = cardState.currentMnemonicCardData {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: shouldShowSeedQR ? .constant(mnemonicCardData.getSeedQRContent()) : .constant(mnemonicCardData.mnemonic))
+                    SKSecretViewer(secretType: .bip39Mnemonic,
+                                   shouldShowQRCode: $shouldShowSeedQR,
+                                   contentText: .constant(mnemonicCardData.mnemonic),
+                                   mnemonicData: mnemonicCardData.getSeedQRContent())
                     
                 } else {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: .constant(""))
+                    SKSecretViewer(secretType: .unknown, shouldShowQRCode: $shouldShowSeedQR, contentText: .constant(""))
                     
                 }
                 

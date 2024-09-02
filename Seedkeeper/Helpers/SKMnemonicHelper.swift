@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import UIKit
 
 struct SKMnemonicEnglish {
-    static let words: [String] = [
+    static let wordList: [String] = [
         "abandon",
         "ability",
         "able",
@@ -2058,4 +2059,203 @@ struct SKMnemonicEnglish {
         "zone",
         "zoo"
     ]
+    
+    /*
+     CS = ENT / 32
+     MS = (ENT + CS) / 11
+
+     |  ENT  | CS | ENT+CS |  MS  |
+     +-------+----+--------+------+
+     |  128  |  4 |   132  |  12  |
+     |  160  |  5 |   165  |  15  |
+     |  192  |  6 |   198  |  18  |
+     |  224  |  7 |   231  |  21  |
+     |  256  |  8 |   264  |  24  |
+     */
+    
+    func getChecksumSizeFromWordsCount(of wordsCount: Int) -> Int {
+        switch wordsCount {
+        case 12:
+            return 4
+        case 18:
+            return 6
+        case 24:
+            return 8
+        default:
+            return 0
+        }
+    }
+    
+    func getCompactSeedQRBitStream(from seed: String) -> String {
+        let words = seed.split(separator: " ")
+        
+        var bitStream = ""
+        for word in words {
+            var index = SKMnemonicEnglish.wordList.firstIndex(of: String(word))
+            let binary = String(index!, radix: 2)
+            print("*** binary *** : \(binary)")
+            let padded = String(String(binary.reversed()).padding(toLength: 11, withPad: "0", startingAt: 0).reversed())
+            bitStream += padded
+            print("***\(word) \(index!) \(padded)***")
+        }
+        
+        let checksumSize = getChecksumSizeFromWordsCount(of: words.count)
+        let bitStreamWithoutChecksum = bitStream.prefix(bitStream.count - checksumSize)
+        
+        return String(bitStreamWithoutChecksum)
+        // return bitStream
+    }
+    
+    func convertBitStreamToByteArray(from bitStream: String) -> [UInt8] {
+        var bytes = [UInt8]()
+        var byte = ""
+        for (index, bit) in bitStream.enumerated() {
+            byte += String(bit)
+            if index % 8 == 7 {
+                bytes.append(UInt8(byte, radix: 2)!)
+                byte = ""
+            }
+        }
+        
+        return bytes
+    }
+    
+    func bitstreamToHexadecimal(bitstream: String) -> String? {
+        // Ensure the bitstream length is a multiple of 4
+        guard bitstream.count % 4 == 0 else {
+            print("Invalid bitstream length")
+            return nil
+        }
+
+        var hexadecimalString = ""
+
+        // Process the bitstream 4 bits at a time
+        for i in stride(from: 0, to: bitstream.count, by: 4) {
+            let startIndex = bitstream.index(bitstream.startIndex, offsetBy: i)
+            let endIndex = bitstream.index(startIndex, offsetBy: 4)
+            let bitSegment = String(bitstream[startIndex..<endIndex])
+            
+            // Convert the 4-bit string to a UInt8 and then to a hexadecimal string
+            if let nibble = UInt8(bitSegment, radix: 2) {
+                hexadecimalString += String(format: "%01x", nibble)
+            } else {
+                print("Invalid bit found in bitstream")
+                return nil
+            }
+        }
+        
+        return hexadecimalString
+    }
+        
+    func bitstreamToByteArray(bitstream: String) -> [UInt8]? {
+        // Ensure the bitstream length is a multiple of 8
+        guard bitstream.count % 8 == 0 else {
+            print("Invalid bitstream length")
+            return nil
+        }
+
+        var byteArray: [UInt8] = []
+        
+        // Process the bitstream 8 bits at a time
+        for i in stride(from: 0, to: bitstream.count, by: 8) {
+            let startIndex = bitstream.index(bitstream.startIndex, offsetBy: i)
+            let endIndex = bitstream.index(startIndex, offsetBy: 8)
+            let byteString = String(bitstream[startIndex..<endIndex])
+            
+            // Convert the 8-bit string to a UInt8
+            if let byte = UInt8(byteString, radix: 2) {
+                byteArray.append(byte)
+            } else {
+                print("Invalid bit found in bitstream")
+                return nil
+            }
+        }
+        
+        return byteArray
+    }
+    
+    func bitstreamToFormattedBytestream(bitstream: String) -> String? {
+        // Ensure the bitstream length is a multiple of 8
+        guard bitstream.count % 8 == 0 else {
+            print("Invalid bitstream length")
+            return nil
+        }
+
+        var formattedBytestream = "b\""
+        
+        // Process the bitstream 8 bits at a time
+        for i in stride(from: 0, to: bitstream.count, by: 8) {
+            let startIndex = bitstream.index(bitstream.startIndex, offsetBy: i)
+            let endIndex = bitstream.index(startIndex, offsetBy: 8)
+            let byteString = String(bitstream[startIndex..<endIndex])
+            
+            // Convert the 8-bit string to a UInt8
+            if let byte = UInt8(byteString, radix: 2) {
+                // Append the byte in \x format to the string
+                formattedBytestream += String(format: "\\x%02x", byte)
+            } else {
+                print("Invalid bit found in bitstream")
+                return nil
+            }
+        }
+        
+        formattedBytestream += "\""
+        
+        return formattedBytestream
+    }
+    
+    func bitstreamToBytestream(bitstream: String) -> Data? {
+        // Ensure the bitstream length is a multiple of 8
+        guard bitstream.count % 8 == 0 else {
+            print("Invalid bitstream length")
+            return nil
+        }
+
+        var bytestream = Data()
+        
+        // Process the bitstream 8 bits at a time
+        for i in stride(from: 0, to: bitstream.count, by: 8) {
+            let startIndex = bitstream.index(bitstream.startIndex, offsetBy: i)
+            let endIndex = bitstream.index(startIndex, offsetBy: 8)
+            let byteString = String(bitstream[startIndex..<endIndex])
+            
+            // Convert the 8-bit string to a UInt8
+            if let byte = UInt8(byteString, radix: 2) {
+                bytestream.append(byte)
+            } else {
+                print("Invalid bit found in bitstream")
+                return nil
+            }
+        }
+        
+        return bytestream
+    }
+    
+    func generateQRCodeImageFromByteArray(byteArray: [UInt8]) -> UIImage? {
+        let data = Data(byteArray)
+        let filter = CIFilter(name: "CIQRCodeGenerator")
+        filter?.setValue(data, forKey: "inputMessage")
+        let transform = CGAffineTransform(scaleX: 10, y: 10)
+        if let output = filter?.outputImage?.transformed(by: transform) {
+            return UIImage(ciImage: output)
+        }
+        
+        return nil
+    }
+    
+    func getBytesStringRepresentation(from bitStream: String) -> String {
+        var bytes = [UInt8]()
+        var byte = ""
+        for (index, bit) in bitStream.enumerated() {
+            byte += String(bit)
+            if index % 8 == 7 {
+                bytes.append(UInt8(byte, radix: 2)!)
+                byte = ""
+            }
+        }
+        
+        return bytes.map { String(format: "%02X", $0) }.joined()
+    }
 }
+
+
