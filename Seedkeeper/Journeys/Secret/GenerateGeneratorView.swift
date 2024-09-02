@@ -60,7 +60,7 @@ struct GenerateGeneratorView: View {
     }
     
     @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
-    
+        
     var canGeneratePassword: Bool {
         if let labelText = labelText {
             return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption() && generatorModeNavData.generatorMode == .password
@@ -235,166 +235,177 @@ struct GenerateGeneratorView: View {
             Image("bg_glow")
                 .resizable()
                 .edgesIgnoringSafeArea(.all)
-            
-            ScrollView {
+            ScrollViewReader { scrollValue in
                 
-                VStack {
+                ScrollView {
                     
-                    Spacer()
-                        .frame(height: 60)
-                    
-                    SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
-                    
-                    Spacer()
-                        .frame(height: 16)
-                    
-                    SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
-                    
-                    Spacer()
-                        .frame(height: 30)
-                    
-                    EditableCardInfoBox(mode: .text("Label"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { labelTextResult in
-                        if case .text(let customLabelText) = labelTextResult {
-                            labelText = customLabelText
-                        }
-                    }
-                    
-                    Spacer()
-                        .frame(height: 16)
-                    
-                    if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode != .manualImport {
-                        SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-                            showPickerSheet = true
-                        }
-                    } else if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode == .manualImport {
-                        EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-                            showPickerSheet = true
-                        }
-                    }
-                    
-                    if generatorModeNavData.generatorMode == .password {
-                        EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { loginTextResult in
-                            if case .text(let customLoginText) = loginTextResult {
-                                loginText = customLoginText
-                            }
-                        }
-                    }
-                    
-                    if generatorModeNavData.generatorMode == .password {
-                        Spacer()
-                            .frame(height: 16)
+                    VStack {
                         
-                        EditableCardInfoBox(mode: .text("Url"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
-                            if case .text(let customUrlText) = urlTextResult {
-                                urlText = customUrlText
-                            }
-                        }
-                    }
-                    
-                    if generatorModeNavData.generatorMode == .password && generatorModeNavData.secretCreationMode != .manualImport {
                         Spacer()
-                            .frame(height: 16)
+                            .frame(height: 60)
                         
-                        PasswordGeneratorBox(options: passwordOptions)
-                    }
-                    
-                    if generatorModeNavData.generatorMode == .mnemonic {
+                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
                         
                         Spacer()
                             .frame(height: 16)
                         
-                        EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
-                            if case .text(let customPassphraseText) = passphraseTextResult {
-                                passphraseText = customPassphraseText
+                        SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
+                        
+                        Spacer()
+                            .frame(height: 30)
+                        
+                        EditableCardInfoBox(mode: .text("Label"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { labelTextResult in
+                            if case .text(let customLabelText) = labelTextResult {
+                                labelText = customLabelText
                             }
                         }
-                    }
-                    
-                    Spacer()
-                        .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
-                    
-                    SKSecretViewer(shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                    }
-                    
-                    Spacer()
-                        .frame(height: 30)
-                    
-                    Button(action: {
-                        homeNavigationPath.removeLast()
-                    }) {
-                        SatoText(text: "back", style: .SKMenuItemTitle)
-                    }
-                    
-                    Spacer()
-                        .frame(height: 16)
-                    
-                    if generatorModeNavData.secretCreationMode == .manualImport {
-                        SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
-                            if generatorModeNavData.generatorMode == .mnemonic, canManualImportMnemonic {
-                                
-                                cardState.mnemonicManualImportPayload = MnemonicManualImportPayload(label: labelText!,
-                                                                                                    passphrase: passphraseText,
-                                                                                                    result: seedPhrase)
-                                
-                                cardState.requestManualImportSecret(secretType: .bip39Mnemonic)
+                        
+                        Spacer()
+                            .frame(height: 16)
+                        
+                        if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode != .manualImport {
+                            SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
+                                showPickerSheet = true
                             }
+                        } else if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode == .manualImport {
+                            EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
+                                showPickerSheet = true
+                            }
+                        }
+                        
+                        if generatorModeNavData.generatorMode == .password {
+                            EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true, 
+                                    action:
+                                    { loginTextResult in
+                                        if case .text(let customLoginText) = loginTextResult {
+                                            loginText = customLoginText
+                                        }
+                                    },
+                                    focusAction: {
+                                        withAnimation {
+                                            scrollValue.scrollTo(0, anchor: .top)
+                                        }
+                                    }
+                            )
+                            .id(0)
+                        }
+                        
+                        if generatorModeNavData.generatorMode == .password {
+                            Spacer()
+                                .frame(height: 16)
                             
-                            if generatorModeNavData.generatorMode == .password, canManualImportPassword {
-                                
-                                cardState.passwordManualImportPayload = PasswordManualImportPayload(label: labelText!,
-                                                                                                    login: loginText,
-                                                                                                    url: urlText,
-                                                                                                    result: seedPhrase)
-                                
-                                cardState.requestManualImportSecret(secretType: .password)
-                            }
-                        })
-                    } else {
-                        SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGenerateMnemonic || canGeneratePassword, action: {
-                            if generateBtnMode == .willGenerate {
-                                
-                                if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
-                                    
-                                    seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
-                                    
-                                    mnemonicPayload = MnemonicPayload(label: labelText!,
-                                                                      mnemonicSize: mnemonicSizeOptions.selectedOption!,
-                                                                      passphrase: passphraseText,
-                                                                      result: seedPhrase)
-                                }
-                                
-                                if generatorModeNavData.generatorMode == .password, canGeneratePassword {
-                                    let password = generatePassword(options: passwordOptions)
-                                    
-                                    seedPhrase = password
-                                    
-                                    passwordPayload = PasswordPayload(label: labelText!,
-                                                                      login: loginText,
-                                                                      url: urlText,
-                                                                      passwordLength: passwordOptions.passwordLength,
-                                                                      result: seedPhrase)
-                                }
-                                
-                            } else if generateBtnMode == .willImport {
-                                if let mnemonicPayload = self.mnemonicPayload {
-                                    print("will import mnemonic")
-                                    cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
-                                    cardState.requestAddSecret(secretType: .bip39Mnemonic)
-                                }
-                                
-                                if let passwordPayload = self.passwordPayload {
-                                    print("will import password")
-                                    cardState.passwordPayloadToImportOnCard = passwordPayload
-                                    cardState.requestAddSecret(secretType: .password)
+                            EditableCardInfoBox(mode: .text("Url"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
+                                if case .text(let customUrlText) = urlTextResult {
+                                    urlText = customUrlText
                                 }
                             }
-                        })
+                        }
+                        
+                        if generatorModeNavData.generatorMode == .password && generatorModeNavData.secretCreationMode != .manualImport {
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            PasswordGeneratorBox(options: passwordOptions)
+                        }
+                        
+                        if generatorModeNavData.generatorMode == .mnemonic {
+                            
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
+                                if case .text(let customPassphraseText) = passphraseTextResult {
+                                    passphraseText = customPassphraseText
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                            .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
+                        
+                        SKSecretViewer(shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        }
+                        
+                        Spacer()
+                            .frame(height: 30)
+                        
+                        Button(action: {
+                            homeNavigationPath.removeLast()
+                        }) {
+                            SatoText(text: "back", style: .SKMenuItemTitle)
+                        }
+                        
+                        Spacer()
+                            .frame(height: 16)
+                        
+                        if generatorModeNavData.secretCreationMode == .manualImport {
+                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
+                                if generatorModeNavData.generatorMode == .mnemonic, canManualImportMnemonic {
+                                    
+                                    cardState.mnemonicManualImportPayload = MnemonicManualImportPayload(label: labelText!,
+                                                                                                        passphrase: passphraseText,
+                                                                                                        result: seedPhrase)
+                                    
+                                    cardState.requestManualImportSecret(secretType: .bip39Mnemonic)
+                                }
+                                
+                                if generatorModeNavData.generatorMode == .password, canManualImportPassword {
+                                    
+                                    cardState.passwordManualImportPayload = PasswordManualImportPayload(label: labelText!,
+                                                                                                        login: loginText,
+                                                                                                        url: urlText,
+                                                                                                        result: seedPhrase)
+                                    
+                                    cardState.requestManualImportSecret(secretType: .password)
+                                }
+                            })
+                        } else {
+                            SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGenerateMnemonic || canGeneratePassword, action: {
+                                if generateBtnMode == .willGenerate {
+                                    
+                                    if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
+                                        
+                                        seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
+                                        
+                                        mnemonicPayload = MnemonicPayload(label: labelText!,
+                                                                          mnemonicSize: mnemonicSizeOptions.selectedOption!,
+                                                                          passphrase: passphraseText,
+                                                                          result: seedPhrase)
+                                    }
+                                    
+                                    if generatorModeNavData.generatorMode == .password, canGeneratePassword {
+                                        let password = generatePassword(options: passwordOptions)
+                                        
+                                        seedPhrase = password
+                                        
+                                        passwordPayload = PasswordPayload(label: labelText!,
+                                                                          login: loginText,
+                                                                          url: urlText,
+                                                                          passwordLength: passwordOptions.passwordLength,
+                                                                          result: seedPhrase)
+                                    }
+                                    
+                                } else if generateBtnMode == .willImport {
+                                    if let mnemonicPayload = self.mnemonicPayload {
+                                        print("will import mnemonic")
+                                        cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
+                                        cardState.requestAddSecret(secretType: .bip39Mnemonic)
+                                    }
+                                    
+                                    if let passwordPayload = self.passwordPayload {
+                                        print("will import password")
+                                        cardState.passwordPayloadToImportOnCard = passwordPayload
+                                        cardState.requestAddSecret(secretType: .password)
+                                    }
+                                }
+                            })
+                        }
+                        
+                        Spacer().frame(height: 16)
+                        
                     }
-                    
-                    Spacer().frame(height: 16)
-                    
+                    .padding([.leading, .trailing], Dimensions.lateralPadding)
                 }
-                .padding([.leading, .trailing], Dimensions.lateralPadding)
             }
         }
         .onChange(of: self.passwordOptions.passwordLength) { newValue in

@@ -59,3 +59,37 @@ extension NSManagedObjectContext {
         try? save()
     }
 }
+
+// MARK: - Previously used logins
+
+extension NSManagedObjectContext {
+    func saveLoginEntry(loginModel: UsedLoginModel) {
+        // Fetch all existing login entries first to check for duplicates
+        let allLogins = fetchAllLoginEntries()
+        
+        let isDuplicate = allLogins.contains { $0.login == loginModel.login }
+        
+        if isDuplicate {
+            print("Duplicate login found: \(loginModel.login). Save operation cancelled.")
+            return
+        }
+        
+        // No duplicate found, proceed with saving the new entry
+        let loginEntry = UsedLogin(context: self)
+        loginEntry.login = loginModel.login
+        try? save()
+    }
+    
+    func fetchAllLoginEntries() -> [UsedLogin] {
+        let request: NSFetchRequest<UsedLogin> = UsedLogin.fetchRequest()
+        return (try? fetch(request)) ?? []
+    }
+    
+    func deleteLoginEntry(loginModel: UsedLoginModel) {
+        let login = UsedLogin(context: self)
+        login.login = loginModel.login
+        delete(login)
+        try? save()
+    }
+}
+

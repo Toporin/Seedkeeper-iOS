@@ -46,6 +46,7 @@
 		D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD772C261D1E00B50489 /* OptionSelectorView.swift */; };
 		D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */; };
 		D08722532C1A02FC00E0FBE5 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = D08722522C1A02FC00E0FBE5 /* QRCode */; };
+		D09A8BAC2C74DAC2003659F0 /* UsedLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A8BAB2C74DAC2003659F0 /* UsedLoginModel.swift */; };
 		D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */; };
 		D0BA41402BCFDDF000FD25B9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */; };
 		D0BA41422BCFDDF200FD25B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BA41412BCFDDF200FD25B9 /* Assets.xcassets */; };
@@ -143,6 +144,7 @@
 		D080FD752C261CF600B50489 /* SKSecretViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSecretViewer.swift; sourceTree = "<group>"; };
 		D080FD772C261D1E00B50489 /* OptionSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorView.swift; sourceTree = "<group>"; };
 		D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKMnemonicHelper.swift; sourceTree = "<group>"; };
+		D09A8BAB2C74DAC2003659F0 /* UsedLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLoginModel.swift; sourceTree = "<group>"; };
 		D0BA413A2BCFDDF000FD25B9 /* Seedkeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seedkeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BA413D2BCFDDF000FD25B9 /* SeedkeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedkeeperApp.swift; sourceTree = "<group>"; };
 		D0BA413F2BCFDDF000FD25B9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				D07141562BF2533700A4939A /* LogModel.swift */,
+				D09A8BAB2C74DAC2003659F0 /* UsedLoginModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -711,6 +714,7 @@
 				D0D832372C20A8B400AE2984 /* CardState+Backup.swift in Sources */,
 				D0C939D42BD687D400F2A17B /* SecureTextInput.swift in Sources */,
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
+				D09A8BAC2C74DAC2003659F0 /* UsedLoginModel.swift in Sources */,
 				D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,

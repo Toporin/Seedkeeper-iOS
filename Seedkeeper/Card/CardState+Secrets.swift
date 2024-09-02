@@ -94,7 +94,7 @@ extension CardState {
             
             let label = passwordPayload.label
             
-            let secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
                                                       subtype: UInt8(0x01),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
@@ -104,11 +104,17 @@ extension CardState {
             
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
             
+            secretHeader.sid = sid
+            
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
             self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+            
+            if let login = passwordPayload.login {
+                self.addLoginToSavedLoginsDB(login: login)
+            }
             
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
@@ -148,7 +154,7 @@ extension CardState {
             
             let label = mnemonicPayload.label
             
-            let secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
                                                       subtype: UInt8(0x00),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
@@ -158,12 +164,14 @@ extension CardState {
             
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
             
+            secretHeader.sid = sid
+            
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
             self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
-                        
+    
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
         } catch let error {
@@ -218,7 +226,7 @@ extension CardState {
             
             let label = mnemonicPayload.label
             
-            let secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
                                                       subtype: UInt8(0x00),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
@@ -227,6 +235,8 @@ extension CardState {
                                                       isEncrypted: false)
             
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
+            
+            secretHeader.sid = sid
             
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
@@ -270,7 +280,7 @@ extension CardState {
             
             let label = passwordPayload.label
             
-            let secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
                                                       subtype: UInt8(0x01),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
@@ -280,11 +290,17 @@ extension CardState {
             
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
             
+            secretHeader.sid = sid
+            
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
             self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+            
+            if let login = passwordPayload.login {
+                self.addLoginToSavedLoginsDB(login: login)
+            }
             
             homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
             
@@ -298,9 +314,20 @@ extension CardState {
     
     private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto) {
         DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            masterSecretHeaders.insert(secretHeader, at: 0)
+        }
+    }
+    
+    /*private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto) {
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return}
             masterSecretHeaders.append(secretHeader)
         }
+    }*/
+    
+    private func addLoginToSavedLoginsDB(login: String) {
+        dataControllerContext.saveLoginEntry(loginModel: UsedLoginModel(login: login))
     }
     
     // *********************************************************
