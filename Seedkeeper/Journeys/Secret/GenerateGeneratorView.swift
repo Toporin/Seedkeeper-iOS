@@ -360,45 +360,73 @@ struct GenerateGeneratorView: View {
                                 }
                             })
                         } else {
-                            SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGenerateMnemonic || canGeneratePassword, action: {
-                                if generateBtnMode == .willGenerate {
-                                    
-                                    if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
+                            HStack(alignment: .center, spacing: 0) {
+                                Spacer()
+                                
+                                HStack(alignment: .center, spacing: 12) {
+                                    if generatorModeNavData.generatorMode == .password,
+                                       canGeneratePassword,
+                                       !seedPhrase.isEmpty,
+                                       self.generateBtnMode == .willImport {
+                                        Spacer()
                                         
-                                        seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
+                                        SKImageButton(iconName: "ic_refresh", style: .regular, staticWidth: 56, isEnabled: true, action: {
+                                            seedPhrase = generatePassword(options: passwordOptions)
+                                        })
+                                        .frame(width: 56, alignment: .center)
                                         
-                                        mnemonicPayload = MnemonicPayload(label: labelText!,
-                                                                          mnemonicSize: mnemonicSizeOptions.selectedOption!,
-                                                                          passphrase: passphraseText,
-                                                                          result: seedPhrase)
+                                        Spacer()
                                     }
                                     
-                                    if generatorModeNavData.generatorMode == .password, canGeneratePassword {
-                                        let password = generatePassword(options: passwordOptions)
-                                        
-                                        seedPhrase = password
-                                        
-                                        passwordPayload = PasswordPayload(label: labelText!,
-                                                                          login: loginText,
-                                                                          url: urlText,
-                                                                          passwordLength: passwordOptions.passwordLength,
-                                                                          result: seedPhrase)
-                                    }
-                                    
-                                } else if generateBtnMode == .willImport {
-                                    if let mnemonicPayload = self.mnemonicPayload {
-                                        print("will import mnemonic")
-                                        cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
-                                        cardState.requestAddSecret(secretType: .bip39Mnemonic)
-                                    }
-                                    
-                                    if let passwordPayload = self.passwordPayload {
-                                        print("will import password")
-                                        cardState.passwordPayloadToImportOnCard = passwordPayload
-                                        cardState.requestAddSecret(secretType: .password)
+                                    SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGenerateMnemonic || canGeneratePassword, action: {
+                                        if generateBtnMode == .willGenerate {
+                                            
+                                            if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
+                                                
+                                                seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
+                                                
+                                                mnemonicPayload = MnemonicPayload(label: labelText!,
+                                                                                  mnemonicSize: mnemonicSizeOptions.selectedOption!,
+                                                                                  passphrase: passphraseText,
+                                                                                  result: seedPhrase)
+                                            }
+                                            
+                                            if generatorModeNavData.generatorMode == .password, canGeneratePassword {
+                                                let password = generatePassword(options: passwordOptions)
+                                                
+                                                seedPhrase = password
+                                                
+                                                passwordPayload = PasswordPayload(label: labelText!,
+                                                                                  login: loginText,
+                                                                                  url: urlText,
+                                                                                  passwordLength: passwordOptions.passwordLength,
+                                                                                  result: seedPhrase)
+                                            }
+                                            
+                                        } else if generateBtnMode == .willImport {
+                                            if let mnemonicPayload = self.mnemonicPayload {
+                                                print("will import mnemonic")
+                                                cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
+                                                cardState.requestAddSecret(secretType: .bip39Mnemonic)
+                                            }
+                                            
+                                            if let passwordPayload = self.passwordPayload {
+                                                print("will import password")
+                                                cardState.passwordPayloadToImportOnCard = passwordPayload
+                                                cardState.requestAddSecret(secretType: .password)
+                                            }
+                                        }
+                                    })
+                                    .frame(minWidth: 200, alignment: .center)
+                                    .frame(maxWidth: .infinity)
+                                    .transaction { transaction in
+                                        transaction.animation = nil
                                     }
                                 }
-                            })
+                                
+                                Spacer()
+                            }
+
                         }
                         
                         Spacer().frame(height: 16)
