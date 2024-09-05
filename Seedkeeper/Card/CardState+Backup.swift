@@ -35,6 +35,14 @@ extension CardState {
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .backup)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             for secret in self.secretsForBackup {
                 try cmdSet.seedkeeperImportSecret(secretObject: secret.value)
             }
@@ -69,6 +77,15 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
             
             var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]

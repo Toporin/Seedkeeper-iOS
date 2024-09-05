@@ -158,9 +158,6 @@ class CardState: ObservableObject {
         cardStatus = try CardStatus(rapdu: statusApdu)
         
         //FaceId integration seems to not be possible for the desired flow, needs further discussion
-        /*let authentikey = try await getAuthentikeyHexSilently()
-        
-        print("*** AuthentiKey : \(authentikey)")*/
         
         if let cardStatus = cardStatus, !cardStatus.setupDone {
             // let version = getCardVersionInt(cardStatus: cardStatus)
@@ -213,6 +210,7 @@ class CardState: ObservableObject {
         }
         
         try await verifyCardAuthenticity(cardType: .master)
+        // Fetching authentikey for the first scan and set it in memory
         try await fetchAuthentikey(cardType: .master)
         
         DispatchQueue.main.async {

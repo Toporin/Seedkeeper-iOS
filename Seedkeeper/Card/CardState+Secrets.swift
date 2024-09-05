@@ -41,6 +41,15 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var rapdu = try cmdSet.cardSetLabel(label: cardLabelToSet)
             if rapdu {
                 self.cardLabel = cardLabelToSet
@@ -88,6 +97,14 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
             
             let secretBytes = passwordPayload.getPayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
@@ -148,6 +165,14 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
             
             let secretBytes = mnemonicPayload.getPayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
@@ -221,6 +246,14 @@ extension CardState {
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             let secretBytes = mnemonicPayload.getPayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
             
@@ -274,6 +307,14 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
             
             let secretBytes = passwordPayload.getPayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
@@ -353,6 +394,15 @@ extension CardState {
         
         do {
             var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var result = try cmdSet.seedkeeperExportSecret(sid: currentSecretHeader.sid)
             self.currentSecretObject = result
             session?.stop(alertMessage: String(localized: "nfcSecretFetched"))
@@ -390,6 +440,15 @@ extension CardState {
         
         do {
             var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
             self.masterSecretHeaders = secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
             session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
@@ -423,6 +482,15 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             homeNavigationPath.removeLast()

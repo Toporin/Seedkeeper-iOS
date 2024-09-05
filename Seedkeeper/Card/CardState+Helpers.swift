@@ -100,6 +100,16 @@ extension CardState {
         return authentikeyHex
     }
     
+    internal func isAuthentikeyValid(for cardType: ScannedCardType) throws -> Bool {
+        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        switch cardType {
+        case .master:
+            return self.authentikeyHex == authentikeyHex
+        case .backup:
+            return self.authentikeyHexForBackup == authentikeyHex
+        }
+    }
+    
     func getCardVersionInt(cardStatus: CardStatus) -> Int {
         return Int(cardStatus.protocolMajorVersion) * (1<<24) +
                Int(cardStatus.protocolMinorVersion) * (1<<16) +
