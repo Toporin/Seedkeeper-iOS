@@ -194,6 +194,7 @@ class CardState: ObservableObject {
                     self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
                 }
                 return
+                // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
             } catch CardError.pinBlocked {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
@@ -204,7 +205,7 @@ class CardState: ObservableObject {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPin"))")
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
                 return
             }
         }

@@ -181,6 +181,7 @@ extension CardState {
                     self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
                 }
                 return
+                // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
             } catch CardError.pinBlocked {
                 self.pinForBackupCard = nil
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(String(localized: "nfcWrongPinBlocked"))"))
@@ -189,7 +190,7 @@ extension CardState {
             } catch {
                 self.pinForBackupCard = nil
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPin"))")
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
                 return
             }
         }
