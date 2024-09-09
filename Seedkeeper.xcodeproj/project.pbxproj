@@ -18,6 +18,8 @@
 		D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */; };
 		D05EB8492BFE4DEA006B84BB /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D05EB8482BFE4DEA006B84BB /* SatochipSwift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
+		D062F01B2C85E4CC001CF243 /* bip39-2048-english.txt in Resources */ = {isa = PBXBuildFile; fileRef = D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */; };
+		D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D062F01C2C862F5B001CF243 /* SKImageButton.swift */; };
 		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
 		D07141622BF259CF00A4939A /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D07141602BF259CF00A4939A /* Seedkeeper.xcdatamodeld */; };
@@ -117,6 +119,8 @@
 		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
 		D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsHandlerView.swift; sourceTree = "<group>"; };
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
+		D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bip39-2048-english.txt"; sourceTree = "<group>"; };
+		D062F01C2C862F5B001CF243 /* SKImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKImageButton.swift; sourceTree = "<group>"; };
 		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		D07141612BF259CF00A4939A /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
@@ -416,6 +420,7 @@
 				D0E4339B2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift */,
 				D0E4339D2BD3FE27008DBAA6 /* ScanButton.swift */,
 				D0E433A62BD425AA008DBAA6 /* SKButton.swift */,
+				D062F01C2C862F5B001CF243 /* SKImageButton.swift */,
 				D0C939D32BD687D400F2A17B /* SecureTextInput.swift */,
 				D071416B2BF272F300A4939A /* CardInfoBox.swift */,
 				D071416D2BF2772600A4939A /* EditableCardInfoBox.swift */,
@@ -441,6 +446,7 @@
 		D0E433842BD3FBC1008DBAA6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */,
 				D0344C112C57D10B00C3002E /* memorable-pwd.txt */,
 				D0C939D92BD6AB3600F2A17B /* Localization */,
 				D0E433852BD3FBC6008DBAA6 /* Fonts */,
@@ -604,6 +610,7 @@
 				D0F727AD2C2B121900C05DB4 /* GoogleService-Info.plist in Resources */,
 				D0BA41452BCFDDF300FD25B9 /* Preview Assets.xcassets in Resources */,
 				D0E433942BD3FBE8008DBAA6 /* OpenSans-SemiBold.ttf in Resources */,
+				D062F01B2C85E4CC001CF243 /* bip39-2048-english.txt in Resources */,
 				D0C939E12BD6AB4700F2A17B /* Localizable.strings in Resources */,
 				D07141682BF26E0200A4939A /* OpenSans-Light.ttf in Resources */,
 				D07141672BF26DFF00A4939A /* OpenSans-Medium.ttf in Resources */,
@@ -695,6 +702,7 @@
 				D080FD702C260ED000B50489 /* Constants.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
+				D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */,
 				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,
 				D071415F2BF2599100A4939A /* DataController.swift in Sources */,
 				D0E4339E2BD3FE27008DBAA6 /* ScanButton.swift in Sources */,

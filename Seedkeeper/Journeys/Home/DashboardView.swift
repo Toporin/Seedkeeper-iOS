@@ -103,7 +103,7 @@ struct DashboardView: View {
         case .allTypes:
             return true
         case .mnemonic:
-            return secret.type == .bip39Mnemonic
+            return secret.type == .bip39Mnemonic || (secret.type == .masterseed && secret.subtype == 0x01)
         case .password:
             return secret.type == .password
         }
@@ -211,10 +211,12 @@ struct SKSecretButton: View {
         switch secretType {
         case .bip39Mnemonic:
             return "ic_leaf"
+        case .masterseed:
+            return "ic_leaf"
         case .password:
             return "ic_3DotsUnderlined"
         default:
-            return ""
+            return "ic_key"
         }
     }
     

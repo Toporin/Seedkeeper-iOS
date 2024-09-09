@@ -174,13 +174,13 @@ extension CardState {
                 return
             }
             
-            let secretBytes = mnemonicPayload.getPayloadBytes()
+            let secretBytes = mnemonicPayload.getV2PayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
             
             let label = mnemonicPayload.label
             
-            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
-                                                      subtype: UInt8(0x00),
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.masterseed,
+                                                      subtype: UInt8(0x01),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
             let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
@@ -223,7 +223,8 @@ extension CardState {
         }
     }
     
-    // SECRET_TYPE_BIP39_MNEMONIC: [mnemonic_size(1b) | mnemonic | passphrase_size(1b) | passphrase ]
+    // DEPRECATED : SECRET_TYPE_BIP39_MNEMONIC: [mnemonic_size(1b) | mnemonic | passphrase_size(1b) | passphrase ]
+    // SECRET_TYPE_MASTER_SEED (subtype SECRET_SUBTYPE_BIP39): [ masterseed_size(1b) | masterseed | wordlist_selector(1b) | entropy_size(1b) | entropy(<=32b) | passphrase_size(1b) | passphrase] where entropy is 16-32 bytes as defined in BIP39 (this format is backward compatible with SECRET_TYPE_MASTER_SEED)
     private func onAddMnemonicSecret(cardChannel: CardChannel) -> Void {
         print("onAddMnemonicSecret")
         guard let pinForMasterCard = pinForMasterCard else {
@@ -254,15 +255,21 @@ extension CardState {
                 return
             }
             
-            let secretBytes = mnemonicPayload.getPayloadBytes()
+            guard let cardVersion = self.cardStatus?.appletMinorVersion else {
+                session?.stop(errorMessage: String(localized: "nfcCardVersionIsNotDefined"))
+                return
+            }
+                        
+            let label = mnemonicPayload.label
+
+            let secretBytes = mnemonicPayload.getV2PayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
             
-            let label = mnemonicPayload.label
-            
-            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.bip39Mnemonic,
-                                                      subtype: UInt8(0x00),
+            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.masterseed,
+                                                      subtype: UInt8(0x01),
                                                       fingerprintBytes: secretFingerprintBytes,
                                                       label: label)
+            
             let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
                                                       secretHeader: secretHeader,
                                                       isEncrypted: false)

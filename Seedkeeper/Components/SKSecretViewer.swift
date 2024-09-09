@@ -13,6 +13,10 @@ enum SecretType {
     case unknown
     case password
     case bip39Mnemonic
+    case secret2FA
+    case masterseedMnemonic
+    case masterseed
+    case electrumMnemonic
 }
 
 struct SKSecretViewer: View {
@@ -119,7 +123,7 @@ struct SKSecretViewer: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     if shouldShowQRCode {
-                        if secretType == .bip39Mnemonic,
+                        if secretType == .bip39Mnemonic || secretType == .masterseedMnemonic,
                            let mnemonicData = self.mnemonicData,
                            let seedQRImage = self.generateMnemonicSeedQR(with: mnemonicData)  {
                             
