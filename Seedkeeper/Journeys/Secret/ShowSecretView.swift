@@ -44,21 +44,35 @@ struct ShowSecretView: View {
                     
                     SKLabel(title: "passphrase", content: cardState.currentMnemonicCardData?.passphrase ?? "(none)")
                     
+                } else if secret.type == .masterseed && secret.subtype == 0x01 {
+                    
+                    SKLabel(title: "mnemonicSize", content: cardState.currentMasterseedMnemonicCardData?.getMnemonicSize()?.humanReadableName() ?? "(none)")
+                    
+                    SKLabel(title: "passphrase", content: cardState.currentMasterseedMnemonicCardData?.passphrase ?? "(none)")
+                    
+                } else if secret.type == .electrumMnemonic {
+                    
+                    SKLabel(title: "mnemonicSize", content: cardState.currentElectrumMnemonicCardData?.getMnemonicSize()?.humanReadableName() ?? "(none)")
+                    
+                    SKLabel(title: "passphrase", content: cardState.currentElectrumMnemonicCardData?.passphrase ?? "(none)")
+                    
                 } else if secret.type == .password {
                     
-                    SKLabel(title: "login", content: cardState.currentPasswordCardData?.login ?? "(none)")
+                    SKLabel(title: "Login", content: cardState.currentPasswordCardData?.login ?? "(none)")
                     
-                    SKLabel(title: "Url:", content: cardState.currentPasswordCardData?.url ?? "(none)")
+                    SKLabel(title: "Url", content: cardState.currentPasswordCardData?.url ?? "(none)")
                 }
                 
-                if secret.type == .bip39Mnemonic {
+                if secret.type == .bip39Mnemonic || (secret.type == .masterseed && secret.subtype == 0x01) || secret.type == .electrumMnemonic {
                     Spacer()
                         .frame(height: 30)
                     
                     HStack {
                         SKActionButtonSmall(title: "Seed", icon: "ic_bip85", isEnabled: $isSecretHeaderFetched) {
-                            guard let _ = cardState.currentMnemonicCardData else {
-                                return
+                            if let _ = cardState.currentMnemonicCardData {
+                                shouldShowSeedQR = true
+                            } else if let _ = cardState.currentMasterseedMnemonicCardData {
+                                shouldShowSeedQR = true
                             }
                             shouldShowSeedQR = false
                         }
@@ -66,10 +80,11 @@ struct ShowSecretView: View {
                         Spacer()
                         
                         SKActionButtonSmall(title: "SeedQR", icon: "ic_qr", isEnabled: $isSecretHeaderFetched) {
-                            guard let _ = cardState.currentMnemonicCardData else {
-                                return
+                            if let _ = cardState.currentMnemonicCardData {
+                                shouldShowSeedQR = true
+                            } else if let _ = cardState.currentMasterseedMnemonicCardData {
+                                shouldShowSeedQR = true
                             }
-                            shouldShowSeedQR = true
                         }
                         
                         if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
@@ -88,13 +103,44 @@ struct ShowSecretView: View {
                     .frame(height: 30)
                 
                 if let password = cardState.currentPasswordCardData?.password {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText:  .constant(password) )
+                    SKSecretViewer(secretType: .password, shouldShowQRCode: $shouldShowSeedQR, contentText:  .constant(password) )
                     
                 } else if let mnemonicCardData = cardState.currentMnemonicCardData {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: shouldShowSeedQR ? .constant(mnemonicCardData.getSeedQRContent()) : .constant(mnemonicCardData.mnemonic))
+                    SKSecretViewer(secretType: .bip39Mnemonic,
+                                   shouldShowQRCode: $shouldShowSeedQR,
+                                   contentText: .constant(mnemonicCardData.mnemonic),
+                                   mnemonicData: mnemonicCardData.getSeedQRContent())
+                } else if let secret2FACardData = cardState.current2FACardData {
+                    SKSecretViewer(secretType: .secret2FA,
+                                   shouldShowQRCode: .constant(false),
+                                   contentText: .constant(secret2FACardData.blob))
+                    
+                } else if let masterseedMnemonicCardData = cardState.currentMasterseedMnemonicCardData {
+                    SKSecretViewer(secretType: .masterseedMnemonic,
+                                   shouldShowQRCode: $shouldShowSeedQR,
+                                   contentText: .constant(masterseedMnemonicCardData.mnemonic),
+                                   mnemonicData: masterseedMnemonicCardData.getSeedQRContent())
+                    
+                } else if let masterseedCardData = cardState.currentMasterseedCardData {
+                    SKSecretViewer(secretType: .masterseed,
+                                   shouldShowQRCode: .constant(false),
+                                   contentText: .constant(masterseedCardData.blob))
+                    
+                } else if let electrumMnemonicCardData = cardState.currentElectrumMnemonicCardData {
+                    SKSecretViewer(secretType: .electrumMnemonic,
+                                   shouldShowQRCode: $shouldShowSeedQR,
+                                   contentText: .constant(electrumMnemonicCardData.mnemonic),
+                                   mnemonicData: electrumMnemonicCardData.getSeedQRContent())
+                    
+                } else if let genericCardData = cardState.currentGenericCardData {
+                    SKSecretViewer(secretType: .unknown,
+                                   shouldShowQRCode: .constant(false),
+                                   contentText: .constant(genericCardData.blob))
                     
                 } else {
-                    SKSecretViewer(shouldShowQRCode: $shouldShowSeedQR, contentText: .constant(""))
+                    SKSecretViewer(secretType: .unknown,
+                                   shouldShowQRCode: $shouldShowSeedQR,
+                                   contentText: .constant(""))
                     
                 }
                 
@@ -103,7 +149,7 @@ struct ShowSecretView: View {
                 
                 HStack {
                     if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
-                        SKActionButtonSmall(title: "delete", icon: "ic_trash", isEnabled: .constant(true)) {
+                        SKActionButtonSmall(title: String(localized: "delete"), icon: "ic_trash", isEnabled: .constant(true)) {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()
                         }

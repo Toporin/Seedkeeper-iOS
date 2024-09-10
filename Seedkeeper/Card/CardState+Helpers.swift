@@ -22,6 +22,10 @@ extension CardState {
         currentSecretObject = nil
         currentPasswordCardData = nil
         currentMnemonicCardData = nil
+        currentMasterseedMnemonicCardData = nil
+        currentMasterseedCardData = nil
+        currentElectrumMnemonicCardData = nil
+        currentGenericCardData = nil
     }
     
     func cleanPayloadToImportOnCard() {
@@ -84,13 +88,15 @@ extension CardState {
     }
     
     internal func fetchAuthentikey(cardType: ScannedCardType) async throws {
-        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        let (_, authentikeyBytes, authentikeyHex) = try cmdSet.cardGetAuthentikey()
         DispatchQueue.main.async {
             switch cardType {
             case .master:
                 self.authentikeyHex = authentikeyHex
+                self.authentikeyBytes = authentikeyBytes
             case .backup:
                 self.authentikeyHexForBackup = authentikeyHex
+                self.authentikeyBytesForBackup = authentikeyBytes
             }
         }
     }
@@ -98,6 +104,16 @@ extension CardState {
     internal func getAuthentikeyHexSilently() async throws -> String {
         let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
         return authentikeyHex
+    }
+    
+    internal func isAuthentikeyValid(for cardType: ScannedCardType) throws -> Bool {
+        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        switch cardType {
+        case .master:
+            return self.authentikeyHex == authentikeyHex
+        case .backup:
+            return self.authentikeyHexForBackup == authentikeyHex
+        }
     }
     
     func getCardVersionInt(cardStatus: CardStatus) -> Int {
@@ -117,6 +133,197 @@ extension CardState {
         else {
             // log.debug("CheckEqual ok for: \(lhs)", tag: tag)
         }
+    }
+    
+    func parseElectreumMnemonicCardData(bytes: [UInt8]) -> ElectrumMnemonicCardData? {
+        var index = 0
+
+        // Extract mnemonic size and mnemonic
+        let mnemonicSize = Int(bytes[index])
+        index += 1
+        guard index + mnemonicSize <= bytes.count else {
+            print("Invalid mnemonic size")
+            return nil
+        }
+        let mnemonicBytes = Array(bytes[index..<(index + mnemonicSize)])
+        index += mnemonicSize
+        guard let mnemonic = String(bytes: mnemonicBytes, encoding: .utf8) else {
+            print("Failed to convert mnemonic bytes to string")
+            return nil
+        }
+
+        // Extract passphrase size and passphrase if available
+        var passphrase: String? = nil
+        if index < bytes.count {
+            let passphraseSize = Int(bytes[index])
+            index += 1
+            if passphraseSize > 0 && index + passphraseSize <= bytes.count {
+                let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
+                index += passphraseSize
+                passphrase = String(bytes: passphraseBytes, encoding: .utf8)
+            }
+        }
+
+        return ElectrumMnemonicCardData(mnemonic: mnemonic, passphrase: passphrase ?? "n/a")
+    }
+    
+    func parseMasterseedCardData(bytes: [UInt8]) -> MasterseedCardData? {
+        var index = 0
+
+        if bytes.isEmpty {
+            print("No bytes to parse!")
+            return nil
+        }
+        
+        let blobSize = Int(bytes[index])
+        index += 1
+        
+        guard index + blobSize <= bytes.count else {
+            print("Invalid blob size")
+            return nil
+        }
+        
+        let blobBytes = Array(bytes[index..<(index + blobSize)])
+        
+        print("Blob Bytes: \(blobBytes)")
+        
+        let hexString = blobBytes.map { String(format: "%02x", $0) }.joined()
+        print("Hexadecimal representation of the bytes: \(hexString)")
+        
+        return MasterseedCardData(blob: hexString)
+    }
+        
+    func parseMasterseedMnemonicCardData(bytes: [UInt8]) -> MasterseedMnemonicCardData? {
+        var index = 0
+
+        if bytes.isEmpty {
+            print("No bytes to parse!")
+            return nil
+        }
+
+        // Check index before accessing bytes
+        guard index < bytes.count else {
+            print("Index out of bounds when reading masterseedSize")
+            return nil
+        }
+
+        let masterseedSize = Int(bytes[index])
+        index += 1
+
+        if masterseedSize < 0 || index + masterseedSize > bytes.count {
+            print("Invalid masterseedSize")
+            return nil
+        }
+
+        let masterseedBytes = Array(bytes[index..<(index + masterseedSize)])
+        index += masterseedSize
+        index += 1
+
+        guard index < bytes.count else {
+            print("Index out of bounds when reading entropySize")
+            return nil
+        }
+
+        let entropySize = Int(bytes[index])
+        index += 1
+
+        let entropyBytes = Array(bytes[index..<(index + entropySize)])
+        index += entropySize
+
+        var mnemonic = "n/a"
+        do {
+            mnemonic = try Mnemonic.entropyToMnemonic(entropy: entropyBytes)
+        } catch {
+            print("Failed to convert entropy to mnemonic")
+        }
+
+        var passphrase: String? = nil
+
+        if index < bytes.count {
+            guard index < bytes.count else {
+                print("Index out of bounds when reading passphraseSize")
+                return nil
+            }
+            
+            let passphraseSize = Int(bytes[index])
+            index += 1
+            if passphraseSize > 0 && index + passphraseSize <= bytes.count {
+                let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
+                index += passphraseSize
+                passphrase = String(bytes: passphraseBytes, encoding: .utf8)
+            }
+        }
+
+        var descriptor = ""
+
+        if index < bytes.count {
+            // Check index before accessing descriptor size
+            guard index + 1 < bytes.count else {
+                print("Index out of bounds when reading descriptor size")
+                return nil
+            }
+
+            let descriptorSizeArray = Array(bytes[index..<(index + 2)])
+            let descriptorSize = descriptorSizeArray.withUnsafeBytes { $0.load(as: Int16.self) }
+            index += 2
+
+            if Int(index + Int(descriptorSize)) > bytes.count {
+                print("Invalid descriptor size")
+                return nil
+            }
+
+            let descriptorBytes = Array(bytes[index..<(index + Int(descriptorSize))])
+            descriptor = String(bytes: descriptorBytes, encoding: .utf8) ?? ""
+        }
+
+        return MasterseedMnemonicCardData(
+            passphrase: passphrase ?? "n/a",
+            mnemonic: mnemonic,
+            size: mnemonic.components(separatedBy: " ").count,
+            descriptor: descriptor
+        )
+    }
+
+    func parseGenericCardData(from bytes: [UInt8]) -> GenericCardData? {
+        var index = 0
+
+        let blobSize = Int(bytes[index])
+        index += 1
+        
+        guard index + blobSize <= bytes.count else {
+            print("Invalid blob size")
+            return nil
+        }
+        
+        let blobBytes = Array(bytes[index..<(index + blobSize)])
+        
+        print("Blob Bytes: \(blobBytes)")
+        
+        let hexString = blobBytes.map { String(format: "%02x", $0) }.joined()
+        print("Hexadecimal representation of the bytes: \(hexString)")
+        
+        return GenericCardData(blob: hexString)
+    }
+    
+    func parse2FACardData(from bytes: [UInt8]) -> TwoFACardData? {
+        var index = 0
+
+        let blobSize = Int(bytes[index])
+        index += 1
+        
+        guard index + blobSize <= bytes.count else {
+            print("Invalid blob size")
+            return nil
+        }
+        
+        let blobBytes = Array(bytes[index..<(index + blobSize)])
+        
+        print("Blob Bytes: \(blobBytes)")
+        
+        let hexString = blobBytes.map { String(format: "%02x", $0) }.joined()
+        print("Hexadecimal representation of the bytes: \(hexString)")
+        
+        return TwoFACardData(blob: hexString)
     }
     
     func parsePasswordCardData(from bytes: [UInt8]) -> PasswordCardData? {

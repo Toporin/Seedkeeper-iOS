@@ -40,6 +40,8 @@ struct HeaderView: View {
             
             if let _ = cardState.cardStatus {
                 Button(action: {
+                    cardState.pinForMasterCard = nil
+                    cardState.lastTimeForMasterCardPin = nil
                     cardState.scan()
                 }) {
                     Image("ic_refresh_dark")

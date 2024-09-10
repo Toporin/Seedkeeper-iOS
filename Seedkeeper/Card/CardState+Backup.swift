@@ -35,8 +35,39 @@ extension CardState {
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .backup)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
+            self.importAuthentikeyAsSecret(for: .master)
+            
+            var onBackupAvailableSecretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+            
             for secret in self.secretsForBackup {
-                try cmdSet.seedkeeperImportSecret(secretObject: secret.value)
+                
+                let secretFingerPrint = secret.key.fingerprintBytes
+                if onBackupAvailableSecretHeaders.contains(where: { $0.fingerprintBytes == secretFingerPrint }) {
+                    continue
+                }
+                
+                do {
+                    var secretBuffer = secret
+                    secretBuffer.value.isEncrypted = true
+                    
+                    var secretEncryptedParamsBuffer = SeedkeeperSecretEncryptedParams(sidPubkey: self.masterAuthentiKeySid!, iv: secretBuffer.value.secretEncryptedParams?.iv ?? [], hmac: secretBuffer.value.secretEncryptedParams?.hmac ?? [])
+
+                    secretBuffer.value.secretEncryptedParams = secretEncryptedParamsBuffer
+                    
+                    try cmdSet.seedkeeperImportSecret(secretObject: secretBuffer.value)
+                } catch {
+                    logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
+                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    return
+                }
             }
             
             session?.stop(alertMessage: String(localized: "nfcBackupSuccess"))
@@ -69,6 +100,17 @@ extension CardState {
         
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
+            self.importAuthentikeyAsSecret(for: .backup)
+            
             var secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
             
             var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
@@ -76,7 +118,7 @@ extension CardState {
             for secretHeader in secretHeaders {
                 var secretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid)
                 
-                var encryptedResult = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: secretObject.getSidPubKey())
+                var encryptedResult = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: self.backupAuthentiKeySid!)
                 
                 fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedResult
             }
@@ -91,6 +133,45 @@ extension CardState {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
     }
+    
+    func importAuthentikeyAsSecret(for cardType: ScannedCardType) {
+        do {
+            var authentikeySecretBytes = [UInt8]()
+            
+            if cardType == .master {
+                authentikeySecretBytes = [UInt8(authentikeyBytes!.count)] + authentikeyBytes!
+            } else if cardType == .backup {
+                authentikeySecretBytes = [UInt8(authentikeyBytesForBackup!.count)] + authentikeyBytesForBackup!
+            }
+            
+            let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: authentikeySecretBytes)
+            let authentikeyLabel = "Seedkeeper authentikey"
+            let authentikeySecretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.pubkey,
+                                                      subtype: UInt8(0x00),
+                                                      fingerprintBytes: authentikeyFingerprintBytes,
+                                                      label: authentikeyLabel)
+            let authentikeySecretObject = SeedkeeperSecretObject(secretBytes: authentikeySecretBytes,
+                                                      secretHeader: authentikeySecretHeader,
+                                                      isEncrypted: false)
+            
+            let (rapdu2, authentikeySid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: authentikeySecretObject)
+            
+            if cardType == .master {
+                self.masterAuthentiKeyBytes = authentikeyBytes
+                self.masterAuthentiKeySid = authentikeySid
+                self.masterAuthentiKeyFingerprintBytes = fingerprintBytes
+            } else if cardType == .backup {
+                self.backupAuthentiKeyBytes = authentikeyBytes
+                self.backupAuthentiKeySid = authentikeySid
+                self.backupAuthentiKeyFingerprintBytes = fingerprintBytes
+            }
+            
+        } catch {
+            logEvent(log: LogModel(type: .error, message: "importAuthentikeyAsSecret : \(error.localizedDescription)"))
+            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+        }
+    }
+    
     // *********************************************************
     // MARK: - Backup card - connection
     // *********************************************************
@@ -103,6 +184,17 @@ extension CardState {
     func resetStateForBackupCard(clearPin: Bool = false) {
         certificateCodeForBackup = .unknown
         authentikeyHexForBackup = ""
+        authentikeyBytes = nil
+        authentikeyBytesForBackup = nil
+        
+        masterAuthentiKeySid = nil
+        masterAuthentiKeyBytes = nil
+        masterAuthentiKeyFingerprintBytes = nil
+        
+        backupAuthentiKeySid = nil
+        backupAuthentiKeyBytes = nil
+        backupAuthentiKeyFingerprintBytes = nil
+        
         secretsForBackup = [:]
         mode = .start
         if clearPin {
@@ -164,6 +256,7 @@ extension CardState {
                     self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
                 }
                 return
+                // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
             } catch CardError.pinBlocked {
                 self.pinForBackupCard = nil
                 logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(String(localized: "nfcWrongPinBlocked"))"))
@@ -171,14 +264,16 @@ extension CardState {
                 return
             } catch {
                 self.pinForBackupCard = nil
-                logEvent(log: LogModel(type: .error, message: "onVerifyPin (Backup) : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPin"))")
+                logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 return
             }
         }
         
         try await verifyCardAuthenticity(cardType: .backup)
         try await fetchAuthentikey(cardType: .backup)
+                
+        // self.importAuthentikeyAsSecret(for: .backup)
         
         self.mode = .backupImport
         

@@ -41,6 +41,15 @@ extension CardState {
                 
         do {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+            
+            if !isAuthentikeyValid {
+                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                return
+            }
+            
             var rapdu = try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
             print("Pin Updated")
             self.pinForMasterCard = pinCodeToSetup
