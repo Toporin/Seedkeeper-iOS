@@ -88,13 +88,15 @@ extension CardState {
     }
     
     internal func fetchAuthentikey(cardType: ScannedCardType) async throws {
-        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        let (_, authentikeyBytes, authentikeyHex) = try cmdSet.cardGetAuthentikey()
         DispatchQueue.main.async {
             switch cardType {
             case .master:
                 self.authentikeyHex = authentikeyHex
+                self.authentikeyBytes = authentikeyBytes
             case .backup:
                 self.authentikeyHexForBackup = authentikeyHex
+                self.authentikeyBytesForBackup = authentikeyBytes
             }
         }
     }

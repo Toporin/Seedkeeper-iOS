@@ -34,12 +34,14 @@ class CardState: ObservableObject {
     
     @Published var isCardDataAvailable = false
     @Published var authentikeyHex = ""
+    var authentikeyBytes: [UInt8]?
     @Published var certificateDic = [String: String]()
     @Published var certificateCode = PkiReturnCode.unknown
     @Published var errorMessage: String?
     @Published var homeNavigationPath = NavigationPath()
     
     @Published var authentikeyHexForBackup = ""
+    var authentikeyBytesForBackup: [UInt8]?
     @Published var certificateDicForBackup = [String: String]()
     @Published var certificateCodeForBackup = PkiReturnCode.unknown
     
@@ -156,6 +158,14 @@ class CardState: ObservableObject {
     var mnemonicManualImportPayload: MnemonicManualImportPayload?
     var passwordManualImportPayload: PasswordManualImportPayload?
     
+    var backupAuthentiKeySid: Int?
+    var backupAuthentiKeyFingerprintBytes: [UInt8]?
+    var backupAuthentiKeyBytes: [UInt8]?
+    
+    var masterAuthentiKeySid: Int?
+    var masterAuthentiKeyFingerprintBytes: [UInt8]?
+    var masterAuthentiKeyBytes: [UInt8]?
+    
     func logEvent(log: LogModel) {
         dataControllerContext.saveLogEntry(log: log)
     }
@@ -241,8 +251,8 @@ class CardState: ObservableObject {
             } catch {
                 self.pinForMasterCard = nil
                 self.isPinVerificationSuccess = false
-                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(error.localizedDescription)"))
-                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
+                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 return
             }
         }
