@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0D8D22C62C415D7D00A3D249 /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0D8D22C52C415D7D00A3D249 /* SatochipSwift */; };
-		0D8D22C92C415E1500A3D249 /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */; };
+		0DAF45072C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45052C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -109,7 +109,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
+		0DAF45062C90A6C0001FDE73 /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 		D07141582BF255B100A4939A /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
-				0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */,
+				0DAF45052C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld */,
 				D071415E2BF2599100A4939A /* DataController.swift */,
 			);
 			path = Repositories;
@@ -703,6 +703,7 @@
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
 				D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */,
 				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,
+				0DAF45072C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld in Sources */,
 				D071415F2BF2599100A4939A /* DataController.swift in Sources */,
 				D0E4339E2BD3FE27008DBAA6 /* ScanButton.swift in Sources */,
 				D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */,
@@ -727,7 +728,6 @@
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
-				0D8D22C92C415E1500A3D249 /* Seedkeeper.xcdatamodeld in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
 				D0C939D22BD6860700F2A17B /* CreatePinCodeView.swift in Sources */,
 				D0F727B02C2B144200C05DB4 /* AppDelegate.swift in Sources */,
@@ -931,7 +931,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = io.satochip.app.Seedkeeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -971,7 +971,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = io.satochip.app.Seedkeeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1146,14 +1146,13 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		0D8D22C72C415E1500A3D249 /* Seedkeeper.xcdatamodeld */ = {
+		0DAF45052C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */,
+				0DAF45062C90A6C0001FDE73 /* Seedkeeper.xcdatamodel */,
 			);
-			currentVersion = 0D8D22C82C415E1500A3D249 /* Seedkeeper.xcdatamodel */;
-			name = Seedkeeper.xcdatamodeld;
-			path = ../../../../satochip/Seedkeeper.xcdatamodeld;
+			currentVersion = 0DAF45062C90A6C0001FDE73 /* Seedkeeper.xcdatamodel */;
+			path = Seedkeeper.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
