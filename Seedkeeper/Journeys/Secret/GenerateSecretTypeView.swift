@@ -35,14 +35,6 @@ struct GenerateSecretTypeView: View {
                 SelectableCardInfoBox(mode: .dropdown(self.phraseTypeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                     showPickerSheet = true
                 }
-
-                Spacer()
-                
-                Button(action: {
-                    homeNavigationPath.removeLast()
-                }) {
-                    SatoText(text: "back", style: .SKMenuItemTitle)
-                }
                 
                 Spacer().frame(height: 16)
                 

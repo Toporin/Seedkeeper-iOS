@@ -325,16 +325,7 @@ struct GenerateGeneratorView: View {
                         
                         SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
-                        
-                        Spacer()
-                            .frame(height: 30)
-                        
-                        Button(action: {
-                            homeNavigationPath.removeLast()
-                        }) {
-                            SatoText(text: "back", style: .SKMenuItemTitle)
-                        }
-                        
+
                         Spacer()
                             .frame(height: 16)
                         

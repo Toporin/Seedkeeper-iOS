@@ -86,15 +86,6 @@ struct BackupView: View {
                     .frame(width: 315, height: 149)
                 
                 Spacer()
-                
-                Button(action: {
-                    cardState.resetStateForBackupCard(clearPin: true)
-                    homeNavigationPath.removeLast()
-                }) {
-                    SatoText(text: "back", style: .SKMenuItemTitle)
-                }
-                
-                Spacer()
                     .frame(height: 16)
                 
                 SKButton(text: getActionButtonTitle(), style: .regular, horizontalPadding: 66, action: {
