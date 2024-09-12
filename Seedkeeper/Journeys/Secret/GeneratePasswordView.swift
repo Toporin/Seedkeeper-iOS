@@ -1,5 +1,5 @@
 //
-//  GenerateMnemonicView.swift
+//  GeneratePasswordView.swift
 //  Seedkeeper
 //
 //  Created by Lionel Delvaux on 07/05/2024.
@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 import SatochipSwift
-import MnemonicSwift
 
 struct GeneratePasswordView: View {
     // MARK: - Properties
@@ -26,16 +25,10 @@ struct GeneratePasswordView: View {
     
     @State var password = ""
     @State private var passwordPayload: PasswordPayload?
-    
-    // Password :
-    // > Label
-    // > Login
-    // > Url
-    // > PasswordLength
-            
+        
     var canGeneratePassword: Bool {
         if let labelText = labelText {
-            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption() && generatorModeNavData.generatorMode == .password
+            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption()
         } else {
             return false
         }
@@ -133,24 +126,20 @@ struct GeneratePasswordView: View {
     }
     
     func getViewTitle() -> String {
-        switch generatorModeNavData.generatorMode {
-        case .password where generatorModeNavData.secretCreationMode == .generate:
+        switch generatorModeNavData.secretCreationMode {
+        case .generate:
             return String(localized: "generatePasswordSecret")
-        case .password where generatorModeNavData.secretCreationMode == .manualImport:
+        case .manualImport:
             return String(localized: "importPasswordSecret")
-        default:
-            return "n/a"
         }
     }
     
     func getViewSubtitle() -> String {
-        switch generatorModeNavData.generatorMode {
-        case .password where generatorModeNavData.secretCreationMode == .generate:
+        switch generatorModeNavData.secretCreationMode {
+        case .generate:
             return String(localized: "generatePasswordSecretInfoSubtitle")
-        case .password where generatorModeNavData.secretCreationMode == .manualImport:
+        case .manualImport:
             return String(localized: "importPasswordSecretInfoSubtitle")
-        default:
-            return "n/a"
         }
     }
     
@@ -187,35 +176,32 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        if generatorModeNavData.generatorMode == .password {
-                            EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true,
-                                    action:
-                                    { loginTextResult in
-                                        if case .text(let customLoginText) = loginTextResult {
-                                            loginText = customLoginText
-                                        }
-                                    },
-                                    focusAction: {
-                                        withAnimation {
-                                            scrollValue.scrollTo(0, anchor: .top)
-                                        }
-                                    }
-                            )
-                            .id(0)
-                        }
                         
-                        if generatorModeNavData.generatorMode == .password {
-                            Spacer()
-                                .frame(height: 16)
-                            
-                            EditableCardInfoBox(mode: .text("Url"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
-                                if case .text(let customUrlText) = urlTextResult {
-                                    urlText = customUrlText
+                        EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true,
+                                action:
+                                { loginTextResult in
+                                    if case .text(let customLoginText) = loginTextResult {
+                                        loginText = customLoginText
+                                    }
+                                },
+                                focusAction: {
+                                    withAnimation {
+                                        scrollValue.scrollTo(0, anchor: .top)
+                                    }
                                 }
+                        )
+                        .id(0)
+                    
+                        Spacer()
+                            .frame(height: 16)
+                        
+                        EditableCardInfoBox(mode: .text("Url"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
+                            if case .text(let customUrlText) = urlTextResult {
+                                urlText = customUrlText
                             }
                         }
                         
-                        if generatorModeNavData.generatorMode == .password && generatorModeNavData.secretCreationMode != .manualImport {
+                        if generatorModeNavData.secretCreationMode != .manualImport {
                             Spacer()
                                 .frame(height: 16)
                             
@@ -223,7 +209,7 @@ struct GeneratePasswordView: View {
                         }
                         
                         Spacer()
-                            .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
+                            .frame(height: 16)
                         
                         SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }

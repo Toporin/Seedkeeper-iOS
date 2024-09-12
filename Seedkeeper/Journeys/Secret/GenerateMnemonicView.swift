@@ -24,36 +24,13 @@ struct GenerateMnemonicView: View {
     @State private var descriptorText: String?
     
     @State private var mnemonicPayload: MnemonicPayload?
-
-    // Mnemonic :
-    // > Label
-    // > MnemonicSize
-    // > Passphrase
-    // > WalletDescriptor
     
-    @State var seedPhrase = "" {
-        didSet {
-            if seedPhrase.isEmpty {
-                generateBtnMode = .willGenerate
-            } else {
-                generateBtnMode = .willImport
-            }
-        }
-    }
-    
-    var continueBtnTitle: String {
-        switch generateBtnMode {
-        case .willGenerate:
-            return String(localized: "generate")
-        case .willImport:
-            return String(localized: "import")
-        }
-    }
+    @State var seedPhrase = ""
     
     @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
     
     var canGenerateMnemonic: Bool {
-        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption, generatorModeNavData.generatorMode == .mnemonic {
+        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption {
             return !labelText.isEmpty
         } else {
             return false
@@ -95,24 +72,20 @@ struct GenerateMnemonicView: View {
     }
     
     func getViewTitle() -> String {
-        switch generatorModeNavData.generatorMode {
-        case .mnemonic where generatorModeNavData.secretCreationMode == .generate:
+        switch generatorModeNavData.secretCreationMode {
+        case .generate:
             return String(localized: "generateMnemonicSecret")
-        case .mnemonic where generatorModeNavData.secretCreationMode == .manualImport:
+        case .manualImport:
             return String(localized: "importMnemonicSecret")
-        default:
-            return "n/a"
         }
     }
     
     func getViewSubtitle() -> String {
-        switch generatorModeNavData.generatorMode {
-        case .mnemonic where generatorModeNavData.secretCreationMode == .generate:
+        switch generatorModeNavData.secretCreationMode {
+        case .generate:
             return String(localized: "generateMnemonicSecretInfoSubtitle")
-        case .mnemonic where generatorModeNavData.secretCreationMode == .manualImport:
+        case .manualImport:
             return String(localized: "importMnemonicSecretInfoSubtitle")
-        default:
-            return "n/a"
         }
     }
     
@@ -149,41 +122,37 @@ struct GenerateMnemonicView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode != .manualImport {
+                        if generatorModeNavData.secretCreationMode != .manualImport {
                             SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                                 showPickerSheet = true
                             }
-                        } else if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode == .manualImport {
+                        } else if generatorModeNavData.secretCreationMode == .manualImport {
+                            // TODO: remove?
                             EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                                 showPickerSheet = true
                             }
                         }
+                            
+                        Spacer()
+                            .frame(height: 16)
                         
-                        if generatorModeNavData.generatorMode == .mnemonic {
-                            
-                            Spacer()
-                                .frame(height: 16)
-                            
-                            EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
-                                if case .text(let customPassphraseText) = passphraseTextResult {
-                                    passphraseText = customPassphraseText
-                                }
+                        EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
+                            if case .text(let customPassphraseText) = passphraseTextResult {
+                                passphraseText = customPassphraseText
                             }
-                            
-                            
-                            Spacer()
-                                .frame(height: 16)
-                            
-                            EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
-                                if case .text(let customDescriptorText) = descriptorTextResult {
-                                    descriptorText = customDescriptorText
-                                }
-                            }
-                            
                         }
                         
                         Spacer()
-                            .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
+                            .frame(height: 16)
+                        
+                        EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
+                            if case .text(let customDescriptorText) = descriptorTextResult {
+                                descriptorText = customDescriptorText
+                            }
+                        }
+                            
+                        Spacer()
+                            .frame(height: 60)
                         
                         SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
@@ -192,16 +161,13 @@ struct GenerateMnemonicView: View {
                             .frame(height: 16)
                         
                         if generatorModeNavData.secretCreationMode == .manualImport {
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
-                                if generatorModeNavData.generatorMode == .mnemonic, canManualImportMnemonic {
-                                    
+                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportMnemonic, action: {
                                     cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
                                                                                             mnemonic: seedPhrase,
                                                                                             passphrase: passphraseText,
                                                                                             descriptor: descriptorText)
                                     
                                     cardState.requestAddSecret(secretType: .bip39Mnemonic)
-                                }
                             })
                         } else {
                             HStack(alignment: .center, spacing: 0) {
@@ -209,32 +175,25 @@ struct GenerateMnemonicView: View {
                                 
                                 HStack(alignment: .center, spacing: 12) {
                                     
-                                    SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGenerateMnemonic, action: {
-                                        if generateBtnMode == .willGenerate {
-                                            
-                                            if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
-                                                
+                                    // generate button
+                                    SKButton(text: String(localized: "generate"), style: .regular, horizontalPadding: 20, isEnabled: canGenerateMnemonic, action: {
                                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
                                                 
                                                 mnemonicPayload = MnemonicPayload(label: labelText!,
                                                                                   mnemonic: seedPhrase,
                                                                                   passphrase: passphraseText,
                                                                                   descriptor: descriptorText)
-                                            }
-                                            
-                                        } else if generateBtnMode == .willImport {
+                                    })
+                                    
+                                    // import button
+                                    SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 20, isEnabled: canManualImportMnemonic, action: {
                                             if let mnemonicPayload = self.mnemonicPayload {
                                                 print("will import mnemonic")
                                                 cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
                                                 cardState.requestAddSecret(secretType: .bip39Mnemonic)
                                             }
-                                        }
                                     })
-                                    .frame(minWidth: 200, alignment: .center)
-                                    .frame(maxWidth: .infinity)
-                                    .transaction { transaction in
-                                        transaction.animation = nil
-                                    }
+                                    
                                 }
                                 
                                 Spacer()
@@ -248,9 +207,6 @@ struct GenerateMnemonicView: View {
                     .padding([.leading, .trailing], Dimensions.lateralPadding)
                 }
             }
-        }
-        .onChange(of: self.mnemonicSizeOptions.selectedOption) { newValue in
-            self.generateBtnMode = .willGenerate
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
