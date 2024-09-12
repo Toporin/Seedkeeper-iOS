@@ -21,12 +21,10 @@ struct GeneratePasswordView: View {
     
     @StateObject var passwordOptions = PasswordOptions()
     
-//    @State private var passphraseText: String?
     @State private var labelText: String?
     @State private var loginText: String?
     @State private var urlText: String?
     
-//    @State private var mnemonicPayload: MnemonicPayload?
     @State private var passwordPayload: PasswordPayload?
     
     // Password :
@@ -54,9 +52,7 @@ struct GeneratePasswordView: View {
             return String(localized: "import")
         }
     }
-    
-//    @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
-        
+            
     var canGeneratePassword: Bool {
         if let labelText = labelText {
             return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption() && generatorModeNavData.generatorMode == .password
@@ -65,22 +61,6 @@ struct GeneratePasswordView: View {
         }
     }
     
-//    var canGenerateMnemonic: Bool {
-//        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption, generatorModeNavData.generatorMode == .mnemonic {
-//            return !labelText.isEmpty
-//        } else {
-//            return false
-//        }
-//    }
-    
-//    var canManualImportMnemonic: Bool {
-//        if let labelText = labelText  {
-//            return isMnemonicValid()
-//        } else {
-//            return false
-//        }
-//    }
-    
     var canManualImportPassword: Bool {
         if let labelText = labelText {
             return !labelText.isEmpty && seedPhrase.count >= 1
@@ -88,32 +68,6 @@ struct GeneratePasswordView: View {
             return false
         }
     }
-    
-//    private func isMnemonicValid() -> Bool {
-//        do {
-//            try Mnemonic.validate(mnemonic: seedPhrase)
-//            return true
-//        } catch {
-//            return false
-//        }
-//    }
-    
-//    func generateMnemonic() -> String? {
-//        do {
-//            
-//            guard let mnemonicSizeOptions = mnemonicSizeOptions.selectedOption else {
-//                return nil
-//            }
-//            
-//            let mnemonicSize = mnemonicSizeOptions.toBits()
-//            let mnemonic = try Mnemonic.generateMnemonic(strength: mnemonicSize)
-//            return mnemonic
-//            
-//        } catch {
-//            print("Error generating mnemonic: \(error)")
-//        }
-//        return nil
-//    }
     
     private func getMemorableWordsFromTextFile() -> [String] {
         guard let path = Bundle.main.path(forResource: "memorable-pwd", ofType: "txt") else {
@@ -200,12 +154,8 @@ struct GeneratePasswordView: View {
     
     func getViewTitle() -> String {
         switch generatorModeNavData.generatorMode {
-//        case .mnemonic where generatorModeNavData.secretCreationMode == .generate:
-//            return String(localized: "generateMnemonicSecret")
         case .password where generatorModeNavData.secretCreationMode == .generate:
             return String(localized: "generatePasswordSecret")
-//        case .mnemonic where generatorModeNavData.secretCreationMode == .manualImport:
-//            return String(localized: "importMnemonicSecret")
         case .password where generatorModeNavData.secretCreationMode == .manualImport:
             return String(localized: "importPasswordSecret")
         default:
@@ -215,12 +165,8 @@ struct GeneratePasswordView: View {
     
     func getViewSubtitle() -> String {
         switch generatorModeNavData.generatorMode {
-//        case .mnemonic where generatorModeNavData.secretCreationMode == .generate:
-//            return String(localized: "generateMnemonicSecretInfoSubtitle")
         case .password where generatorModeNavData.secretCreationMode == .generate:
             return String(localized: "generatePasswordSecretInfoSubtitle")
-//        case .mnemonic where generatorModeNavData.secretCreationMode == .manualImport:
-//            return String(localized: "importMnemonicSecretInfoSubtitle")
         case .password where generatorModeNavData.secretCreationMode == .manualImport:
             return String(localized: "importPasswordSecretInfoSubtitle")
         default:
@@ -261,16 +207,6 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-//                        if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode != .manualImport {
-//                            SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-//                                showPickerSheet = true
-//                            }
-//                        } else if generatorModeNavData.generatorMode == .mnemonic && generatorModeNavData.secretCreationMode == .manualImport {
-//                            EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-//                                showPickerSheet = true
-//                            }
-//                        }
-                        
                         if generatorModeNavData.generatorMode == .password {
                             EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true,
                                     action:
@@ -306,18 +242,6 @@ struct GeneratePasswordView: View {
                             PasswordGeneratorBox(options: passwordOptions)
                         }
                         
-//                        if generatorModeNavData.generatorMode == .mnemonic {
-//                            
-//                            Spacer()
-//                                .frame(height: 16)
-//                            
-//                            EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
-//                                if case .text(let customPassphraseText) = passphraseTextResult {
-//                                    passphraseText = customPassphraseText
-//                                }
-//                            }
-//                        }
-                        
                         Spacer()
                             .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
                         
@@ -329,14 +253,6 @@ struct GeneratePasswordView: View {
                         
                         if generatorModeNavData.secretCreationMode == .manualImport {
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
-//                                if generatorModeNavData.generatorMode == .mnemonic, canManualImportMnemonic {
-//                                    
-//                                    cardState.mnemonicManualImportPayload = MnemonicManualImportPayload(label: labelText!,
-//                                                                                                        passphrase: passphraseText,
-//                                                                                                        result: seedPhrase)
-//                                    
-//                                    cardState.requestManualImportSecret(secretType: .bip39Mnemonic)
-//                                }
                                 
                                 if generatorModeNavData.generatorMode == .password, canManualImportPassword {
                                     
@@ -370,16 +286,6 @@ struct GeneratePasswordView: View {
                                     SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGeneratePassword, action: {
                                         if generateBtnMode == .willGenerate {
                                             
-//                                            if generatorModeNavData.generatorMode == .mnemonic, canGenerateMnemonic {
-//                                                
-//                                                seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
-//                                                
-//                                                mnemonicPayload = MnemonicPayload(label: labelText!,
-//                                                                                  mnemonicSize: mnemonicSizeOptions.selectedOption!,
-//                                                                                  passphrase: passphraseText,
-//                                                                                  result: seedPhrase)
-//                                            }
-                                            
                                             if generatorModeNavData.generatorMode == .password, canGeneratePassword {
                                                 let password = generatePassword(options: passwordOptions)
                                                 
@@ -393,12 +299,6 @@ struct GeneratePasswordView: View {
                                             }
                                             
                                         } else if generateBtnMode == .willImport {
-//                                            if let mnemonicPayload = self.mnemonicPayload {
-//                                                print("will import mnemonic")
-//                                                cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
-//                                                cardState.requestAddSecret(secretType: .bip39Mnemonic)
-//                                            }
-                                            
                                             if let passwordPayload = self.passwordPayload {
                                                 print("will import password")
                                                 cardState.passwordPayloadToImportOnCard = passwordPayload
@@ -443,9 +343,6 @@ struct GeneratePasswordView: View {
         .onChange(of: self.passwordOptions.includeUppercase) { newValue in
             self.generateBtnMode = .willGenerate
         }
-//        .onChange(of: self.mnemonicSizeOptions.selectedOption) { newValue in
-//            self.generateBtnMode = .willGenerate
-//        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
@@ -458,321 +355,13 @@ struct GeneratePasswordView: View {
                 SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
-//        .sheet(isPresented: $showPickerSheet) {
-//            if #available(iOS 16.4, *) {
-//                OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
-//                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
-//                    .presentationBackground(.ultraThinMaterial)
-//            } else {
-//                OptionSelectorView(pickerOptions: $mnemonicSizeOptions)
-//                    .presentationDetents([.height(Dimensions.optionSelectorSheetHeight)])
-//                    .background(Image("bg-glow-small")
-//                        .resizable()
-//                        .scaledToFill()
-//                        .blur(radius: 10)
-//                        .edgesIgnoringSafeArea(.all))
-//            }
-//        }
         .onDisappear {
             cardState.cleanPayloadToImportOnCard()
         }
     }
 }
 
-
-//enum GenerateBtnMode {
-//    case willGenerate
-//    case willImport
-//}
-
-//struct GeneratorModeNavData: Hashable {
-//    let generatorMode: GeneratorMode
-//    let secretCreationMode: SecretCreationMode
-//    
-//    init(generatorMode: GeneratorMode, secretCreationMode: SecretCreationMode) {
-//        self.generatorMode = generatorMode
-//        self.secretCreationMode = secretCreationMode
-//    }
-//}
-
-//enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
-//    case mnemonic
-//    case password
-//    
-//    // TODO:  not used?
-//    func humanReadableName() -> String {
-//        switch self {
-//        case .mnemonic:
-//            return String(localized: "mnemonicPhrase")
-//        case .password:
-//            return String(localized: "loginPasswordPhrase")
-//        }
-//    }
-//}
-
-//enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
-//    case twelveWords
-//    case eighteenWords
-//    case twentyFourWords
-//    
-//    // TODO: not used?
-//    func humanReadableName() -> String {
-//        switch self {
-//        case .twelveWords:
-//            return String(localized: "12words")
-//        case .eighteenWords:
-//            return String(localized: "18words")
-//        case .twentyFourWords:
-//            return String(localized: "24words")
-//        }
-//    }
-//        
-//    func toBits() -> Int {
-//        switch self {
-//        case .twelveWords:
-//            return 128
-//        case .eighteenWords:
-//            return 192
-//        case .twentyFourWords:
-//            return 256
-//        }
-//    }
-//}
-
 // MARK: Payload types
-
-// TODO: remove?
-//struct MnemonicCardData {
-//    let mnemonic: String
-//    let passphrase: String?
-//    
-//    func getMnemonicSize() -> MnemonicSize? {
-//        let mnemonicWords = mnemonic.split(separator: " ")
-//        switch mnemonicWords.count {
-//        case 12:
-//            return .twelveWords
-//        case 18:
-//            return .eighteenWords
-//        case 24:
-//            return .twentyFourWords
-//        default:
-//            return nil
-//        }
-//    }
-//    
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
-//    
-//    func getSeedQRImage() -> UIImage? {
-//        let wordlist = SKMnemonicEnglish.wordList
-//        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
-//        let combinedString = indices.map { String($0) }.joined(separator: " ")
-//
-//        guard let data = combinedString.data(using: .ascii) else { return nil }
-//        
-//        // Create a QR code filter
-//        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
-//        filter.setValue(data, forKey: "inputMessage")
-//        filter.setValue("Q", forKey: "inputCorrectionLevel")
-//        
-//        guard let ciImage = filter.outputImage else { return nil }
-//        
-//        let transform = CGAffineTransform(scaleX: 10, y: 10)
-//        let scaledCIImage = ciImage.transformed(by: transform)
-//        
-//        let context = CIContext()
-//        guard let cgImage = context.createCGImage(scaledCIImage, from: scaledCIImage.extent) else { return nil }
-//        
-//        return UIImage(cgImage: cgImage)
-//    }
-//    
-//    private func mnemonicToIndices(mnemonic: String, wordlist: [String]) -> [Int] {
-//        return mnemonic.split(separator: " ").compactMap { word in
-//            wordlist.firstIndex(of: String(word))
-//        }
-//    }
-//}
-
-
-// TODO: merge MnemonicManualImportPayload & MnemonicPayload
-//struct MnemonicPayload {
-//    var label: String
-//    var mnemonicSize: MnemonicSize
-//    var passphrase: String?
-//    var result: String
-//    
-//    func getV1PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//    
-//    func getV2PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        let worldlistSelector: UInt8 = 0x00
-//        payload.append(worldlistSelector)
-//        
-//        do {
-//            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
-//            let entropySize = UInt8(entropy.count)
-//            payload.append(entropySize)
-//            payload.append(contentsOf: entropy)
-//        } catch {
-//            print("Error converting mnemonic to entropy: \(error)")
-//        }
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//}
-
-//struct MnemonicManualImportPayload {
-//    var label: String
-//    var passphrase: String?
-//    var result: String
-//    
-//    func getV1PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//    
-//    func getV2PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        let worldlistSelector: UInt8 = 0x00
-//        payload.append(worldlistSelector)
-//        
-//        do {
-//            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
-//            let entropySize = UInt8(entropy.count)
-//            payload.append(entropySize)
-//            payload.append(contentsOf: entropy)
-//        } catch {
-//            print("Error converting mnemonic to entropy: \(error)")
-//        }
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//}
-
-//struct MasterseedCardData {
-//    let blob: String
-//}
-
-//struct ElectrumMnemonicCardData {
-//    let mnemonic: String
-//    let passphrase: String
-//    
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
-//    
-//    func getMnemonicSize() -> MnemonicSize? {
-//        let mnemonicWords = mnemonic.split(separator: " ")
-//        switch mnemonicWords.count {
-//        case 12:
-//            return .twelveWords
-//        case 18:
-//            return .eighteenWords
-//        case 24:
-//            return .twentyFourWords
-//        default:
-//            return nil
-//        }
-//    }
-//}
-
-//struct MasterseedMnemonicCardData {
-//    let passphrase: String
-//    let mnemonic: String
-//    let size: Int
-//    let descriptor: String
-//    
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
-//    
-//    func getMnemonicSize() -> MnemonicSize? {
-//        let mnemonicWords = mnemonic.split(separator: " ")
-//        switch mnemonicWords.count {
-//        case 12:
-//            return .twelveWords
-//        case 18:
-//            return .eighteenWords
-//        case 24:
-//            return .twentyFourWords
-//        default:
-//            return nil
-//        }
-//    }
-//}
-
-//struct GenericCardData {
-//    let blob: String
-//}
-
-//struct TwoFACardData {
-//    let blob: String
-//}
 
 // TODO: remove
 struct PasswordCardData {
@@ -786,8 +375,8 @@ struct PasswordPayload {
     var label: String
     var login: String?
     var url: String?
-    var passwordLength: Double
-    var result: String
+    var passwordLength: Double // TODO: not useful, remove?
+    var result: String // TODO: rename to password
     
     func getPayloadBytes() -> [UInt8] {
         let passwordBytes = [UInt8](result.utf8)
