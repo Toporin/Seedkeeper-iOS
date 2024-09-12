@@ -109,7 +109,7 @@ class CardState: ObservableObject {
                 
             } else if currentSecretObject?.secretHeader.type == .bip39Mnemonic,
                       let secretBytes = currentSecretObject?.secretBytes,
-                      let data = parseMnemonicCardData(from: secretBytes) {
+                      let data = parseMnemonicCardData(bytes: secretBytes) {
                 
                 currentMnemonicCardData = data
                 
@@ -130,7 +130,6 @@ class CardState: ObservableObject {
                       currentSecretObject?.secretHeader.subtype == 0x00,
                       let secretBytes = currentSecretObject?.secretBytes,
                       let data = parseMasterseedCardData(bytes: secretBytes) {
-                
                 currentMasterseedCardData = data
                 
             } else if currentSecretObject?.secretHeader.type == .electrumMnemonic, let secretBytes = currentSecretObject?.secretBytes, let data = parseElectreumMnemonicCardData(bytes: secretBytes) {

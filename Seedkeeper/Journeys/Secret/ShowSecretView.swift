@@ -50,6 +50,8 @@ struct ShowSecretView: View {
                     
                     SKLabel(title: "passphrase", content: cardState.currentMasterseedMnemonicCardData?.passphrase ?? "(none)")
                     
+                    SKLabel(title: "descriptor", content: cardState.currentMasterseedMnemonicCardData?.descriptor ?? "(none)")
+
                 } else if secret.type == .electrumMnemonic {
                     
                     SKLabel(title: "mnemonicSize", content: cardState.currentElectrumMnemonicCardData?.getMnemonicSize()?.humanReadableName() ?? "(none)")

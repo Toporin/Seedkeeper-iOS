@@ -19,8 +19,9 @@ struct GenerateMnemonicView: View {
     @State private var showPickerSheet = false
     @State private var generateBtnMode = GenerateBtnMode.willGenerate
     
-    @State private var passphraseText: String?
     @State private var labelText: String?
+    @State private var passphraseText: String?
+    @State private var descriptorText: String?
     
     @State private var mnemonicPayload: MnemonicPayload?
 
@@ -168,6 +169,17 @@ struct GenerateMnemonicView: View {
                                     passphraseText = customPassphraseText
                                 }
                             }
+                            
+                            
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
+                                if case .text(let customDescriptorText) = descriptorTextResult {
+                                    descriptorText = customDescriptorText
+                                }
+                            }
+                            
                         }
                         
                         Spacer()
@@ -185,7 +197,8 @@ struct GenerateMnemonicView: View {
                                     
                                     cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
                                                                                             mnemonic: seedPhrase,
-                                                                                            passphrase: passphraseText)
+                                                                                            passphrase: passphraseText,
+                                                                                            descriptor: descriptorText)
                                     
                                     cardState.requestAddSecret(secretType: .bip39Mnemonic)
                                 }
@@ -205,7 +218,8 @@ struct GenerateMnemonicView: View {
                                                 
                                                 mnemonicPayload = MnemonicPayload(label: labelText!,
                                                                                   mnemonic: seedPhrase,
-                                                                                  passphrase: passphraseText)
+                                                                                  passphrase: passphraseText,
+                                                                                  descriptor: descriptorText)
                                             }
                                             
                                         } else if generateBtnMode == .willImport {
@@ -309,26 +323,6 @@ struct MnemonicPayload {
     var passphrase: String?
     var descriptor: String?
     
-    // TODO: remove?
-//    func getV1PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](mnemonic.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-    
     func getV2PayloadBytes() -> [UInt8] {
         let mnemonicBytes = [UInt8](mnemonic.utf8)
         let mnemonicSize = UInt8(mnemonicBytes.count)
@@ -357,8 +351,14 @@ struct MnemonicPayload {
             payload.append(contentsOf: passphraseBytes)
         }
         
-        // TODO: add descriptor
-        
+        // add descriptor
+        if let descriptor = descriptor {
+            let descriptorBytes = [UInt8](descriptor.utf8)
+            let descriptorSize = [UInt8((descriptorBytes.count>>8)%256), UInt8(descriptorBytes.count%256)]
+            payload.append(contentsOf: descriptorSize)
+            payload.append(contentsOf: descriptorBytes)
+        }
+        print("Debug getV2PayloadBytes: \(payload.bytesToHex)")
         return payload
     }
     

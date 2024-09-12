@@ -132,6 +132,7 @@ extension CardState {
         }
     }
     
+    // todo: merge with parseMnemonicCardData
     func parseElectreumMnemonicCardData(bytes: [UInt8]) -> ElectrumMnemonicCardData? {
         var index = 0
 
@@ -189,59 +190,60 @@ extension CardState {
         
         return MasterseedCardData(blob: hexString)
     }
-        
+    
     func parseMasterseedMnemonicCardData(bytes: [UInt8]) -> MnemonicPayload? {
+        
         var index = 0
-
-        if bytes.isEmpty {
-            print("No bytes to parse!")
-            return nil
-        }
-
         // Check index before accessing bytes
         guard index < bytes.count else {
             print("Index out of bounds when reading masterseedSize")
             return nil
         }
-
+        
+        // Extract masterseed size and masterseed
         let masterseedSize = Int(bytes[index])
         index += 1
-
-        if masterseedSize < 0 || index + masterseedSize > bytes.count {
-            print("Invalid masterseedSize")
+        guard index + masterseedSize <= bytes.count else {
+            print("Invalid masterseed size")
             return nil
         }
-
         let masterseedBytes = Array(bytes[index..<(index + masterseedSize)])
         index += masterseedSize
+        
+        // get wordlist selector
+        guard index <= bytes.count else {
+            print("Index out of bounds when reading wordlistSelector")
+            return nil
+        }
+        let wordlistSelector = Int(bytes[index]) // TODO: use selector
         index += 1
-
-        guard index < bytes.count else {
+        
+        // Extract entropy if available
+        guard index <= bytes.count else {
             print("Index out of bounds when reading entropySize")
             return nil
         }
-
         let entropySize = Int(bytes[index])
         index += 1
-
+        guard index + entropySize <= bytes.count else {
+            print("Index out of bounds when reading entropy")
+            return nil
+        }
         let entropyBytes = Array(bytes[index..<(index + entropySize)])
         index += entropySize
-
+        
+        // convert entropy to mnemonic
         var mnemonic = "n/a"
         do {
             mnemonic = try Mnemonic.entropyToMnemonic(entropy: entropyBytes)
         } catch {
             print("Failed to convert entropy to mnemonic")
+            mnemonic = "Failed to recover mnemonic from entropy: \(entropyBytes.bytesToHex)"
         }
-
+        
+        // Extract passphrase size and passphrase if available
         var passphrase: String? = nil
-
         if index < bytes.count {
-            guard index < bytes.count else {
-                print("Index out of bounds when reading passphraseSize")
-                return nil
-            }
-            
             let passphraseSize = Int(bytes[index])
             index += 1
             if passphraseSize > 0 && index + passphraseSize <= bytes.count {
@@ -250,35 +252,57 @@ extension CardState {
                 passphrase = String(bytes: passphraseBytes, encoding: .utf8)
             }
         }
-
-        var descriptor = ""
-
-        if index < bytes.count {
-            // Check index before accessing descriptor size
-            guard index + 1 < bytes.count else {
-                print("Index out of bounds when reading descriptor size")
-                return nil
-            }
-
-            let descriptorSizeArray = Array(bytes[index..<(index + 2)])
-            let descriptorSize = descriptorSizeArray.withUnsafeBytes { $0.load(as: Int16.self) }
+        
+        // Extract descriptor size and descriptor if available
+        var descriptor: String? = nil
+        if index < (bytes.count-1) {
+            print("in parseMnemonicCardData: there is a descriptor")
+            let descriptorSize = Int(bytes[index])*256 + Int(bytes[index+1])
+            print("in parseMnemonicCardData: there is a descriptor with size \(descriptorSize)")
             index += 2
-
-            if Int(index + Int(descriptorSize)) > bytes.count {
-                print("Invalid descriptor size")
-                return nil
+            if descriptorSize > 0 && (index + descriptorSize) <= bytes.count {
+                let descriptorBytes = Array(bytes[index..<(index + descriptorSize)])
+                print("in parseMnemonicCardData: there is a descriptorBytes \(descriptorBytes.bytesToHex)")
+                index += descriptorSize
+                descriptor = String(bytes: descriptorBytes, encoding: .utf8)
+                print("in parseMnemonicCardData: there is a descriptor \(descriptor)")
             }
-
-            let descriptorBytes = Array(bytes[index..<(index + Int(descriptorSize))])
-            descriptor = String(bytes: descriptorBytes, encoding: .utf8) ?? ""
         }
 
-        return MnemonicPayload(
-            label: "",
-            mnemonic: mnemonic,
-            passphrase: passphrase ?? "n/a",
-            descriptor: descriptor
-        )
+        return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: descriptor)
+    }
+    
+    // Parse mnemonic in legacy format [mnemonic_size mnemonic passphrase_size passphrase]
+    func parseMnemonicCardData(bytes: [UInt8]) -> MnemonicPayload? { //MnemonicCardData? {
+        var index = 0
+
+        // Extract mnemonic size and mnemonic
+        let mnemonicSize = Int(bytes[index])
+        index += 1
+        guard index + mnemonicSize <= bytes.count else {
+            print("Invalid mnemonic size")
+            return nil
+        }
+        let mnemonicBytes = Array(bytes[index..<(index + mnemonicSize)])
+        index += mnemonicSize
+        guard let mnemonic = String(bytes: mnemonicBytes, encoding: .utf8) else {
+            print("Failed to convert mnemonic bytes to string")
+            return nil
+        }
+
+        // Extract passphrase size and passphrase if available
+        var passphrase: String? = nil
+        if index < bytes.count {
+            let passphraseSize = Int(bytes[index])
+            index += 1
+            if passphraseSize > 0 && index + passphraseSize <= bytes.count {
+                let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
+                index += passphraseSize
+                passphrase = String(bytes: passphraseBytes, encoding: .utf8)
+            }
+        }
+        
+        return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: nil)
     }
 
     func parseGenericCardData(from bytes: [UInt8]) -> GenericCardData? {
@@ -367,40 +391,6 @@ extension CardState {
         return PasswordPayload(label:"", password: password, login: login ?? "n/a", url: url ?? "n/a")
     }
 
-    func parseMnemonicCardData(from bytes: [UInt8]) -> MnemonicPayload? { //MnemonicCardData? {
-        var index = 0
-
-        // Extract mnemonic size and mnemonic
-        let mnemonicSize = Int(bytes[index])
-        index += 1
-        guard index + mnemonicSize <= bytes.count else {
-            print("Invalid mnemonic size")
-            return nil
-        }
-        let mnemonicBytes = Array(bytes[index..<(index + mnemonicSize)])
-        index += mnemonicSize
-        guard let mnemonic = String(bytes: mnemonicBytes, encoding: .utf8) else {
-            print("Failed to convert mnemonic bytes to string")
-            return nil
-        }
-
-        // Extract passphrase size and passphrase if available
-        var passphrase: String? = nil
-        if index < bytes.count {
-            let passphraseSize = Int(bytes[index])
-            index += 1
-            if passphraseSize > 0 && index + passphraseSize <= bytes.count {
-                let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
-                index += passphraseSize
-                passphrase = String(bytes: passphraseBytes, encoding: .utf8)
-            }
-        }
-        
-        // TODO: extract descriptor
-
-        return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: "TODO!")
-    }
-    
     func getReasonFromPkiReturnCode(pkiReturnCode: PkiReturnCode) -> String {
         switch(pkiReturnCode) {
         case PkiReturnCode.FailedToVerifyDeviceCertificate:

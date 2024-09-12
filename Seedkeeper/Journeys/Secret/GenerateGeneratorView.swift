@@ -74,7 +74,7 @@ struct MasterseedCardData {
 }
 
 // TODO: BIP39mnemonicPayload
-
+// TODO: merge with MnemonicPayload?
 struct ElectrumMnemonicCardData {
     let mnemonic: String
     let passphrase: String
