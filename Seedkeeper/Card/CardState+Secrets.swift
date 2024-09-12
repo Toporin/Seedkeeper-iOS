@@ -64,148 +64,148 @@ extension CardState {
     // *********************************************************
     // MARK: - Manual import secret
     // *********************************************************
-    func requestManualImportSecret(secretType: SeedkeeperSecretType) {
-        switch secretType {
-        case .bip39Mnemonic:
-            session = SatocardController(onConnect: onManualImportMnemonicSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-        case .password:
-            session = SatocardController(onConnect: onManualImportPasswordSecret, onFailure: onDisconnection)
-            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-        default:
-            print("requestAddSecret : No action defined for \(secretType.rawValue)")
-        }
-    }
+//    func requestManualImportSecret(secretType: SeedkeeperSecretType) {
+//        switch secretType {
+//        case .bip39Mnemonic:
+//            session = SatocardController(onConnect: onAddMnemonicSecret, onFailure: onDisconnection)
+//            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
+//        case .password:
+//            session = SatocardController(onConnect: onAddPasswordSecret, onFailure: onDisconnection)
+//            session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
+//        default:
+//            print("requestAddSecret : No action defined for \(secretType.rawValue)")
+//        }
+//    }
     
-    // SECRET_TYPE_PASSWORD (subtype 0x01): [password_size(1b) | password | login_size(1b) | login | url_size(1b) | url]
-    private func onManualImportPasswordSecret(cardChannel: CardChannel) -> Void {
-        guard let pinForMasterCard = pinForMasterCard else {
-            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
-            return
-        }
-        
-        guard let passwordPayload = passwordManualImportPayload else {
-            session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
-            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : passwordPayload is not defined"))
-            return
-        }
-        
-        let pinBytes = Array(pinForMasterCard.utf8)
-        
-        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-        
-        do {
-            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            
-            if !isAuthentikeyValid {
-                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                return
-            }
-            
-            let secretBytes = passwordPayload.getPayloadBytes()
-            let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
-            
-            let label = passwordPayload.label
-            
-            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
-                                                      subtype: UInt8(0x01),
-                                                      fingerprintBytes: secretFingerprintBytes,
-                                                      label: label)
-            let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
-                                                      secretHeader: secretHeader,
-                                                      isEncrypted: false)
-            
-            let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
-            
-            secretHeader.sid = sid
-            
-            try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
-            
-            try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
-            
-            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
-            
-            if let login = passwordPayload.login {
-                self.addLoginToSavedLoginsDB(login: login)
-            }
-            
-            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
-            
-        } catch let error {
-            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : \(error.localizedDescription)"))
-        }
-        
-        session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
-    }
+//    // SECRET_TYPE_PASSWORD (subtype 0x01): [password_size(1b) | password | login_size(1b) | login | url_size(1b) | url]
+//    private func onManualImportPasswordSecret(cardChannel: CardChannel) -> Void {
+//        guard let pinForMasterCard = pinForMasterCard else {
+//            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+//            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+//            return
+//        }
+//        
+//        guard let passwordPayload = passwordManualImportPayload else {
+//            session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+//            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : passwordPayload is not defined"))
+//            return
+//        }
+//        
+//        let pinBytes = Array(pinForMasterCard.utf8)
+//        
+//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+//        
+//        do {
+//            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+//            
+//            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+//            
+//            if !isAuthentikeyValid {
+//                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+//                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+//                return
+//            }
+//            
+//            let secretBytes = passwordPayload.getPayloadBytes()
+//            let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
+//            
+//            let label = passwordPayload.label
+//            
+//            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.password,
+//                                                      subtype: UInt8(0x01),
+//                                                      fingerprintBytes: secretFingerprintBytes,
+//                                                      label: label)
+//            let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
+//                                                      secretHeader: secretHeader,
+//                                                      isEncrypted: false)
+//            
+//            let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
+//            
+//            secretHeader.sid = sid
+//            
+//            try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
+//            
+//            try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
+//            
+//            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+//            
+//            if let login = passwordPayload.login {
+//                self.addLoginToSavedLoginsDB(login: login)
+//            }
+//            
+//            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+//            
+//        } catch let error {
+//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+//            logEvent(log: LogModel(type: .error, message: "onManualImportPasswordSecret : \(error.localizedDescription)"))
+//        }
+//        
+//        session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+//    }
     
-    // trigger hidden before fringe cattle height rug blush pause erode shift absent
-    // SECRET_TYPE_BIP39_MNEMONIC: [mnemonic_size(1b) | mnemonic | passphrase_size(1b) | passphrase ]
-    private func onManualImportMnemonicSecret(cardChannel: CardChannel) -> Void {
-        print("onAddMnemonicSecret")
-        guard let pinForMasterCard = pinForMasterCard else {
-            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-            // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
-            return
-        }
-        
-        guard let mnemonicPayload = mnemonicManualImportPayload else {
-            session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
-            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : mnemonicPayload is not defined"))
-            return
-        }
-        
-        let pinBytes = Array(pinForMasterCard.utf8)
-        
-        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-        
-        do {
-            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            
-            if !isAuthentikeyValid {
-                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                return
-            }
-            
-            let secretBytes = mnemonicPayload.getV2PayloadBytes()
-            let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
-            
-            let label = mnemonicPayload.label
-            
-            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.masterseed,
-                                                      subtype: UInt8(0x01),
-                                                      fingerprintBytes: secretFingerprintBytes,
-                                                      label: label)
-            let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
-                                                      secretHeader: secretHeader,
-                                                      isEncrypted: false)
-            
-            let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
-            
-            secretHeader.sid = sid
-            
-            try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
-            
-            try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
-            
-            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
-    
-            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
-            
-        } catch let error {
-            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : \(error.localizedDescription)"))
-        }
-        
-        session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
-    }
+//    // trigger hidden before fringe cattle height rug blush pause erode shift absent
+//    // SECRET_TYPE_BIP39_MNEMONIC: [mnemonic_size(1b) | mnemonic | passphrase_size(1b) | passphrase ]
+//    private func onManualImportMnemonicSecret(cardChannel: CardChannel) -> Void {
+//        print("onAddMnemonicSecret")
+//        guard let pinForMasterCard = pinForMasterCard else {
+//            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+//            // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
+//            return
+//        }
+//        
+//        guard let mnemonicPayload = mnemonicManualImportPayload else {
+//            session?.stop(errorMessage: String(localized: "nfcPasswordPayloadIsNotDefined"))
+//            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : mnemonicPayload is not defined"))
+//            return
+//        }
+//        
+//        let pinBytes = Array(pinForMasterCard.utf8)
+//        
+//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+//        
+//        do {
+//            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+//            
+//            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+//            
+//            if !isAuthentikeyValid {
+//                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+//                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+//                return
+//            }
+//            
+//            let secretBytes = mnemonicPayload.getV2PayloadBytes()
+//            let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
+//            
+//            let label = mnemonicPayload.label
+//            
+//            var secretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.masterseed,
+//                                                      subtype: UInt8(0x01),
+//                                                      fingerprintBytes: secretFingerprintBytes,
+//                                                      label: label)
+//            let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
+//                                                      secretHeader: secretHeader,
+//                                                      isEncrypted: false)
+//            
+//            let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
+//            
+//            secretHeader.sid = sid
+//            
+//            try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
+//            
+//            try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
+//            
+//            self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+//    
+//            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+//            
+//        } catch let error {
+//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+//            logEvent(log: LogModel(type: .error, message: "onManualImportMnemonicSecret : \(error.localizedDescription)"))
+//        }
+//        
+//        session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+//    }
     
     // *********************************************************
     // MARK: - Add secret

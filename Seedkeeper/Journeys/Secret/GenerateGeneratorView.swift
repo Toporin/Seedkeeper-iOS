@@ -73,6 +73,8 @@ struct MasterseedCardData {
     let blob: String
 }
 
+// TODO: BIP39mnemonicPayload
+
 struct ElectrumMnemonicCardData {
     let mnemonic: String
     let passphrase: String

@@ -144,10 +144,10 @@ class CardState: ObservableObject {
         }
     }
     @Published var currentSecretString: String = ""
-    @Published var currentPasswordCardData: PasswordCardData?
+    @Published var currentPasswordCardData: PasswordPayload? //PasswordCardData?
     @Published var currentMnemonicCardData: MnemonicCardData?
     @Published var current2FACardData: TwoFACardData?
-    @Published var currentMasterseedMnemonicCardData: MasterseedMnemonicCardData?
+    @Published var currentMasterseedMnemonicCardData: MnemonicPayload? //MasterseedMnemonicCardData?
     @Published var currentMasterseedCardData: MasterseedCardData?
     @Published var currentElectrumMnemonicCardData: ElectrumMnemonicCardData?
     @Published var currentGenericCardData: GenericCardData?
@@ -155,8 +155,8 @@ class CardState: ObservableObject {
     var passwordPayloadToImportOnCard: PasswordPayload?
     var mnemonicPayloadToImportOnCard: MnemonicPayload?
     
-    var mnemonicManualImportPayload: MnemonicManualImportPayload?
-    var passwordManualImportPayload: PasswordManualImportPayload?
+    //var mnemonicManualImportPayload: MnemonicManualImportPayload?
+    //var passwordManualImportPayload: PasswordPayload? // TODO: merge with passwordPayloadToImportOnCard
     
     var backupAuthentiKeySid: Int?
     var backupAuthentiKeyFingerprintBytes: [UInt8]?

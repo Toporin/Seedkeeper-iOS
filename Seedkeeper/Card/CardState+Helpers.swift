@@ -32,8 +32,8 @@ extension CardState {
         passwordPayloadToImportOnCard = nil
         mnemonicPayloadToImportOnCard = nil
         
-        mnemonicManualImportPayload = nil
-        passwordManualImportPayload = nil
+        //mnemonicManualImportPayload = nil
+        //passwordManualImportPayload = nil
     }
     
     internal func resetState() {
@@ -193,7 +193,7 @@ extension CardState {
         return MasterseedCardData(blob: hexString)
     }
         
-    func parseMasterseedMnemonicCardData(bytes: [UInt8]) -> MasterseedMnemonicCardData? {
+    func parseMasterseedMnemonicCardData(bytes: [UInt8]) -> MnemonicPayload? {
         var index = 0
 
         if bytes.isEmpty {
@@ -276,10 +276,10 @@ extension CardState {
             descriptor = String(bytes: descriptorBytes, encoding: .utf8) ?? ""
         }
 
-        return MasterseedMnemonicCardData(
-            passphrase: passphrase ?? "n/a",
+        return MnemonicPayload(
+            label: "",
             mnemonic: mnemonic,
-            size: mnemonic.components(separatedBy: " ").count,
+            passphrase: passphrase ?? "n/a",
             descriptor: descriptor
         )
     }
@@ -326,7 +326,7 @@ extension CardState {
         return TwoFACardData(blob: hexString)
     }
     
-    func parsePasswordCardData(from bytes: [UInt8]) -> PasswordCardData? {
+    func parsePasswordCardData(from bytes: [UInt8]) -> PasswordPayload? {
         var index = 0
 
         // PASSWORD
@@ -367,7 +367,7 @@ extension CardState {
             }
         }
 
-        return PasswordCardData(password: password, login: login ?? "n/a", url: url ?? "n/a")
+        return PasswordPayload(label:"", password: password, login: login ?? "n/a", url: url ?? "n/a")
     }
 
     func parseMnemonicCardData(from bytes: [UInt8]) -> MnemonicCardData? {

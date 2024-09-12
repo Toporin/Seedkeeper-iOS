@@ -183,11 +183,11 @@ struct GenerateMnemonicView: View {
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
                                 if generatorModeNavData.generatorMode == .mnemonic, canManualImportMnemonic {
                                     
-                                    cardState.mnemonicManualImportPayload = MnemonicManualImportPayload(label: labelText!,
-                                                                                                        passphrase: passphraseText,
-                                                                                                        result: seedPhrase)
+                                    cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
+                                                                                            mnemonic: seedPhrase,
+                                                                                            passphrase: passphraseText)
                                     
-                                    cardState.requestManualImportSecret(secretType: .bip39Mnemonic)
+                                    cardState.requestAddSecret(secretType: .bip39Mnemonic)
                                 }
                             })
                         } else {
@@ -204,9 +204,8 @@ struct GenerateMnemonicView: View {
                                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
                                                 
                                                 mnemonicPayload = MnemonicPayload(label: labelText!,
-                                                                                  mnemonicSize: mnemonicSizeOptions.selectedOption!,
-                                                                                  passphrase: passphraseText,
-                                                                                  result: seedPhrase)
+                                                                                  mnemonic: seedPhrase,
+                                                                                  passphrase: passphraseText)
                                             }
                                             
                                         } else if generateBtnMode == .willImport {
@@ -365,12 +364,13 @@ struct MnemonicCardData {
 // TODO: merge MnemonicManualImportPayload & MnemonicPayload
 struct MnemonicPayload {
     var label: String
-    var mnemonicSize: MnemonicSize
+    var mnemonic: String
+    //var mnemonicSize: MnemonicSize // TODO: remove?
     var passphrase: String?
-    var result: String
+    var descriptor: String?
     
     func getV1PayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
+        let mnemonicBytes = [UInt8](mnemonic.utf8)
         let mnemonicSize = UInt8(mnemonicBytes.count)
         
         var payload: [UInt8] = []
@@ -389,7 +389,7 @@ struct MnemonicPayload {
     }
     
     func getV2PayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
+        let mnemonicBytes = [UInt8](mnemonic.utf8)
         let mnemonicSize = UInt8(mnemonicBytes.count)
         
         var payload: [UInt8] = []
@@ -401,7 +401,7 @@ struct MnemonicPayload {
         payload.append(worldlistSelector)
         
         do {
-            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
+            let entropy = try Mnemonic.mnemonicToEntropy(bip39: mnemonic)
             let entropySize = UInt8(entropy.count)
             payload.append(entropySize)
             payload.append(contentsOf: entropy)
@@ -418,68 +418,6 @@ struct MnemonicPayload {
 
         return payload
     }
-}
-
-struct MnemonicManualImportPayload {
-    var label: String
-    var passphrase: String?
-    var result: String
-    
-    func getV1PayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
-        var payload: [UInt8] = []
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
-        
-        if let passphrase = passphrase {
-            let passphraseBytes = [UInt8](passphrase.utf8)
-            let passphraseSize = UInt8(passphraseBytes.count)
-            payload.append(passphraseSize)
-            payload.append(contentsOf: passphraseBytes)
-        }
-
-        return payload
-    }
-    
-    func getV2PayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](result.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
-        var payload: [UInt8] = []
-        
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
-        
-        let worldlistSelector: UInt8 = 0x00
-        payload.append(worldlistSelector)
-        
-        do {
-            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
-            let entropySize = UInt8(entropy.count)
-            payload.append(entropySize)
-            payload.append(contentsOf: entropy)
-        } catch {
-            print("Error converting mnemonic to entropy: \(error)")
-        }
-        
-        if let passphrase = passphrase {
-            let passphraseBytes = [UInt8](passphrase.utf8)
-            let passphraseSize = UInt8(passphraseBytes.count)
-            payload.append(passphraseSize)
-            payload.append(contentsOf: passphraseBytes)
-        }
-
-        return payload
-    }
-}
-
-struct MasterseedMnemonicCardData {
-    let passphrase: String
-    let mnemonic: String
-    let size: Int
-    let descriptor: String
     
     func getSeedQRContent() -> [UInt8]? {
         let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
@@ -500,4 +438,87 @@ struct MasterseedMnemonicCardData {
             return nil
         }
     }
+    
 }
+
+//struct MnemonicManualImportPayload {
+//    var label: String
+//    var passphrase: String?
+//    var result: String
+//    
+//    func getV1PayloadBytes() -> [UInt8] {
+//        let mnemonicBytes = [UInt8](result.utf8)
+//        let mnemonicSize = UInt8(mnemonicBytes.count)
+//        
+//        var payload: [UInt8] = []
+//        payload.append(mnemonicSize)
+//        payload.append(contentsOf: mnemonicBytes)
+//        
+//        if let passphrase = passphrase {
+//            let passphraseBytes = [UInt8](passphrase.utf8)
+//            let passphraseSize = UInt8(passphraseBytes.count)
+//            payload.append(passphraseSize)
+//            payload.append(contentsOf: passphraseBytes)
+//        }
+//
+//        return payload
+//    }
+//    
+//    func getV2PayloadBytes() -> [UInt8] {
+//        let mnemonicBytes = [UInt8](result.utf8)
+//        let mnemonicSize = UInt8(mnemonicBytes.count)
+//        
+//        var payload: [UInt8] = []
+//        
+//        payload.append(mnemonicSize)
+//        payload.append(contentsOf: mnemonicBytes)
+//        
+//        let worldlistSelector: UInt8 = 0x00
+//        payload.append(worldlistSelector)
+//        
+//        do {
+//            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
+//            let entropySize = UInt8(entropy.count)
+//            payload.append(entropySize)
+//            payload.append(contentsOf: entropy)
+//        } catch {
+//            print("Error converting mnemonic to entropy: \(error)")
+//        }
+//        
+//        if let passphrase = passphrase {
+//            let passphraseBytes = [UInt8](passphrase.utf8)
+//            let passphraseSize = UInt8(passphraseBytes.count)
+//            payload.append(passphraseSize)
+//            payload.append(contentsOf: passphraseBytes)
+//        }
+//
+//        return payload
+//    }
+//}
+
+//struct MasterseedMnemonicCardData {
+//    let passphrase: String
+//    let mnemonic: String
+//    let size: Int // TODO: remove?
+//    let descriptor: String
+//    
+//    func getSeedQRContent() -> [UInt8]? {
+//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
+//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
+//        return byteArray
+//    }
+//    
+//    func getMnemonicSize() -> MnemonicSize? {
+//        let mnemonicWords = mnemonic.split(separator: " ")
+//        switch mnemonicWords.count {
+//        case 12:
+//            return .twelveWords
+//        case 18:
+//            return .eighteenWords
+//        case 24:
+//            return .twentyFourWords
+//        default:
+//            return nil
+//        }
+//    }
+//}

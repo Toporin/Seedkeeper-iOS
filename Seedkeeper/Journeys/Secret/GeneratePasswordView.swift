@@ -256,12 +256,12 @@ struct GeneratePasswordView: View {
                                 
                                 if generatorModeNavData.generatorMode == .password, canManualImportPassword {
                                     
-                                    cardState.passwordManualImportPayload = PasswordManualImportPayload(label: labelText!,
-                                                                                                        login: loginText,
-                                                                                                        url: urlText,
-                                                                                                        result: seedPhrase)
+                                    cardState.passwordPayloadToImportOnCard = PasswordPayload(label: labelText!,
+                                                                                            password: seedPhrase,
+                                                                                            login: loginText,
+                                                                                            url: urlText)
                                     
-                                    cardState.requestManualImportSecret(secretType: .password)
+                                    cardState.requestAddSecret(secretType: .password)
                                 }
                             })
                         } else {
@@ -292,10 +292,9 @@ struct GeneratePasswordView: View {
                                                 seedPhrase = password
                                                 
                                                 passwordPayload = PasswordPayload(label: labelText!,
+                                                                                  password: seedPhrase,
                                                                                   login: loginText,
-                                                                                  url: urlText,
-                                                                                  passwordLength: passwordOptions.passwordLength,
-                                                                                  result: seedPhrase)
+                                                                                  url: urlText)
                                             }
                                             
                                         } else if generateBtnMode == .willImport {
@@ -364,22 +363,22 @@ struct GeneratePasswordView: View {
 // MARK: Payload types
 
 // TODO: remove
-struct PasswordCardData {
-    let password: String
-    let login: String
-    let url: String
-}
+//struct PasswordCardData {
+//    let password: String
+//    let login: String
+//    let url: String
+//}
 
 // TODO: merge PasswordPayload & PasswordManualImportPayload very similar
 struct PasswordPayload {
     var label: String
+    var password: String
     var login: String?
     var url: String?
-    var passwordLength: Double // TODO: not useful, remove?
-    var result: String // TODO: rename to password
+    //var passwordLength: Double // TODO: not useful, remove?
     
     func getPayloadBytes() -> [UInt8] {
-        let passwordBytes = [UInt8](result.utf8)
+        let passwordBytes = [UInt8](password.utf8)
         let passwordSize = UInt8(passwordBytes.count)
 
         var payload: [UInt8] = []
@@ -404,35 +403,35 @@ struct PasswordPayload {
     }
 }
 
-struct PasswordManualImportPayload {
-    var label: String
-    var login: String?
-    var url: String?
-    var result: String
-    
-    func getPayloadBytes() -> [UInt8] {
-        let passwordBytes = [UInt8](result.utf8)
-        let passwordSize = UInt8(passwordBytes.count)
-
-        var payload: [UInt8] = []
-        payload.append(passwordSize)
-        payload.append(contentsOf: passwordBytes)
-        
-        if let login = login {
-            let loginBytes = [UInt8](login.utf8)
-            let loginSize = UInt8(loginBytes.count)
-            payload.append(loginSize)
-            payload.append(contentsOf: loginBytes)
-        }
-
-        if let url = url {
-            let urlBytes = [UInt8](url.utf8)
-            let urlSize = UInt8(urlBytes.count)
-            payload.append(urlSize)
-            payload.append(contentsOf: urlBytes)
-        }
-
-        return payload
-    }
-}
+//struct PasswordManualImportPayload {
+//    var label: String
+//    var login: String?
+//    var url: String?
+//    var result: String
+//    
+//    func getPayloadBytes() -> [UInt8] {
+//        let passwordBytes = [UInt8](result.utf8)
+//        let passwordSize = UInt8(passwordBytes.count)
+//
+//        var payload: [UInt8] = []
+//        payload.append(passwordSize)
+//        payload.append(contentsOf: passwordBytes)
+//        
+//        if let login = login {
+//            let loginBytes = [UInt8](login.utf8)
+//            let loginSize = UInt8(loginBytes.count)
+//            payload.append(loginSize)
+//            payload.append(contentsOf: loginBytes)
+//        }
+//
+//        if let url = url {
+//            let urlBytes = [UInt8](url.utf8)
+//            let urlSize = UInt8(urlBytes.count)
+//            payload.append(urlSize)
+//            payload.append(contentsOf: urlBytes)
+//        }
+//
+//        return payload
+//    }
+//}
 
