@@ -17,7 +17,6 @@ struct GeneratePasswordView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
     @State private var showPickerSheet = false
-    @State private var generateBtnMode = GenerateBtnMode.willGenerate
     
     @StateObject var passwordOptions = PasswordOptions()
     
@@ -25,6 +24,7 @@ struct GeneratePasswordView: View {
     @State private var loginText: String?
     @State private var urlText: String?
     
+    @State var password = ""
     @State private var passwordPayload: PasswordPayload?
     
     // Password :
@@ -32,26 +32,6 @@ struct GeneratePasswordView: View {
     // > Login
     // > Url
     // > PasswordLength
-    
-    // TODO: rename
-    @State var seedPhrase = "" {
-        didSet {
-            if seedPhrase.isEmpty {
-                generateBtnMode = .willGenerate
-            } else {
-                generateBtnMode = .willImport
-            }
-        }
-    }
-    
-    var continueBtnTitle: String {
-        switch generateBtnMode {
-        case .willGenerate:
-            return String(localized: "generate")
-        case .willImport:
-            return String(localized: "import")
-        }
-    }
             
     var canGeneratePassword: Bool {
         if let labelText = labelText {
@@ -63,7 +43,7 @@ struct GeneratePasswordView: View {
     
     var canManualImportPassword: Bool {
         if let labelText = labelText {
-            return !labelText.isEmpty && seedPhrase.count >= 1
+            return !labelText.isEmpty && password.count >= 1
         } else {
             return false
         }
@@ -245,71 +225,56 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: generatorModeNavData.generatorMode == .password ? 16 : 60)
                         
-                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
 
                         Spacer()
                             .frame(height: 16)
                         
+                        
                         if generatorModeNavData.secretCreationMode == .manualImport {
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
-                                
-                                if generatorModeNavData.generatorMode == .password, canManualImportPassword {
-                                    
+                            // Import button for manual import
+                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportPassword, action: {
+                                                                    
                                     cardState.passwordPayloadToImportOnCard = PasswordPayload(label: labelText!,
-                                                                                            password: seedPhrase,
+                                                                                            password: password,
                                                                                             login: loginText,
                                                                                             url: urlText)
                                     
                                     cardState.requestAddSecret(secretType: .password)
-                                }
                             })
                         } else {
+                            // (re)generate and import buttons
                             HStack(alignment: .center, spacing: 0) {
                                 Spacer()
                                 
                                 HStack(alignment: .center, spacing: 12) {
-                                    if generatorModeNavData.generatorMode == .password,
-                                       canGeneratePassword,
-                                       !seedPhrase.isEmpty,
-                                       self.generateBtnMode == .willImport {
-                                        Spacer()
-                                        
-                                        SKImageButton(iconName: "ic_refresh", style: .regular, staticWidth: 56, isEnabled: true, action: {
-                                            seedPhrase = generatePassword(options: passwordOptions)
-                                        })
-                                        .frame(width: 56, alignment: .center)
-                                        
-                                        Spacer()
-                                    }
                                     
-                                    SKButton(text: continueBtnTitle, style: .regular, horizontalPadding: 66, isEnabled: canGeneratePassword, action: {
-                                        if generateBtnMode == .willGenerate {
-                                            
-                                            if generatorModeNavData.generatorMode == .password, canGeneratePassword {
-                                                let password = generatePassword(options: passwordOptions)
-                                                
-                                                seedPhrase = password
-                                                
+                                    SKButton(
+                                        text: String(localized: "generate"),
+                                        style: .regular,
+                                        horizontalPadding: 20,
+                                        isEnabled: canGeneratePassword,
+                                        action: {
+                                                password = generatePassword(options: passwordOptions)
                                                 passwordPayload = PasswordPayload(label: labelText!,
-                                                                                  password: seedPhrase,
+                                                                                  password: password,
                                                                                   login: loginText,
                                                                                   url: urlText)
-                                            }
-                                            
-                                        } else if generateBtnMode == .willImport {
+                                    })
+                                    
+                                    SKButton(
+                                        text: String(localized: "import"),
+                                        style: .regular, 
+                                        horizontalPadding: 20,
+                                        isEnabled: canManualImportPassword,
+                                        action: {
                                             if let passwordPayload = self.passwordPayload {
                                                 print("will import password")
                                                 cardState.passwordPayloadToImportOnCard = passwordPayload
                                                 cardState.requestAddSecret(secretType: .password)
                                             }
-                                        }
                                     })
-                                    .frame(minWidth: 200, alignment: .center)
-                                    .frame(maxWidth: .infinity)
-                                    .transaction { transaction in
-                                        transaction.animation = nil
-                                    }
                                 }
                                 
                                 Spacer()
@@ -323,24 +288,6 @@ struct GeneratePasswordView: View {
                     .padding([.leading, .trailing], Dimensions.lateralPadding)
                 }
             }
-        }
-        .onChange(of: self.passwordOptions.passwordLength) { newValue in
-            self.generateBtnMode = .willGenerate
-        }
-        .onChange(of: self.passwordOptions.isMemorablePassword) { newValue in
-            self.generateBtnMode = .willGenerate
-        }
-        .onChange(of: self.passwordOptions.includeLowercase) { newValue in
-            self.generateBtnMode = .willGenerate
-        }
-        .onChange(of: self.passwordOptions.includeNumbers) { newValue in
-            self.generateBtnMode = .willGenerate
-        }
-        .onChange(of: self.passwordOptions.includeSymbols) { newValue in
-            self.generateBtnMode = .willGenerate
-        }
-        .onChange(of: self.passwordOptions.includeUppercase) { newValue in
-            self.generateBtnMode = .willGenerate
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -362,7 +309,6 @@ struct GeneratePasswordView: View {
 
 // MARK: Payload types
 
-// TODO: merge PasswordPayload & PasswordManualImportPayload very similar
 struct PasswordPayload {
     var label: String
     var password: String
