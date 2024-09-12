@@ -302,91 +302,32 @@ enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
 
 // MARK: Payload types
 
-// TODO: remove?
-struct MnemonicCardData {
-    let mnemonic: String
-    let passphrase: String?
-    
-    func getMnemonicSize() -> MnemonicSize? {
-        let mnemonicWords = mnemonic.split(separator: " ")
-        switch mnemonicWords.count {
-        case 12:
-            return .twelveWords
-        case 18:
-            return .eighteenWords
-        case 24:
-            return .twentyFourWords
-        default:
-            return nil
-        }
-    }
-    
-    func getSeedQRContent() -> [UInt8]? {
-        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-        return byteArray
-    }
-    
-    func getSeedQRImage() -> UIImage? {
-        let wordlist = SKMnemonicEnglish.wordList
-        let indices = mnemonicToIndices(mnemonic: mnemonic, wordlist: wordlist)
-        let combinedString = indices.map { String($0) }.joined(separator: " ")
-
-        guard let data = combinedString.data(using: .ascii) else { return nil }
-        
-        // Create a QR code filter
-        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("Q", forKey: "inputCorrectionLevel")
-        
-        guard let ciImage = filter.outputImage else { return nil }
-        
-        let transform = CGAffineTransform(scaleX: 10, y: 10)
-        let scaledCIImage = ciImage.transformed(by: transform)
-        
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(scaledCIImage, from: scaledCIImage.extent) else { return nil }
-        
-        return UIImage(cgImage: cgImage)
-    }
-    
-    private func mnemonicToIndices(mnemonic: String, wordlist: [String]) -> [Int] {
-        return mnemonic.split(separator: " ").compactMap { word in
-            wordlist.firstIndex(of: String(word))
-        }
-    }
-}
-
-
-
 // SECRET_TYPE_MASTER_SEED (subtype SECRET_SUBTYPE_BIP39): [ masterseed_size(1b) | masterseed | wordlist_selector(1b) | entropy_size(1b) | entropy(<=32b) | passphrase_size(1b) | passphrase] where entropy is 16-32 bytes as defined in BIP39 (this format is backward compatible with SECRET_TYPE_MASTER_SEED)
-
-// TODO: merge MnemonicManualImportPayload & MnemonicPayload
 struct MnemonicPayload {
     var label: String
     var mnemonic: String
-    //var mnemonicSize: MnemonicSize // TODO: remove?
     var passphrase: String?
     var descriptor: String?
     
-    func getV1PayloadBytes() -> [UInt8] {
-        let mnemonicBytes = [UInt8](mnemonic.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
-        var payload: [UInt8] = []
-        
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
-        
-        if let passphrase = passphrase {
-            let passphraseBytes = [UInt8](passphrase.utf8)
-            let passphraseSize = UInt8(passphraseBytes.count)
-            payload.append(passphraseSize)
-            payload.append(contentsOf: passphraseBytes)
-        }
-
-        return payload
-    }
+    // TODO: remove?
+//    func getV1PayloadBytes() -> [UInt8] {
+//        let mnemonicBytes = [UInt8](mnemonic.utf8)
+//        let mnemonicSize = UInt8(mnemonicBytes.count)
+//        
+//        var payload: [UInt8] = []
+//        
+//        payload.append(mnemonicSize)
+//        payload.append(contentsOf: mnemonicBytes)
+//        
+//        if let passphrase = passphrase {
+//            let passphraseBytes = [UInt8](passphrase.utf8)
+//            let passphraseSize = UInt8(passphraseBytes.count)
+//            payload.append(passphraseSize)
+//            payload.append(contentsOf: passphraseBytes)
+//        }
+//
+//        return payload
+//    }
     
     func getV2PayloadBytes() -> [UInt8] {
         let mnemonicBytes = [UInt8](mnemonic.utf8)
@@ -415,7 +356,9 @@ struct MnemonicPayload {
             payload.append(passphraseSize)
             payload.append(contentsOf: passphraseBytes)
         }
-
+        
+        // TODO: add descriptor
+        
         return payload
     }
     
@@ -440,85 +383,3 @@ struct MnemonicPayload {
     }
     
 }
-
-//struct MnemonicManualImportPayload {
-//    var label: String
-//    var passphrase: String?
-//    var result: String
-//    
-//    func getV1PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//    
-//    func getV2PayloadBytes() -> [UInt8] {
-//        let mnemonicBytes = [UInt8](result.utf8)
-//        let mnemonicSize = UInt8(mnemonicBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        
-//        payload.append(mnemonicSize)
-//        payload.append(contentsOf: mnemonicBytes)
-//        
-//        let worldlistSelector: UInt8 = 0x00
-//        payload.append(worldlistSelector)
-//        
-//        do {
-//            let entropy = try Mnemonic.mnemonicToEntropy(bip39: result)
-//            let entropySize = UInt8(entropy.count)
-//            payload.append(entropySize)
-//            payload.append(contentsOf: entropy)
-//        } catch {
-//            print("Error converting mnemonic to entropy: \(error)")
-//        }
-//        
-//        if let passphrase = passphrase {
-//            let passphraseBytes = [UInt8](passphrase.utf8)
-//            let passphraseSize = UInt8(passphraseBytes.count)
-//            payload.append(passphraseSize)
-//            payload.append(contentsOf: passphraseBytes)
-//        }
-//
-//        return payload
-//    }
-//}
-
-//struct MasterseedMnemonicCardData {
-//    let passphrase: String
-//    let mnemonic: String
-//    let size: Int // TODO: remove?
-//    let descriptor: String
-//    
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
-//    
-//    func getMnemonicSize() -> MnemonicSize? {
-//        let mnemonicWords = mnemonic.split(separator: " ")
-//        switch mnemonicWords.count {
-//        case 12:
-//            return .twelveWords
-//        case 18:
-//            return .eighteenWords
-//        case 24:
-//            return .twentyFourWords
-//        default:
-//            return nil
-//        }
-//    }
-//}

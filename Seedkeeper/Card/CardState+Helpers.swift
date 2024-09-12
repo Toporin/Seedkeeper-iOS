@@ -31,9 +31,6 @@ extension CardState {
     func cleanPayloadToImportOnCard() {
         passwordPayloadToImportOnCard = nil
         mnemonicPayloadToImportOnCard = nil
-        
-        //mnemonicManualImportPayload = nil
-        //passwordManualImportPayload = nil
     }
     
     internal func resetState() {
@@ -370,7 +367,7 @@ extension CardState {
         return PasswordPayload(label:"", password: password, login: login ?? "n/a", url: url ?? "n/a")
     }
 
-    func parseMnemonicCardData(from bytes: [UInt8]) -> MnemonicCardData? {
+    func parseMnemonicCardData(from bytes: [UInt8]) -> MnemonicPayload? { //MnemonicCardData? {
         var index = 0
 
         // Extract mnemonic size and mnemonic
@@ -398,8 +395,10 @@ extension CardState {
                 passphrase = String(bytes: passphraseBytes, encoding: .utf8)
             }
         }
+        
+        // TODO: extract descriptor
 
-        return MnemonicCardData(mnemonic: mnemonic, passphrase: passphrase)
+        return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: "TODO!")
     }
     
     func getReasonFromPkiReturnCode(pkiReturnCode: PkiReturnCode) -> String {
