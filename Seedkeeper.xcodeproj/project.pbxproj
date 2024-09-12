@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0D8D22C62C415D7D00A3D249 /* SatochipSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0D8D22C52C415D7D00A3D249 /* SatochipSwift */; };
 		0DAF45072C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45052C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld */; };
+		0DAF45092C92CD1D001FDE73 /* GeneratePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */; };
+		0DAF450B2C92CD4F001FDE73 /* GenerateMnemonicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -110,6 +112,8 @@
 
 /* Begin PBXFileReference section */
 		0DAF45062C90A6C0001FDE73 /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
+		0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratePasswordView.swift; sourceTree = "<group>"; };
+		0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateMnemonicView.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -281,6 +285,8 @@
 				D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */,
 				D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */,
 				D0BEA3192BF5193100BD05D7 /* GenerateSuccessView.swift */,
+				0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */,
+				0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */,
 			);
 			path = Secret;
 			sourceTree = "<group>";
@@ -681,6 +687,7 @@
 				D0E433A02BD4088E008DBAA6 /* Colors.swift in Sources */,
 				D0E433812BD3FA48008DBAA6 /* SatoStatusView.swift in Sources */,
 				D080FD6C2C260DF200B50489 /* OnboardingInfoView.swift in Sources */,
+				0DAF45092C92CD1D001FDE73 /* GeneratePasswordView.swift in Sources */,
 				D07141572BF2533700A4939A /* LogModel.swift in Sources */,
 				D080FD6A2C260DD100B50489 /* OnBoardingWelcomeView.swift in Sources */,
 				D071416E2BF2772600A4939A /* EditableCardInfoBox.swift in Sources */,
@@ -729,6 +736,7 @@
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,
 				D07141702BF4C0E500A4939A /* AuhenticityView.swift in Sources */,
+				0DAF450B2C92CD4F001FDE73 /* GenerateMnemonicView.swift in Sources */,
 				D0C939D22BD6860700F2A17B /* CreatePinCodeView.swift in Sources */,
 				D0F727B02C2B144200C05DB4 /* AppDelegate.swift in Sources */,
 			);
