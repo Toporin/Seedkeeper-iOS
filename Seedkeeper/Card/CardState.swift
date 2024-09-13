@@ -81,6 +81,8 @@ class CardState: ObservableObject {
             return true
         }
         let diff = Calendar.current.dateComponents([.second], from: lastTimeForMasterCardPin, to: Date())
+        
+        // TODO: add option in settings
         return diff.second! > Constants.pinExpirationInSeconds
     }
     
@@ -203,6 +205,8 @@ class CardState: ObservableObject {
         //FaceId integration seems to not be possible for the desired flow, needs further discussion
         
         if let cardStatus = cardStatus, !cardStatus.setupDone {
+            // Card needs setup
+            
             // let version = getCardVersionInt(cardStatus: cardStatus)
             // if version <= 0x00010001 {
                 DispatchQueue.main.async { [weak self] in
@@ -213,6 +217,8 @@ class CardState: ObservableObject {
                 return
             // }
         } else {
+            // card needs PIN
+            
             guard let pinForMasterCard = pinForMasterCard else {
                 session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
                 DispatchQueue.main.async { [weak self] in
@@ -253,6 +259,7 @@ class CardState: ObservableObject {
             }
         }
         
+        // Check authenticity
         try await verifyCardAuthenticity(cardType: .master)
         // Fetching authentikey for the first scan and set it in memory
         try await fetchAuthentikey(cardType: .master)
@@ -260,7 +267,8 @@ class CardState: ObservableObject {
         DispatchQueue.main.async {
             self.isCardDataAvailable = true
         }
-                
+            
+        // List all secret headers
         do {
             let secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
             self.masterSecretHeaders = secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
@@ -268,7 +276,7 @@ class CardState: ObservableObject {
             self.cardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
             print("Secrets: \(secrets)")
         } catch let error {
-            logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
+            logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
         }
         

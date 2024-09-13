@@ -67,7 +67,7 @@ extension CardState {
     }
     
     // *********************************************************
-    // MARK: - Setup card's pin code
+    // MARK: - Setup card pin code
     // *********************************************************
     func requestInitPinOnCard() {
         session = SatocardController(onConnect: onSetPinCode, onFailure: onDisconnection)
@@ -102,7 +102,7 @@ extension CardState {
     }
     
     // *********************************************************
-    // MARK: - Setup backup card's pin code
+    // MARK: - Setup backup card pin code
     // *********************************************************
     
     func requestInitPinOnBackupCard() {

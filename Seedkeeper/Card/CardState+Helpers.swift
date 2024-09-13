@@ -59,6 +59,7 @@ extension CardState {
         var statusApdu: APDUResponse?
         var cardType: CardType?
         
+        // TODO: for v2, status is already provided in select response
         (statusApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
         
         statusApdu = try cmdSet.cardGetStatus()
@@ -81,6 +82,19 @@ extension CardState {
                 self.certificateCodeForBackup = certificateCode
                 self.certificateDicForBackup = certificateDic
             }
+        }
+    }
+    
+    func getReasonFromPkiReturnCode(pkiReturnCode: PkiReturnCode) -> String {
+        switch(pkiReturnCode) {
+        case PkiReturnCode.FailedToVerifyDeviceCertificate:
+            return "_reason_wrong_sig"
+        case PkiReturnCode.FailedChallengeResponse:
+            return "_reason_wrong_challenge"
+        case PkiReturnCode.unknown:
+            return "_reason_unknown"
+        default:
+            return "Reason: \(pkiReturnCode)"
         }
     }
     
@@ -131,6 +145,10 @@ extension CardState {
             // log.debug("CheckEqual ok for: \(lhs)", tag: tag)
         }
     }
+    
+    // *********************************************************
+    // MARK: - Secret parsers
+    // *********************************************************
     
     // todo: merge with parseMnemonicCardData
     func parseElectreumMnemonicCardData(bytes: [UInt8]) -> ElectrumMnemonicCardData? {
@@ -391,16 +409,4 @@ extension CardState {
         return PasswordPayload(label:"", password: password, login: login ?? "n/a", url: url ?? "n/a")
     }
 
-    func getReasonFromPkiReturnCode(pkiReturnCode: PkiReturnCode) -> String {
-        switch(pkiReturnCode) {
-        case PkiReturnCode.FailedToVerifyDeviceCertificate:
-            return "_reason_wrong_sig"
-        case PkiReturnCode.FailedChallengeResponse:
-            return "_reason_wrong_challenge"
-        case PkiReturnCode.unknown:
-            return "_reason_unknown"
-        default:
-            return "Reason: \(pkiReturnCode)"
-        }
-    }
 }

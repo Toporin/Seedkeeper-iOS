@@ -176,7 +176,7 @@ extension CardState {
     // MARK: - Backup card - connection
     // *********************************************************
     func scanBackupCard() {
-        print("CardState scan()")
+        print("CardState scanBackupCard()")
         session = SatocardController(onConnect: onConnectionForBackupCard, onFailure: onDisconnection)
         session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
     }
@@ -264,7 +264,7 @@ extension CardState {
                 return
             } catch {
                 self.pinForBackupCard = nil
-                logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
+                logEvent(log: LogModel(type: .error, message: "handleConnectionForBackupCard : \(error.localizedDescription)"))
                 self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 return
             }
