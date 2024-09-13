@@ -99,8 +99,10 @@ extension CardState {
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
+            print("onAddMnemonicSecret verifying PIN...")
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
+            print("onAddMnemonicSecret checking authentikey...")
             var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
             
             if !isAuthentikeyValid {
@@ -109,13 +111,15 @@ extension CardState {
                 return
             }
             
+            print("onAddMnemonicSecret checking version...")
             guard let cardVersion = self.cardStatus?.appletMinorVersion else {
                 session?.stop(errorMessage: String(localized: "nfcCardVersionIsNotDefined"))
                 return
             }
                         
             let label = mnemonicPayload.label
-
+            
+            
             let secretBytes = mnemonicPayload.getV2PayloadBytes()
             let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
             
@@ -128,24 +132,39 @@ extension CardState {
                                                       secretHeader: secretHeader,
                                                       isEncrypted: false)
             
+            print("onAddMnemonicSecret importing secret...")
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
             
             secretHeader.sid = sid
+            print("onAddMnemonicSecret secret sid: \(sid)")
             
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
+            print("onAddMnemonicSecret adding secret header to masterlist...")
             self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
-                        
-            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+            
+//            print("onAddMnemonicSecret stopping session...")
+//            session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+//            print("onAddMnemonicSecret session stopped!")
+            
+            print("onAddMnemonicSecret setting homeNavigation...")
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+            }
+            print("onAddMnemonicSecret aafter homeNavigation")
             
         } catch let error {
+            print("onAddMnemonicSecret ERROR \(error.localizedDescription)")
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logEvent(log: LogModel(type: .error, message: "onAddMnemonicSecret : \(error.localizedDescription)"))
         }
         
+        print("onAddMnemonicSecret stopping session...")
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+        print("onAddMnemonicSecret session stopped!")
     }
     
     // SECRET_TYPE_PASSWORD (subtype 0x01): [password_size(1b) | password | login_size(1b) | login | url_size(1b) | url]
@@ -167,8 +186,10 @@ extension CardState {
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
+            print("onAddPasswordSecret verifying PIN...")
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
+            print("onAddPasswordSecret checking authentikey...")
             var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
             
             if !isAuthentikeyValid {
@@ -190,28 +211,40 @@ extension CardState {
                                                       secretHeader: secretHeader,
                                                       isEncrypted: false)
             
+            print("onAddPasswordSecret importing secret on card...")
             let (rapdu, sid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: secretObject)
             
             secretHeader.sid = sid
+            print("onAddPasswordSecret secret imported with sid: \(sid)")
             
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
             try checkEqual(fingerprintBytes, secretFingerprintBytes, tag: "Function: \(#function), line: \(#line)")
             
+            print("onAddPasswordSecret adding new secret header to master list...")
             self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+            print("onAddPasswordSecret added secret header to master list")
             
             if let login = passwordPayload.login {
                 self.addLoginToSavedLoginsDB(login: login)
             }
             
-            homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+            print("onAddPasswordSecret calling home navigation path with label: \(label)...")
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                homeNavigationPath.append(NavigationRoutes.generateSuccess(label))
+            }
+            print("onAddPasswordSecret called home navigation path !")
             
         } catch let error {
+            print("onAddPasswordSecret ERROR \(error.localizedDescription)")
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret : \(error.localizedDescription)"))
         }
         
+        print("onAddPasswordSecret stopping session...")
         session?.stop(alertMessage: String(localized: "nfcSecretAdded"))
+        print("onAddPasswordSecret session stopped!")
     }
     
     private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto) {
@@ -229,6 +262,7 @@ extension CardState {
     }*/
     
     private func addLoginToSavedLoginsDB(login: String) {
+        print("addLoginToSavedLoginsDB adding login \(login) to db...")
         dataControllerContext.saveLoginEntry(loginModel: UsedLoginModel(login: login))
     }
     
