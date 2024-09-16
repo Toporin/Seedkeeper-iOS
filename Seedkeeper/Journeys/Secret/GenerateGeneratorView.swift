@@ -20,18 +20,29 @@ struct GenerateGeneratorView: View {
     
     var body: some View {
         
-        
-        if generatorModeNavData.generatorMode == .mnemonic {
-            
+        switch generatorModeNavData.generatorMode {
+        case .mnemonic:
             GenerateMnemonicView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
-            
-        } else if generatorModeNavData.generatorMode == .password {
-            
+        case .password:
             GeneratePasswordView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
-            
-        } else {
-            // TODO: default
+        case .descriptor:
+            GenerateDescriptorView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
+        case .data:
+            GenerateDataView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
         }
+        
+        
+//        if generatorModeNavData.generatorMode == .mnemonic {
+//            
+//            GenerateMnemonicView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
+//            
+//        } else if generatorModeNavData.generatorMode == .password {
+//            
+//            GeneratePasswordView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
+//            
+//        } else {
+//            // TODO: default
+//        }
         
     }
 }
@@ -54,6 +65,8 @@ struct GeneratorModeNavData: Hashable {
 enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
     case mnemonic
     case password
+    case descriptor
+    case data
     
     // TODO:  not used?
     func humanReadableName() -> String {
@@ -62,6 +75,10 @@ enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
             return String(localized: "mnemonicPhrase")
         case .password:
             return String(localized: "loginPasswordPhrase")
+        case .descriptor:
+            return "descriptor" //String(localized: "loginPasswordPhrase") //TODO: translation
+        case .data:
+            return "data" //String(localized: "loginPasswordPhrase") //TODO: translation
         }
     }
 }
