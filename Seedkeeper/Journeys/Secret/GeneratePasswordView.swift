@@ -15,7 +15,7 @@ struct GeneratePasswordView: View {
     
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
-    @State private var showPickerSheet = false
+    //@State private var showPickerSheet = false
     
     @StateObject var passwordOptions = PasswordOptions()
     
@@ -222,12 +222,17 @@ struct GeneratePasswordView: View {
                             // Import button for manual import
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportPassword, action: {
                                                                     
-                                    cardState.passwordPayloadToImportOnCard = PasswordPayload(label: labelText!,
-                                                                                            password: password,
-                                                                                            login: loginText,
-                                                                                            url: urlText)
-                                    
-                                    cardState.requestAddSecret(secretType: .password)
+//                                    cardState.passwordPayloadToImportOnCard = PasswordPayload(label: labelText!,
+//                                                                                            password: password,
+//                                                                                            login: loginText,
+//                                                                                            url: urlText)
+//                                    
+//                                    cardState.requestAddSecret(secretType: .password)
+                                var payload = PasswordPayload(label: labelText!,
+                                                              password: password,
+                                                              login: loginText,
+                                                              url: urlText)
+                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
                             })
                         } else {
                             // (re)generate and import buttons
@@ -257,8 +262,9 @@ struct GeneratePasswordView: View {
                                         action: {
                                             if let passwordPayload = self.passwordPayload {
                                                 print("will import password")
-                                                cardState.passwordPayloadToImportOnCard = passwordPayload
-                                                cardState.requestAddSecret(secretType: .password)
+//                                                cardState.passwordPayloadToImportOnCard = passwordPayload
+//                                                cardState.requestAddSecret(secretType: .password)
+                                                cardState.requestImportSecret(secretPayload: passwordPayload, onSuccess: {}, onFail: {})
                                             }
                                     })
                                 }
@@ -287,19 +293,22 @@ struct GeneratePasswordView: View {
                 SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
-        .onDisappear {
-            cardState.cleanPayloadToImportOnCard()
-        }
+//        .onDisappear {
+//            cardState.cleanPayloadToImportOnCard()
+//        }
     }
 }
 
 // MARK: Payload types
 
-struct PasswordPayload {
+struct PasswordPayload : Payload {
     var label: String
     var password: String
     var login: String?
     var url: String?
+    
+    var type = SeedkeeperSecretType.password
+    var subtype = UInt8(0x00)
     
     func getPayloadBytes() -> [UInt8] {
         let passwordBytes = [UInt8](password.utf8)
@@ -324,5 +333,9 @@ struct PasswordPayload {
         }
 
         return payload
+    }
+    
+    func getFingerprintBytes() -> [UInt8] {
+        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
 }

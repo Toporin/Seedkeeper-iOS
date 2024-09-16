@@ -11,6 +11,9 @@
 		0DAF45072C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45052C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld */; };
 		0DAF45092C92CD1D001FDE73 /* GeneratePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */; };
 		0DAF450B2C92CD4F001FDE73 /* GenerateMnemonicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */; };
+		0DAF450D2C9815BB001FDE73 /* GenerateDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450C2C9815BB001FDE73 /* GenerateDataView.swift */; };
+		0DAF450F2C981973001FDE73 /* GenerateDescriptorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */; };
+		0DAF45112C985F89001FDE73 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45102C985F89001FDE73 /* Payload.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -114,6 +117,9 @@
 		0DAF45062C90A6C0001FDE73 /* Seedkeeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Seedkeeper.xcdatamodel; sourceTree = "<group>"; };
 		0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratePasswordView.swift; sourceTree = "<group>"; };
 		0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateMnemonicView.swift; sourceTree = "<group>"; };
+		0DAF450C2C9815BB001FDE73 /* GenerateDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateDataView.swift; sourceTree = "<group>"; };
+		0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateDescriptorView.swift; sourceTree = "<group>"; };
+		0DAF45102C985F89001FDE73 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -264,6 +270,7 @@
 			children = (
 				D07141562BF2533700A4939A /* LogModel.swift */,
 				D09A8BAB2C74DAC2003659F0 /* UsedLoginModel.swift */,
+				0DAF45102C985F89001FDE73 /* Payload.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -287,6 +294,8 @@
 				D0BEA3192BF5193100BD05D7 /* GenerateSuccessView.swift */,
 				0DAF45082C92CD1D001FDE73 /* GeneratePasswordView.swift */,
 				0DAF450A2C92CD4F001FDE73 /* GenerateMnemonicView.swift */,
+				0DAF450C2C9815BB001FDE73 /* GenerateDataView.swift */,
+				0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */,
 			);
 			path = Secret;
 			sourceTree = "<group>";
@@ -695,6 +704,7 @@
 				D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */,
 				D080FD742C261CD600B50489 /* SKActionButtonSmall.swift in Sources */,
 				D080FD6E2C260E1100B50489 /* OnboardingNFCView.swift in Sources */,
+				0DAF45112C985F89001FDE73 /* Payload.swift in Sources */,
 				D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */,
 				D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */,
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
@@ -725,12 +735,14 @@
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
 				D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */,
+				0DAF450F2C981973001FDE73 /* GenerateDescriptorView.swift in Sources */,
 				D080FD762C261CF600B50489 /* SKSecretViewer.swift in Sources */,
 				D0D832372C20A8B400AE2984 /* CardState+Backup.swift in Sources */,
 				D0C939D42BD687D400F2A17B /* SecureTextInput.swift in Sources */,
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
 				D09A8BAC2C74DAC2003659F0 /* UsedLoginModel.swift in Sources */,
 				D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */,
+				0DAF450D2C9815BB001FDE73 /* GenerateDataView.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,

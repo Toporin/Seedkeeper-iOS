@@ -162,12 +162,17 @@ struct GenerateMnemonicView: View {
                         
                         if generatorModeNavData.secretCreationMode == .manualImport {
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportMnemonic, action: {
-                                    cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
-                                                                                            mnemonic: seedPhrase,
-                                                                                            passphrase: passphraseText,
-                                                                                            descriptor: descriptorText)
-                                    
-                                    cardState.requestAddSecret(secretType: .bip39Mnemonic)
+//                                    cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
+//                                                                                            mnemonic: seedPhrase,
+//                                                                                            passphrase: passphraseText,
+//                                                                                            descriptor: descriptorText)
+//                                    
+//                                    cardState.requestAddSecret(secretType: .bip39Mnemonic)
+                                var payload = MnemonicPayload(label: labelText!,
+                                                              mnemonic: seedPhrase,
+                                                              passphrase: passphraseText,
+                                                              descriptor: descriptorText)
+                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
                             })
                         } else {
                             HStack(alignment: .center, spacing: 0) {
@@ -178,7 +183,6 @@ struct GenerateMnemonicView: View {
                                     // generate button
                                     SKButton(text: String(localized: "generate"), style: .regular, horizontalPadding: 20, isEnabled: canGenerateMnemonic, action: {
                                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
-                                                
                                                 mnemonicPayload = MnemonicPayload(label: labelText!,
                                                                                   mnemonic: seedPhrase,
                                                                                   passphrase: passphraseText,
@@ -189,8 +193,9 @@ struct GenerateMnemonicView: View {
                                     SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 20, isEnabled: canManualImportMnemonic, action: {
                                             if let mnemonicPayload = self.mnemonicPayload {
                                                 print("will import mnemonic")
-                                                cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
-                                                cardState.requestAddSecret(secretType: .bip39Mnemonic)
+//                                                cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
+//                                                cardState.requestAddSecret(secretType: .bip39Mnemonic)
+                                                cardState.requestImportSecret(secretPayload: mnemonicPayload, onSuccess: {}, onFail: {})
                                             }
                                     })
                                     
@@ -235,9 +240,9 @@ struct GenerateMnemonicView: View {
                         .edgesIgnoringSafeArea(.all))
             }
         }
-        .onDisappear {
-            cardState.cleanPayloadToImportOnCard()
-        }
+//        .onDisappear {
+//            cardState.cleanPayloadToImportOnCard()
+//        }
     }
 }
 
@@ -273,13 +278,16 @@ enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
 // MARK: Payload types
 
 // SECRET_TYPE_MASTER_SEED (subtype SECRET_SUBTYPE_BIP39): [ masterseed_size(1b) | masterseed | wordlist_selector(1b) | entropy_size(1b) | entropy(<=32b) | passphrase_size(1b) | passphrase] where entropy is 16-32 bytes as defined in BIP39 (this format is backward compatible with SECRET_TYPE_MASTER_SEED)
-struct MnemonicPayload {
+struct MnemonicPayload : Payload {
     var label: String
     var mnemonic: String
     var passphrase: String?
     var descriptor: String?
     
-    func getV2PayloadBytes() -> [UInt8] {
+    var type = SeedkeeperSecretType.masterseed
+    var subtype = UInt8(0x01)
+    
+    func getPayloadBytes() -> [UInt8] { // getV2PayloadBytes
         let mnemonicBytes = [UInt8](mnemonic.utf8)
         let mnemonicSize = UInt8(mnemonicBytes.count)
         
@@ -316,6 +324,10 @@ struct MnemonicPayload {
         }
         print("Debug getV2PayloadBytes: \(payload.bytesToHex)")
         return payload
+    }
+    
+    func getFingerprintBytes() -> [UInt8] {
+        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getSeedQRContent() -> [UInt8]? {
