@@ -30,20 +30,7 @@ struct GenerateGeneratorView: View {
         case .data:
             GenerateDataView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
         }
-        
-        
-//        if generatorModeNavData.generatorMode == .mnemonic {
-//            
-//            GenerateMnemonicView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
-//            
-//        } else if generatorModeNavData.generatorMode == .password {
-//            
-//            GeneratePasswordView(homeNavigationPath: $homeNavigationPath, generatorModeNavData: generatorModeNavData)
-//            
-//        } else {
-//            // TODO: default
-//        }
-        
+
     }
 }
 

@@ -115,9 +115,6 @@ struct GenerateDescriptorView: View {
                 SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
-//        .onDisappear {
-//            cardState.cleanPayloadToImportOnCard()
-//        }
     }
 }
 

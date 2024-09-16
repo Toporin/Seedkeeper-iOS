@@ -154,9 +154,6 @@ class CardState: ObservableObject {
     @Published var currentGenericCardData: GenericCardData?
     
     var secretPayloadToImportOnCard: Payload?
-    // TODO: remove payload by types and use protocol instead
-//    var passwordPayloadToImportOnCard: PasswordPayload?
-//    var mnemonicPayloadToImportOnCard: MnemonicPayload?
     
     var backupAuthentiKeySid: Int?
     var backupAuthentiKeyFingerprintBytes: [UInt8]?

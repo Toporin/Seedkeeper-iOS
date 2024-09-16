@@ -28,11 +28,6 @@ extension CardState {
         currentGenericCardData = nil
     }
     
-//    func cleanPayloadToImportOnCard() {
-//        passwordPayloadToImportOnCard = nil
-//        mnemonicPayloadToImportOnCard = nil
-//    }
-    
     internal func resetState() {
         certificateCode = .unknown
         authentikeyHex = ""

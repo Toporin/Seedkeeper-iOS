@@ -91,12 +91,6 @@ struct GenerateDataView: View {
                         if generatorModeNavData.secretCreationMode == .manualImport {
                             // Import button for manual import
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
-                                                                    
-//                                    cardState.DataPayloadToImportOnCard = DataPayload(label: labelText!,
-//                                                                                      password: dataText)
-//                                    
-//                                    cardState.requestAddSecret(secretType: .password)
-                                
                                 var payload = DataPayload(label: labelText!, data: dataText)
                                 cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
                             })
@@ -121,9 +115,6 @@ struct GenerateDataView: View {
                 SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
-//        .onDisappear {
-//            cardState.cleanPayloadToImportOnCard()
-//        }
     }
 }
 

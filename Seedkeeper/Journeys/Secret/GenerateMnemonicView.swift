@@ -162,12 +162,6 @@ struct GenerateMnemonicView: View {
                         
                         if generatorModeNavData.secretCreationMode == .manualImport {
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportMnemonic, action: {
-//                                    cardState.mnemonicPayloadToImportOnCard = MnemonicPayload(label: labelText!,
-//                                                                                            mnemonic: seedPhrase,
-//                                                                                            passphrase: passphraseText,
-//                                                                                            descriptor: descriptorText)
-//                                    
-//                                    cardState.requestAddSecret(secretType: .bip39Mnemonic)
                                 var payload = MnemonicPayload(label: labelText!,
                                                               mnemonic: seedPhrase,
                                                               passphrase: passphraseText,
@@ -193,8 +187,6 @@ struct GenerateMnemonicView: View {
                                     SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 20, isEnabled: canManualImportMnemonic, action: {
                                             if let mnemonicPayload = self.mnemonicPayload {
                                                 print("will import mnemonic")
-//                                                cardState.mnemonicPayloadToImportOnCard = mnemonicPayload
-//                                                cardState.requestAddSecret(secretType: .bip39Mnemonic)
                                                 cardState.requestImportSecret(secretPayload: mnemonicPayload, onSuccess: {}, onFail: {})
                                             }
                                     })
@@ -240,9 +232,6 @@ struct GenerateMnemonicView: View {
                         .edgesIgnoringSafeArea(.all))
             }
         }
-//        .onDisappear {
-//            cardState.cleanPayloadToImportOnCard()
-//        }
     }
 }
 

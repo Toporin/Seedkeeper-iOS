@@ -15,7 +15,6 @@ struct GeneratePasswordView: View {
     
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
-    //@State private var showPickerSheet = false
     
     @StateObject var passwordOptions = PasswordOptions()
     
@@ -222,12 +221,6 @@ struct GeneratePasswordView: View {
                             // Import button for manual import
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportPassword, action: {
                                                                     
-//                                    cardState.passwordPayloadToImportOnCard = PasswordPayload(label: labelText!,
-//                                                                                            password: password,
-//                                                                                            login: loginText,
-//                                                                                            url: urlText)
-//                                    
-//                                    cardState.requestAddSecret(secretType: .password)
                                 var payload = PasswordPayload(label: labelText!,
                                                               password: password,
                                                               login: loginText,
@@ -262,8 +255,6 @@ struct GeneratePasswordView: View {
                                         action: {
                                             if let passwordPayload = self.passwordPayload {
                                                 print("will import password")
-//                                                cardState.passwordPayloadToImportOnCard = passwordPayload
-//                                                cardState.requestAddSecret(secretType: .password)
                                                 cardState.requestImportSecret(secretPayload: passwordPayload, onSuccess: {}, onFail: {})
                                             }
                                     })
@@ -293,9 +284,6 @@ struct GeneratePasswordView: View {
                 SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
             }
         }
-//        .onDisappear {
-//            cardState.cleanPayloadToImportOnCard()
-//        }
     }
 }
 
