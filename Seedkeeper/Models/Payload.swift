@@ -37,19 +37,19 @@ func parseBytesToPayload(secretType: SeedkeeperSecretType, secretSubtype: UInt8,
     case .electrumMnemonic:
         return parseToElectrumMnemonicPayload(bytes: bytes)
     case .shamirSecretShare:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .privkey:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .pubkey:
         return parseToPubkeyPayload(bytes: bytes)
     case .pubkeyAuthenticated:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .key:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .masterPassword:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .certificate:
-        return nil
+        return parseToDefaultPayload(bytes: bytes) // TODO: implement specific parser
     case .secret2FA:
         return parseToSecret2FAPayload(bytes: bytes)
     case .data:
