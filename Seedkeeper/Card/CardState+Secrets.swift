@@ -170,7 +170,7 @@ extension CardState {
     }
     
     // *********************************************************
-    // MARK: - Get secret
+    // MARK: - Export secret
     // *********************************************************
     
     // TODO: rename to exportSecret
@@ -215,7 +215,7 @@ extension CardState {
     
     
     // *********************************************************
-    // MARK: - Fetch secrets
+    // MARK: - Fetch secret headers
     // *********************************************************
     
     // TODO: rename as it actually fetches secret headers, not secrets
@@ -236,9 +236,9 @@ extension CardState {
         
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
-        var sids = [Int]()
-        var secrets = [SeedkeeperSecretObject]()
-        var fingerprints = [String]()
+//        var sids = [Int]()
+//        var secrets = [SeedkeeperSecretObject]()
+//        var fingerprints = [String]()
         
         do {
             var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)

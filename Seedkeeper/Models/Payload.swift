@@ -23,7 +23,7 @@ func parseBytesToPayload(secretType: SeedkeeperSecretType, secretSubtype: UInt8,
     case .password:
         return parseToPasswordPayload(bytes: bytes)
     case .defaultType:
-        return nil
+        return parseToDefaultPayload(bytes: bytes)
     case .masterseed:
         if secretSubtype == 0x00 {
             return parseToMasterseedPayload(bytes: bytes)}
@@ -41,7 +41,7 @@ func parseBytesToPayload(secretType: SeedkeeperSecretType, secretSubtype: UInt8,
     case .privkey:
         return nil
     case .pubkey:
-        return nil //TODO: implement
+        return parseToPubkeyPayload(bytes: bytes)
     case .pubkeyAuthenticated:
         return nil
     case .key:
@@ -322,6 +322,24 @@ func parseToDataPayload(bytes: [UInt8]) -> DataPayload? {
     return DataPayload(label: "", data: data)
 }
 
+func parseToPubkeyPayload(bytes: [UInt8]) -> PubkeyPayload? {
+    var index = 0
+
+    let pubkeySize = Int(bytes[index])
+    index += 1
+    
+    guard index + pubkeySize <= bytes.count else {
+        print("Invalid blob size")
+        return nil
+    }
+    
+    let pubkeyBytes = Array(bytes[index..<(index + pubkeySize)])
+    
+    print("Blob Bytes: \(pubkeyBytes.bytesToHex)")
+    
+    return PubkeyPayload(label: "", pubkeyBytes: pubkeyBytes)
+}
+
 func parseToSecret2FAPayload(bytes: [UInt8]) -> Secret2FAPayload? {
     var index = 0
 
@@ -340,4 +358,20 @@ func parseToSecret2FAPayload(bytes: [UInt8]) -> Secret2FAPayload? {
     return Secret2FAPayload(label: "", secretBytes: secret2FABytes)
 }
 
+func parseToDefaultPayload(bytes: [UInt8]) -> DefaultPayload? {
+    var index = 0
 
+    let defaultSize = Int(bytes[index])
+    index += 1
+    
+    guard index + defaultSize <= bytes.count else {
+        print("Invalid blob size")
+        return nil
+    }
+    
+    let defaultBytes = Array(bytes[index..<(index + defaultSize)])
+    
+    print("Blob Bytes: \(defaultBytes.bytesToHex)")
+    
+    return DefaultPayload(label: "", defaultBytes: defaultBytes)
+}

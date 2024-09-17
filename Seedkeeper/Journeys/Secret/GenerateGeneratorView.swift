@@ -201,11 +201,39 @@ struct Bip39MnemonicPayload : Payload {
     }
 }
 
+struct PubkeyPayload : Payload {
+    var label: String
+    var pubkeyBytes: [UInt8]
+    
+    var type = SeedkeeperSecretType.pubkey
+    var subtype = UInt8(0x00)
+    
+    func getPayloadBytes() -> [UInt8] {
+        
+        let pubkeySize = UInt8(pubkeyBytes.count)
+        
+        var payload: [UInt8] = []
+        payload.append(pubkeySize)
+        payload.append(contentsOf: pubkeyBytes)
+        
+        return payload
+    }
+    
+    func getFingerprintBytes() -> [UInt8] {
+        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
+    }
+    
+    func getContentString() -> String {
+        return pubkeyBytes.bytesToHex
+    }
+}
+
 struct Secret2FAPayload : Payload {
     var label: String
+    var secretBytes: [UInt8]
+    
     var type = SeedkeeperSecretType.secret2FA
     var subtype = UInt8(0x00)
-    var secretBytes: [UInt8]
     
     func getPayloadBytes() -> [UInt8] {
         
@@ -224,5 +252,32 @@ struct Secret2FAPayload : Payload {
     
     func getContentString() -> String {
         return secretBytes.bytesToHex
+    }
+}
+
+struct DefaultPayload : Payload {
+    var label: String
+    var defaultBytes: [UInt8]
+    
+    var type = SeedkeeperSecretType.defaultType
+    var subtype = UInt8(0x00)
+    
+    func getPayloadBytes() -> [UInt8] {
+        
+        let defaultSize = UInt8(defaultBytes.count)
+        
+        var payload: [UInt8] = []
+        payload.append(defaultSize)
+        payload.append(contentsOf: defaultBytes)
+        
+        return payload
+    }
+    
+    func getFingerprintBytes() -> [UInt8] {
+        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
+    }
+    
+    func getContentString() -> String {
+        return defaultBytes.bytesToHex
     }
 }
