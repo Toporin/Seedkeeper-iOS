@@ -49,7 +49,7 @@ class CardState: ObservableObject {
     var cardLabelToSet: String?
     
     var session: SatocardController?
-    var cardController: SatocardController?
+    //var cardController: SatocardController? // TODO: remove
     
     private(set) var isPinVerificationSuccess: Bool = false
     
@@ -92,6 +92,7 @@ class CardState: ObservableObject {
     
     @Published var masterSecretHeaders: [SeedkeeperSecretHeaderDto] = []
     
+    // TODO: rename to backupMode
     @Published var mode: BackupMode = .start {
         didSet {
             print("backup mode is set to : \(mode)")
@@ -248,5 +249,6 @@ class CardState: ObservableObject {
     // *********************************************************
     func onDisconnection(error: Error) {
         // Handle disconnection
+        // TODO: log error
     }
 }

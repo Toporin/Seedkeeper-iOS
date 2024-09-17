@@ -32,8 +32,11 @@ extension CardState {
     }
     
     internal func popToBackupFlow() {
-        if homeNavigationPath.count >= 2 {
-            homeNavigationPath.removeLast(2)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if homeNavigationPath.count >= 2 {
+                homeNavigationPath.removeLast(2)
+            }
         }
     }
     
@@ -102,10 +105,11 @@ extension CardState {
         }
     }
     
-    internal func getAuthentikeyHexSilently() async throws -> String {
-        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
-        return authentikeyHex
-    }
+    // TODO: remove
+//    internal func getAuthentikeyHexSilently() async throws -> String {
+//        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+//        return authentikeyHex
+//    }
     
     internal func isAuthentikeyValid(for cardType: ScannedCardType) throws -> Bool {
         let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()

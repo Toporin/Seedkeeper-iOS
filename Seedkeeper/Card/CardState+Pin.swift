@@ -95,7 +95,7 @@ extension CardState {
             // homeNavigationPath.append(NavigationRoutes.setupFaceId(pin))
         } catch let error {
             print("Error: \(error)")
-            session?.stop(alertMessage: String(localized: "nfcPinCodeSetFailed"))
+            session?.stop(errorMessage: String(localized: "nfcPinCodeSetFailed"))
         }
         
         pinCodeToSetup = nil
@@ -107,9 +107,10 @@ extension CardState {
     
     func requestInitPinOnBackupCard() {
         session = SatocardController(onConnect: onSetPinCodeForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
+        session?.start(alertMessage: String(localized: "nfcScanBackupCard")) // TODO: update nfc message
     }
     
+    // TODO: merge with onSetPinCode(cardChannel: CardChannel)
     private func onSetPinCodeForBackupCard(cardChannel: CardChannel) -> Void {
         guard let pin = pinCodeToSetup else {
             session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
@@ -129,7 +130,7 @@ extension CardState {
             popToBackupFlow()
         } catch let error {
             print("Error: \(error)")
-            session?.stop(alertMessage: String(localized: "nfcPinCodeSetFailed"))
+            session?.stop(errorMessage: String(localized: "nfcPinCodeSetFailed"))
         }
         
         pinCodeToSetup = nil

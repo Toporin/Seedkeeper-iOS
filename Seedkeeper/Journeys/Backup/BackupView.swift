@@ -95,7 +95,8 @@ struct BackupView: View {
                     case .pairBackupCard:
                         cardState.scanBackupCard()
                     case .backupImport:
-                        cardState.requestFetchSecretsForBackup()
+                        //cardState.requestFetchSecretsForBackup()
+                        cardState.requestExportSecretsForBackup()
                     case .backupExportReady:
                         cardState.mode = .initiateBackupExport
                     case .initiateBackupExport:
