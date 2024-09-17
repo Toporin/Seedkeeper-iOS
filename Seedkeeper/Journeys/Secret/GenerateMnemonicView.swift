@@ -278,18 +278,23 @@ struct MnemonicPayload : Payload {
     var subtype = UInt8(0x01)
     
     func getPayloadBytes() -> [UInt8] { // getV2PayloadBytes
-        // TODO: convert to masterseed!!!
-        let mnemonicBytes = [UInt8](mnemonic.utf8)
-        let mnemonicSize = UInt8(mnemonicBytes.count)
-        
         var payload: [UInt8] = []
         
-        payload.append(mnemonicSize)
-        payload.append(contentsOf: mnemonicBytes)
+        // convert mnemonic phrase to masterseed
+        do {
+            let masterseedBytes = try Mnemonic.mnemonicToMasterseed(mnemonic: mnemonic, passphrase: passphrase ?? "", mnemonicType: MnemonicType.bip39)
+            let masterseedSize = UInt8(masterseedBytes.count)
+            payload.append(masterseedSize)
+            payload.append(contentsOf: masterseedBytes)
+        } catch {
+            print("Error converting mnemonic to masterseed: \(error)")
+            payload.append(UInt8(0x00))
+        }
         
-        let worldlistSelector: UInt8 = 0x00
+        let worldlistSelector: UInt8 = 0x00 // english
         payload.append(worldlistSelector)
         
+        // add entropy
         do {
             let entropy = try Mnemonic.mnemonicToEntropy(bip39: mnemonic)
             let entropySize = UInt8(entropy.count)
@@ -297,8 +302,10 @@ struct MnemonicPayload : Payload {
             payload.append(contentsOf: entropy)
         } catch {
             print("Error converting mnemonic to entropy: \(error)")
+            payload.append(UInt8(0x00))
         }
         
+        // add passphrase
         if let passphrase = passphrase {
             let passphraseBytes = [UInt8](passphrase.utf8)
             let passphraseSize = UInt8(passphraseBytes.count)
