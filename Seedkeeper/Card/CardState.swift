@@ -103,55 +103,73 @@ class CardState: ObservableObject {
     var currentSecretHeader: SeedkeeperSecretHeaderDto?
     @Published var currentSecretObject: SeedkeeperSecretObject? {
         didSet {
-            if currentSecretObject?.secretHeader.type == .password,
-               let secretBytes = currentSecretObject?.secretBytes,
-               let data = parsePasswordCardData(from: secretBytes) {
+            if let secretBytes = currentSecretObject?.secretBytes,
+               let secretType = currentSecretObject?.secretHeader.type,
+                let secretSubtype = currentSecretObject?.secretHeader.subtype {
+                    
+                currentSecretPayload = parseBytesToPayload(secretType: secretType, secretSubtype: secretSubtype, bytes: secretBytes)
                 
-                    currentPasswordCardData = data
-                
-            } else if currentSecretObject?.secretHeader.type == .bip39Mnemonic,
-                      let secretBytes = currentSecretObject?.secretBytes,
-                      let data = parseMnemonicCardData(bytes: secretBytes) {
-                
-                currentMnemonicCardData = data
-                
-            } else if currentSecretObject?.secretHeader.type == .secret2FA,
-                      let secretBytes = currentSecretObject?.secretBytes,
-                      let data = parse2FACardData(from: secretBytes) {
-                
-                current2FACardData = data
-                
-            } else if currentSecretObject?.secretHeader.type == .masterseed,
-                      currentSecretObject?.secretHeader.subtype == 0x01,
-                      let secretBytes = currentSecretObject?.secretBytes,
-                      let data = parseMasterseedMnemonicCardData(bytes: secretBytes) {
-                
-                currentMasterseedMnemonicCardData = data
-                
-            } else if currentSecretObject?.secretHeader.type == .masterseed,
-                      currentSecretObject?.secretHeader.subtype == 0x00,
-                      let secretBytes = currentSecretObject?.secretBytes,
-                      let data = parseMasterseedCardData(bytes: secretBytes) {
-                currentMasterseedCardData = data
-                
-            } else if currentSecretObject?.secretHeader.type == .electrumMnemonic, let secretBytes = currentSecretObject?.secretBytes, let data = parseElectreumMnemonicCardData(bytes: secretBytes) {
-                
-                currentElectrumMnemonicCardData = data
-                
-            } else {
-                guard let secretBytes = currentSecretObject?.secretBytes, let data = parseGenericCardData(from: secretBytes) else { return }
-                currentGenericCardData = data
-             }
+            }
         }
     }
-    @Published var currentSecretString: String = ""
-    @Published var currentPasswordCardData: PasswordPayload? //PasswordCardData?
-    @Published var currentMnemonicCardData: MnemonicPayload? //MnemonicCardData?
-    @Published var current2FACardData: TwoFACardData?
-    @Published var currentMasterseedMnemonicCardData: MnemonicPayload? //MasterseedMnemonicCardData?
-    @Published var currentMasterseedCardData: MasterseedCardData?
-    @Published var currentElectrumMnemonicCardData: ElectrumMnemonicCardData?
-    @Published var currentGenericCardData: GenericCardData?
+//    @Published var currentSecretObject: SeedkeeperSecretObject? {
+//        didSet {
+//            if currentSecretObject?.secretHeader.type == .password,
+//               let secretBytes = currentSecretObject?.secretBytes,
+//               let data = parsePasswordCardData(from: secretBytes) {
+//                
+//                    currentPasswordCardData = data
+//                    currentSecretPayload = data
+//                
+//            } else if currentSecretObject?.secretHeader.type == .bip39Mnemonic,
+//                      let secretBytes = currentSecretObject?.secretBytes,
+//                      let data = parseMnemonicCardData(bytes: secretBytes) {
+//                
+//                currentMnemonicCardData = data
+//                currentSecretPayload = data
+//                
+//            } else if currentSecretObject?.secretHeader.type == .secret2FA,
+//                      let secretBytes = currentSecretObject?.secretBytes,
+//                      let data = parse2FACardData(from: secretBytes) {
+//                
+//                current2FACardData = data
+//                currentSecretPayload = data
+//                
+//            } else if currentSecretObject?.secretHeader.type == .masterseed,
+//                      currentSecretObject?.secretHeader.subtype == 0x01,
+//                      let secretBytes = currentSecretObject?.secretBytes,
+//                      let data = parseMasterseedMnemonicCardData(bytes: secretBytes) {
+//                
+//                currentMasterseedMnemonicCardData = data
+//                
+//            } else if currentSecretObject?.secretHeader.type == .masterseed,
+//                      currentSecretObject?.secretHeader.subtype == 0x00,
+//                      let secretBytes = currentSecretObject?.secretBytes,
+//                      let data = parseMasterseedCardData(bytes: secretBytes) {
+//                currentMasterseedCardData = data
+//                
+//            } else if currentSecretObject?.secretHeader.type == .electrumMnemonic, let secretBytes = currentSecretObject?.secretBytes, let data = parseElectreumMnemonicCardData(bytes: secretBytes) {
+//                
+//                currentElectrumMnemonicCardData = data
+//                
+//            } else {
+//                guard let secretBytes = currentSecretObject?.secretBytes, let data = parseGenericCardData(from: secretBytes) else { return }
+//                currentGenericCardData = data
+//             }
+//        }
+//    }
+    // TODO: use protocol to support multiple secret types
+//    @Published var currentSecretString: String = "" // TODO: remove
+//    @Published var currentPasswordCardData: PasswordPayload? //PasswordCardData?
+//    @Published var currentMnemonicCardData: MnemonicPayload? //MnemonicCardData?
+//    @Published var current2FACardData: TwoFACardData?
+//    @Published var currentMasterseedMnemonicCardData: MnemonicPayload? //MasterseedMnemonicCardData?
+//    @Published var currentMasterseedCardData: MasterseedCardData?
+//    @Published var currentElectrumMnemonicCardData: ElectrumMnemonicCardData?
+    //@Published var currentGenericCardData: GenericCardData?
+    
+    @Published var currentSecretPayload: Payload?
+    
     
     var secretPayloadToImportOnCard: Payload?
     
@@ -164,6 +182,7 @@ class CardState: ObservableObject {
     var masterAuthentiKeyBytes: [UInt8]?
     
     func logEvent(log: LogModel) {
+        // TODO: do not persist logs?
         dataControllerContext.saveLogEntry(log: log)
     }
 

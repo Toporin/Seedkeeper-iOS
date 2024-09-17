@@ -80,7 +80,7 @@ struct GenerateDescriptorView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $descriptorText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .walletDescriptor, shouldShowSeedQRCode: .constant(false), contentText: $descriptorText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
 
                         Spacer()
@@ -140,5 +140,9 @@ struct DescriptorPayload : Payload {
     
     func getFingerprintBytes() -> [UInt8] {
         return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
+    }
+    
+    func getContentString() -> String {
+        return descriptor
     }
 }

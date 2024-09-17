@@ -210,7 +210,7 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .password, shouldShowSeedQRCode: .constant(false), contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
 
                         Spacer()
@@ -325,5 +325,9 @@ struct PasswordPayload : Payload {
     
     func getFingerprintBytes() -> [UInt8] {
         return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
+    }
+    
+    func getContentString() -> String {
+        return password
     }
 }

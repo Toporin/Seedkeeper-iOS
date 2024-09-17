@@ -154,7 +154,7 @@ struct GenerateMnemonicView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .masterseed, shouldShowSeedQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
 
                         Spacer()
@@ -267,6 +267,7 @@ enum MnemonicSize: String, CaseIterable, Hashable, HumanReadable {
 // MARK: Payload types
 
 // SECRET_TYPE_MASTER_SEED (subtype SECRET_SUBTYPE_BIP39): [ masterseed_size(1b) | masterseed | wordlist_selector(1b) | entropy_size(1b) | entropy(<=32b) | passphrase_size(1b) | passphrase] where entropy is 16-32 bytes as defined in BIP39 (this format is backward compatible with SECRET_TYPE_MASTER_SEED)
+// TODO: rename as MnemonicMasterseedPayload
 struct MnemonicPayload : Payload {
     var label: String
     var mnemonic: String
@@ -277,6 +278,7 @@ struct MnemonicPayload : Payload {
     var subtype = UInt8(0x01)
     
     func getPayloadBytes() -> [UInt8] { // getV2PayloadBytes
+        // TODO: convert to masterseed!!!
         let mnemonicBytes = [UInt8](mnemonic.utf8)
         let mnemonicSize = UInt8(mnemonicBytes.count)
         
@@ -319,12 +321,17 @@ struct MnemonicPayload : Payload {
         return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
-    func getSeedQRContent() -> [UInt8]? {
-        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-        return byteArray
+    func getContentString() -> String {
+        return mnemonic
     }
     
+    // TODO: remove
+//    func getSeedQRContent() -> [UInt8]? {
+//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
+//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
+//        return byteArray
+//    }
+
     func getMnemonicSize() -> MnemonicSize? {
         let mnemonicWords = mnemonic.split(separator: " ")
         switch mnemonicWords.count {

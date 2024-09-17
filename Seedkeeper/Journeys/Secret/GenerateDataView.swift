@@ -81,7 +81,7 @@ struct GenerateDataView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .unknown, shouldShowQRCode: .constant(false), contentText: $dataText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
+                        SKSecretViewer(secretType: .data, shouldShowSeedQRCode: .constant(false), contentText: $dataText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
                         }
 
                         Spacer()
@@ -140,5 +140,9 @@ struct DataPayload : Payload {
     
     func getFingerprintBytes() -> [UInt8] {
         return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
+    }
+    
+    func getContentString() -> String {
+        return data
     }
 }
