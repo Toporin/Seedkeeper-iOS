@@ -300,39 +300,6 @@ func parseToDescriptorPayload(bytes: [UInt8]) -> DescriptorPayload? {
     return DescriptorPayload(label: "", descriptor: data)
 }
 
-// Parse mnemonic in legacy format [mnemonic_size mnemonic passphrase_size passphrase]
-//func parseMnemonicCardData(bytes: [UInt8]) -> MnemonicPayload? { //MnemonicCardData? {
-//    var index = 0
-//
-//    // Extract mnemonic size and mnemonic
-//    let mnemonicSize = Int(bytes[index])
-//    index += 1
-//    guard index + mnemonicSize <= bytes.count else {
-//        print("Invalid mnemonic size")
-//        return nil
-//    }
-//    let mnemonicBytes = Array(bytes[index..<(index + mnemonicSize)])
-//    index += mnemonicSize
-//    guard let mnemonic = String(bytes: mnemonicBytes, encoding: .utf8) else {
-//        print("Failed to convert mnemonic bytes to string")
-//        return nil
-//    }
-//
-//    // Extract passphrase size and passphrase if available
-//    var passphrase: String? = nil
-//    if index < bytes.count {
-//        let passphraseSize = Int(bytes[index])
-//        index += 1
-//        if passphraseSize > 0 && index + passphraseSize <= bytes.count {
-//            let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
-//            index += passphraseSize
-//            passphrase = String(bytes: passphraseBytes, encoding: .utf8)
-//        }
-//    }
-//    
-//    return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: nil)
-//}
-
 func parseToDataPayload(bytes: [UInt8]) -> DataPayload? {
     var index = 0
 
@@ -352,9 +319,6 @@ func parseToDataPayload(bytes: [UInt8]) -> DataPayload? {
         return nil // TODO: convert to hexstring instead
     }
     
-//    let hexString = dataBytes.map { String(format: "%02x", $0) }.joined()
-//    print("Hexadecimal representation of the bytes: \(hexString)")
-    
     return DataPayload(label: "", data: data)
 }
 
@@ -372,9 +336,6 @@ func parseToSecret2FAPayload(bytes: [UInt8]) -> Secret2FAPayload? {
     let secret2FABytes = Array(bytes[index..<(index + secret2FASize)])
     
     print("Blob Bytes: \(secret2FABytes.bytesToHex)")
-    
-//    let hexString = secret2FABytes.map { String(format: "%02x", $0) }.joined()
-//    print("Hexadecimal representation of the bytes: \(hexString)")
     
     return Secret2FAPayload(label: "", secretBytes: secret2FABytes)
 }

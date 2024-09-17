@@ -311,37 +311,4 @@ extension CardState {
         }
     }
     
-    // *********************************************************
-    // MARK: - Get Xpub
-    // *********************************************************
-    // TODO: Not supported for v1
-    // TODO: remove
-//    func requestGetXpub() {
-//        session = SatocardController(onConnect: onGetXpub, onFailure: onDisconnection)
-//        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-//    }
-//    
-//    private func onGetXpub(cardChannel: CardChannel) -> Void {
-//        guard let pinForMasterCard = pinForMasterCard,
-//              let currentSecretHeader = self.currentSecretHeader else {
-//            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-//            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
-//            return
-//        }
-//        
-//        let pinBytes = Array(pinForMasterCard.utf8)
-//        
-//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-//        
-//        do {
-//            let paths = [ "m/0/0/0"]
-//            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-//            let xpub = try cmdSet.cardBip32GetXpub(path: "m/0/0/0", xtype: XPUB_HEADERS_MAINNET.standard.rawValue, sid: currentSecretHeader.sid)
-//            currentSecretString = xpub
-//            session?.stop(alertMessage: "nfcXpubFetchSuccess")
-//        } catch let error {
-//            logEvent(log: LogModel(type: .error, message: "onGetXpub : \(error.localizedDescription)"))
-//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//        }
-//    }
 }

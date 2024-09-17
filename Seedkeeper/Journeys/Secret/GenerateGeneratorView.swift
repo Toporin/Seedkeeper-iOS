@@ -72,6 +72,7 @@ enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
 
 
 // MARK: Payload types
+// TODO: move somewhere else
 
 struct MasterseedPayload : Payload {
     var label: String
@@ -225,98 +226,3 @@ struct Secret2FAPayload : Payload {
         return secretBytes.bytesToHex
     }
 }
-
-//
-// MARK: OLD STRUCT TO REMOVE
-//
-
-//struct MasterseedCardData {
-//    var label=""
-//    var type = SeedkeeperSecretType.masterseed
-//    var subtype = UInt8(0x00)
-//    var masterseedBytes = [UInt8]()
-//    let blob: String
-//    
-//    func getPayloadBytes() -> [UInt8] {
-//        
-//        let secretSize = UInt8(masterseedBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        payload.append(secretSize)
-//        payload.append(contentsOf: masterseedBytes)
-//        
-//        return payload
-//    }
-//    
-//    func getFingerprintBytes() -> [UInt8] {
-//        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-//    }
-//    
-//    func getContentString() -> String {
-//        return masterseedBytes.bytesToHex
-//    }
-//    
-//}
-//
-//// TODO: BIP39mnemonicPayload
-//// TODO: merge with MnemonicPayload?
-//struct ElectrumMnemonicCardData {
-//    let mnemonic: String
-//    let passphrase: String
-//    
-//    
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
-//    
-//    func getMnemonicSize() -> MnemonicSize? {
-//        let mnemonicWords = mnemonic.split(separator: " ")
-//        switch mnemonicWords.count {
-//        case 12:
-//            return .twelveWords
-//        case 18:
-//            return .eighteenWords
-//        case 24:
-//            return .twentyFourWords
-//        default:
-//            return nil
-//        }
-//    }
-//}
-
-//struct GenericCardData : Payload {
-//    var label: String
-//    var type: SeedkeeperSecretType.data
-//    var subtype: UInt8 {get set}
-//    
-//    func getPayloadBytes() -> [UInt8]
-//    func getFingerprintBytes() -> [UInt8]
-//    
-//    let blob: String
-//}
-
-//struct TwoFACardData {
-//    var label: String
-//    var type = SeedkeeperSecretType.secret2FA
-//    var subtype = UInt8(0x00)
-//    var secretBytes: [UInt8]
-//    let blob: String
-//    
-//    func getPayloadBytes() -> [UInt8] {
-//        
-//        let secretSize = UInt8(secretBytes.count)
-//        
-//        var payload: [UInt8] = []
-//        payload.append(secretSize)
-//        payload.append(contentsOf: secretBytes)
-//        
-//        return payload
-//    }
-//    
-//    func getFingerprintBytes() -> [UInt8] {
-//        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-//    }
-//
-//}

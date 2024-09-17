@@ -324,13 +324,6 @@ struct MnemonicPayload : Payload {
     func getContentString() -> String {
         return mnemonic
     }
-    
-    // TODO: remove
-//    func getSeedQRContent() -> [UInt8]? {
-//        let result = SKMnemonicEnglish().getCompactSeedQRBitStream(from: self.mnemonic)
-//        let byteArray = SKMnemonicEnglish().bitstreamToByteArray(bitstream: result)
-//        return byteArray
-//    }
 
     func getMnemonicSize() -> MnemonicSize? {
         let mnemonicWords = mnemonic.split(separator: " ")
