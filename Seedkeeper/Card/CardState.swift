@@ -97,9 +97,9 @@ class CardState: ObservableObject {
     // MARK: Properties for secret mgmt
     // *********************************************************
     
-    @Published var masterSecretHeaders: [SeedkeeperSecretHeaderDto] = []
+    @Published var masterSecretHeaders: [SeedkeeperSecretHeader] = []
     
-    var currentSecretHeader: SeedkeeperSecretHeaderDto?
+    var currentSecretHeader: SeedkeeperSecretHeader?
     @Published var currentSecretObject: SeedkeeperSecretObject? {
         didSet {
             if let secretBytes = currentSecretObject?.secretBytes,
@@ -132,7 +132,7 @@ class CardState: ObservableObject {
     @Published var backupIndex = 0
 //    var backupBusy = false
 //    var exportDone = false
-    var secretsForBackup: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+    var secretsForBackup: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
     
     var backupAuthentiKeySid: Int?
     var backupAuthentiKeyFingerprintBytes: [UInt8]?
@@ -245,7 +245,7 @@ class CardState: ObservableObject {
         // List all secret headers
         do {
             let secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-            self.masterSecretHeaders = secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
+            self.masterSecretHeaders = secrets //.map { SeedkeeperSecretHeader(secretHeader: $0) }
             let fetchedLabel = try cmdSet.cardGetLabel()
             self.cardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
             print("Secrets: \(secrets)")

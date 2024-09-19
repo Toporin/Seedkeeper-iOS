@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SatochipSwift
 
 enum ActionAfterPin {
     case rescanCard
@@ -34,7 +35,7 @@ enum NavigationRoutes: Hashable {
     case editPinCode
     case pinCode(ActionAfterPin)
     case addSecret
-    case showSecret(SeedkeeperSecretHeaderDto)
+    case showSecret(SeedkeeperSecretHeader)
     case generateSecretType(SecretCreationMode)
     case generateGenerator(GeneratorModeNavData)
     case generateSuccess(String)

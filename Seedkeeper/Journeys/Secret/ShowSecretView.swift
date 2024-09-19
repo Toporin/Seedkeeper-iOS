@@ -9,12 +9,13 @@ import Foundation
 import CoreGraphics
 import QRCode
 import SwiftUI
+import SatochipSwift
 
 struct ShowSecretView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
-    var secret: SeedkeeperSecretHeaderDto // TODO: use SeedkeeperSecretHeader instead?
+    var secret: SeedkeeperSecretHeader
     @State var shouldShowSeedQR: Bool = false
     @State var isSecretHeaderFetched: Bool = false
     

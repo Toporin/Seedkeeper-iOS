@@ -112,9 +112,8 @@ extension CardState {
                     }
                     
                     // get the list of secrets headers
-                    // TODO: reuse list already fetched during scan()?
-                    // TODO: use self.masterSecretHeaders
-                    let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+                    //let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+                    let secretHeaders: [SeedkeeperSecretHeader] = masterSecretHeaders
                     
                     // check whether the backup authentikey is already present in card
                     let authentikeySecretBytes = [UInt8(authentikeyBytesForBackup!.count)] + authentikeyBytesForBackup!
@@ -130,7 +129,7 @@ extension CardState {
                         print("Backup authentikey imported in card with sid: \(authentikeySid)")
                     }
                     
-                    var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+                    var fetchedSecretsFromCard: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
                     
                     //for secretHeader in secretHeaders {
                     //for (index, secretHeader) in secretHeaders.enumerated() {
@@ -142,11 +141,11 @@ extension CardState {
                         
                         let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
                         
-                        fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+                        fetchedSecretsFromCard[secretHeader] = encryptedSecretObject
                         
                         backupIndex = index+1
                         print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
-                        sleep(1)// for debug purpose!
+                        sleep(1)// force multiple nfc session - for debug purpose!
                     }
                     session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
                     
@@ -238,7 +237,7 @@ extension CardState {
 //                        print("Backup authentikey imported in card with sid: \(authentikeySid)")
 //                    }
 //                    
-//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
 //                    
 //                    //for secretHeader in secretHeaders {
 //                    //for (index, secretHeader) in secretHeaders.enumerated() {
@@ -250,7 +249,7 @@ extension CardState {
 //                        
 //                        let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
 //                        
-//                        fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+//                        fetchedSecretsFromCard[SeedkeeperSecretHeader(secretHeader: secretHeader)] = encryptedSecretObject
 //                        
 //                        backupIndex = index+1
 //                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
@@ -392,7 +391,7 @@ extension CardState {
 //                        print("Backup authentikey imported in card with sid: \(authentikeySid)")
 //                    }
 //                    
-//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
 //                    
 //                    //for secretHeader in secretHeaders {
 //                    //for (index, secretHeader) in secretHeaders.enumerated() {
@@ -404,7 +403,7 @@ extension CardState {
 //                        
 //                        let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
 //                        
-//                        fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+//                        fetchedSecretsFromCard[SeedkeeperSecretHeader(secretHeader: secretHeader)] = encryptedSecretObject
 //                        
 //                        backupIndex = index+1
 //                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
@@ -509,14 +508,14 @@ extension CardState {
 //            
 //            var secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
 //            
-//            var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+//            var fetchedSecretsFromCard: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
 //            
 //            for secretHeader in secretHeaders {
 //                var secretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid)
 //                
 //                var encryptedResult = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: self.backupAuthentiKeySid!)
 //                
-//                fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedResult
+//                fetchedSecretsFromCard[SeedkeeperSecretHeader(secretHeader: secretHeader)] = encryptedResult
 //            }
 //            
 //            self.secretsForBackup = fetchedSecretsFromCard

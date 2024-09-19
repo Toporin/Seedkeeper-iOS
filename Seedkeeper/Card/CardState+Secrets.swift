@@ -113,7 +113,7 @@ extension CardState {
                     print("onImportSecret secret imported with sid: \(sid)")
                     
                     print("onImportSecret adding new secret header to master list...")
-                    self.addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto(secretHeader: secretHeader))
+                    self.addSecretToMasterList(secretHeader: secretHeader)
                     print("onImportSecret added secret header to master list")
                     
                     // specific to password
@@ -157,7 +157,7 @@ extension CardState {
         session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
     }
     
-    private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeaderDto) {
+    private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeader) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             masterSecretHeaders.insert(secretHeader, at: 0)
@@ -174,7 +174,7 @@ extension CardState {
     // *********************************************************
     
     // TODO: rename to exportSecret
-    func requestGetSecret(with secretHeader: SeedkeeperSecretHeaderDto) {
+    func requestGetSecret(with secretHeader: SeedkeeperSecretHeader) {
         currentSecretHeader = secretHeader
         session = SatocardController(onConnect: onGetSecret, onFailure: onDisconnection)
         session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
@@ -252,7 +252,7 @@ extension CardState {
             }
             
             var secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-            self.masterSecretHeaders = secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
+            self.masterSecretHeaders = secrets //secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
             session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
             print("Secrets: \(secrets)")
         } catch let error {
@@ -304,7 +304,7 @@ extension CardState {
         }
     }
     
-    func deleteSecretsFromList(secretHeader: SeedkeeperSecretHeaderDto) {
+    func deleteSecretsFromList(secretHeader: SeedkeeperSecretHeader) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.masterSecretHeaders.removeAll { $0 == secretHeader }

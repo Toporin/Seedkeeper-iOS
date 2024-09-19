@@ -10,50 +10,51 @@ import SwiftUI
 import SatochipSwift
 import CryptoSwift
 
-struct SeedkeeperSecretHeaderDto: Hashable {
-    
-    public static let HEADER_SIZE = 13
-    
-    public var sid = 0
-    public var type = SeedkeeperSecretType.defaultType
-    public var subtype: UInt8 = UInt8(0) // todo:
-    public var origin = SeedkeeperSecretOrigin.plainImport
-    public var exportRights = SeedkeeperExportRights.exportPlaintextAllowed
-    public var nbExportPlaintext: UInt8 = UInt8(0)
-    public var nbExportEncrypted: UInt8 = UInt8(0)
-    public var useCounter: UInt8 = UInt8(0)
-    public var rfu2: UInt8 = UInt8(0) // currently not used
-    public var fingerprintBytes = [UInt8](repeating: 0, count: 4)
-    public var label = ""
-    
-    public init(secretHeader: SeedkeeperSecretHeader) {
-        self.sid = secretHeader.sid
-        self.type = secretHeader.type
-        self.subtype = secretHeader.subtype
-        self.origin = secretHeader.origin
-        self.exportRights = secretHeader.exportRights
-        self.nbExportPlaintext = secretHeader.nbExportPlaintext
-        self.nbExportEncrypted = secretHeader.nbExportEncrypted
-        self.useCounter = secretHeader.useCounter
-        self.rfu2 = secretHeader.rfu2
-        self.fingerprintBytes = secretHeader.fingerprintBytes
-        self.label = secretHeader.label
-    }
-    
-    func toSeedkeeperSecretHeader() -> SeedkeeperSecretHeader {
-        return SeedkeeperSecretHeader(sid: sid,
-                                       type: type,
-                                       subtype: subtype,
-                                       origin: origin,
-                                       exportRights: exportRights,
-                                       nbExportPlaintext: nbExportPlaintext,
-                                       nbExportEncrypted: nbExportEncrypted,
-                                       useCounter: useCounter,
-                                       rfu2: rfu2,
-                                       fingerprintBytes: fingerprintBytes,
-                                       label: label)
-    }
-}
+// TODO: remove and use SeedkeeperSecretHeader directly
+//struct SeedkeeperSecretHeaderDto: Hashable {
+//    
+//    public static let HEADER_SIZE = 13
+//    
+//    public var sid = 0
+//    public var type = SeedkeeperSecretType.defaultType
+//    public var subtype: UInt8 = UInt8(0) // todo:
+//    public var origin = SeedkeeperSecretOrigin.plainImport
+//    public var exportRights = SeedkeeperExportRights.exportPlaintextAllowed
+//    public var nbExportPlaintext: UInt8 = UInt8(0)
+//    public var nbExportEncrypted: UInt8 = UInt8(0)
+//    public var useCounter: UInt8 = UInt8(0)
+//    public var rfu2: UInt8 = UInt8(0) // currently not used
+//    public var fingerprintBytes = [UInt8](repeating: 0, count: 4)
+//    public var label = ""
+//    
+//    public init(secretHeader: SeedkeeperSecretHeader) {
+//        self.sid = secretHeader.sid
+//        self.type = secretHeader.type
+//        self.subtype = secretHeader.subtype
+//        self.origin = secretHeader.origin
+//        self.exportRights = secretHeader.exportRights
+//        self.nbExportPlaintext = secretHeader.nbExportPlaintext
+//        self.nbExportEncrypted = secretHeader.nbExportEncrypted
+//        self.useCounter = secretHeader.useCounter
+//        self.rfu2 = secretHeader.rfu2
+//        self.fingerprintBytes = secretHeader.fingerprintBytes
+//        self.label = secretHeader.label
+//    }
+//    
+//    func toSeedkeeperSecretHeader() -> SeedkeeperSecretHeader {
+//        return SeedkeeperSecretHeader(sid: sid,
+//                                       type: type,
+//                                       subtype: subtype,
+//                                       origin: origin,
+//                                       exportRights: exportRights,
+//                                       nbExportPlaintext: nbExportPlaintext,
+//                                       nbExportEncrypted: nbExportEncrypted,
+//                                       useCounter: useCounter,
+//                                       rfu2: rfu2,
+//                                       fingerprintBytes: fingerprintBytes,
+//                                       label: label)
+//    }
+//}
 
 enum SecretSearchMode {
     case all
@@ -86,7 +87,7 @@ struct DashboardView: View {
     @State var filterOptions = PickerOptions(placeHolder: String(localized: "selectFilterOptions"), items: SecretSearchFilterOptions.self, selectedOption: .allTypes)
     @State private var showFilterOptions = false
     
-    private func showSecretView(secret: SeedkeeperSecretHeaderDto) -> some View {
+    private func showSecretView(secret: SeedkeeperSecretHeader) -> some View {
         return SKSecretButton(secret: secret) {
             homeNavigationPath.append(NavigationRoutes.showSecret(secret))
         }
@@ -95,7 +96,7 @@ struct DashboardView: View {
         .frame(maxWidth: .infinity, alignment: .center)
     }
     
-    private func matchesSearchMode(secret: SeedkeeperSecretHeaderDto) -> Bool {
+    private func matchesSearchMode(secret: SeedkeeperSecretHeader) -> Bool {
         guard let selectedOption = filterOptions.selectedOption else {
             return false
         }
@@ -204,7 +205,7 @@ struct DashboardView: View {
 }
 
 struct SKSecretButton: View {
-    let secret: SeedkeeperSecretHeaderDto
+    let secret: SeedkeeperSecretHeader
     let action: () -> Void
     
     func getSecretIcon(secretType: SeedkeeperSecretType) -> String {
