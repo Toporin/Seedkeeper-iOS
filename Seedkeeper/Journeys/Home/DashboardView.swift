@@ -10,52 +10,6 @@ import SwiftUI
 import SatochipSwift
 import CryptoSwift
 
-// TODO: remove and use SeedkeeperSecretHeader directly
-//struct SeedkeeperSecretHeaderDto: Hashable {
-//    
-//    public static let HEADER_SIZE = 13
-//    
-//    public var sid = 0
-//    public var type = SeedkeeperSecretType.defaultType
-//    public var subtype: UInt8 = UInt8(0) // todo:
-//    public var origin = SeedkeeperSecretOrigin.plainImport
-//    public var exportRights = SeedkeeperExportRights.exportPlaintextAllowed
-//    public var nbExportPlaintext: UInt8 = UInt8(0)
-//    public var nbExportEncrypted: UInt8 = UInt8(0)
-//    public var useCounter: UInt8 = UInt8(0)
-//    public var rfu2: UInt8 = UInt8(0) // currently not used
-//    public var fingerprintBytes = [UInt8](repeating: 0, count: 4)
-//    public var label = ""
-//    
-//    public init(secretHeader: SeedkeeperSecretHeader) {
-//        self.sid = secretHeader.sid
-//        self.type = secretHeader.type
-//        self.subtype = secretHeader.subtype
-//        self.origin = secretHeader.origin
-//        self.exportRights = secretHeader.exportRights
-//        self.nbExportPlaintext = secretHeader.nbExportPlaintext
-//        self.nbExportEncrypted = secretHeader.nbExportEncrypted
-//        self.useCounter = secretHeader.useCounter
-//        self.rfu2 = secretHeader.rfu2
-//        self.fingerprintBytes = secretHeader.fingerprintBytes
-//        self.label = secretHeader.label
-//    }
-//    
-//    func toSeedkeeperSecretHeader() -> SeedkeeperSecretHeader {
-//        return SeedkeeperSecretHeader(sid: sid,
-//                                       type: type,
-//                                       subtype: subtype,
-//                                       origin: origin,
-//                                       exportRights: exportRights,
-//                                       nbExportPlaintext: nbExportPlaintext,
-//                                       nbExportEncrypted: nbExportEncrypted,
-//                                       useCounter: useCounter,
-//                                       rfu2: rfu2,
-//                                       fingerprintBytes: fingerprintBytes,
-//                                       label: label)
-//    }
-//}
-
 enum SecretSearchMode {
     case all
     case mnemonic

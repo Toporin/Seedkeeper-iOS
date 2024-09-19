@@ -25,7 +25,6 @@ extension CardState {
     
     internal func resetState() {
         certificateCode = .unknown
-        authentikeyHex = ""
         isCardDataAvailable = false
         
         masterSecretHeaders = []
@@ -39,15 +38,6 @@ extension CardState {
             }
         }
     }
-    
-    // TODO: remove unused
-//    internal func setCardStatus(statusApdu: APDUResponse, completion: @escaping () -> Void){
-//        DispatchQueue.main.async { [weak self] in
-//            guard let self = self else { return }
-//            self.cardStatus = try? CardStatus(rapdu: statusApdu)
-//            completion()
-//        }
-//    }
     
     internal func fetchCardStatus() throws -> (CardStatus, CardType) {
         var statusApdu: APDUResponse?
@@ -102,28 +92,22 @@ extension CardState {
         DispatchQueue.main.async {
             switch cardType {
             case .master:
-                self.authentikeyHex = authentikeyHex
+                //self.authentikeyHex = authentikeyHex
                 self.authentikeyBytes = authentikeyBytes
             case .backup:
-                self.authentikeyHexForBackup = authentikeyHex
+                //self.authentikeyHexForBackup = authentikeyHex
                 self.authentikeyBytesForBackup = authentikeyBytes
             }
         }
     }
     
-    // TODO: remove
-//    internal func getAuthentikeyHexSilently() async throws -> String {
-//        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
-//        return authentikeyHex
-//    }
-    
     internal func isAuthentikeyValid(for cardType: ScannedCardType) throws -> Bool {
-        let (_, _, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        let (_, authentikeyBytes, _) = try cmdSet.cardGetAuthentikey()
         switch cardType {
         case .master:
-            return self.authentikeyHex == authentikeyHex
+            return self.authentikeyBytes == authentikeyBytes
         case .backup:
-            return self.authentikeyHexForBackup == authentikeyHex
+            return self.authentikeyBytesForBackup == authentikeyBytes
         }
     }
     

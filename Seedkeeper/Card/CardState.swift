@@ -33,17 +33,17 @@ class CardState: ObservableObject {
     @Published var backupCardStatus: CardStatus?
     
     @Published var isCardDataAvailable = false
-    @Published var authentikeyHex = ""
+    //@Published var authentikeyHex = ""
     var authentikeyBytes: [UInt8]?
     @Published var certificateDic = [String: String]()
     @Published var certificateCode = PkiReturnCode.unknown
     @Published var errorMessage: String?
     @Published var homeNavigationPath = NavigationPath()
     
-    @Published var authentikeyHexForBackup = ""
-    var authentikeyBytesForBackup: [UInt8]?
-    @Published var certificateDicForBackup = [String: String]()
-    @Published var certificateCodeForBackup = PkiReturnCode.unknown
+    //@Published var authentikeyHexForBackup = ""
+    var authentikeyBytesForBackup: [UInt8]? // TODO: rename to backupAuthentikeyBytes
+    @Published var certificateDicForBackup = [String: String]() // TODO: remove as unused?
+    @Published var certificateCodeForBackup = PkiReturnCode.unknown // TODO: remove as unused?
     
     @Published var masterCardLabel: String = "n/a"
     @Published var backupCardLabel: String = ""
@@ -134,17 +134,15 @@ class CardState: ObservableObject {
     var pinForBackupCard: String?
     
     @Published var backupIndex = 0
-//    var backupBusy = false
-//    var exportDone = false
     var secretsForBackup: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
     
-    var backupAuthentiKeySid: Int?
-    var backupAuthentiKeyFingerprintBytes: [UInt8]?
-    var backupAuthentiKeyBytes: [UInt8]?
-    
-    var masterAuthentiKeySid: Int?
-    var masterAuthentiKeyFingerprintBytes: [UInt8]?
-    var masterAuthentiKeyBytes: [UInt8]?
+//    var backupAuthentiKeySid: Int?
+//    var backupAuthentiKeyFingerprintBytes: [UInt8]?
+//    var backupAuthentiKeyBytes: [UInt8]?
+//    
+//    var masterAuthentiKeySid: Int?
+//    var masterAuthentiKeyFingerprintBytes: [UInt8]?
+//    var masterAuthentiKeyBytes: [UInt8]?
     
     // *********************************************************
     // MARK: scan card to fetch secrets
@@ -197,7 +195,6 @@ class CardState: ObservableObject {
                         let pinBytes = Array(pin.utf8)
                         do {
                             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-//                            self.isPinVerificationSuccess = true // TODO: remove
                         } catch CardError.wrongPIN(let retryCounter){
                             DispatchQueue.main.async {
                                 switch scannedCardType {
@@ -208,7 +205,6 @@ class CardState: ObservableObject {
                                 }
                             }
                             
-//                            self.isPinVerificationSuccess = false
                             logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
                             if retryCounter == 0 {
                                 logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
@@ -227,7 +223,6 @@ class CardState: ObservableObject {
                                     self.pinForBackupCard = nil
                                 }
                             }
-//                            self.isPinVerificationSuccess = false
                             logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
                             self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
                             return
@@ -240,7 +235,6 @@ class CardState: ObservableObject {
                                     self.pinForBackupCard = nil
                                 }
                             }
-//                            self.isPinVerificationSuccess = false
                             logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
                             self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                             return
@@ -306,234 +300,6 @@ class CardState: ObservableObject {
 
         session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
     }
-    
-    
-    ////
-//    func scan() {
-//        print("CardState scan()")
-//        DispatchQueue.main.async {
-//            self.resetState()
-//        }
-//        session = SatocardController(onConnect: onConnection, onFailure: onDisconnection)
-//        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-//    }
-//    
-//    func onConnection(cardChannel: CardChannel) -> Void {
-//        Task {
-//            do {
-//                try await handleConnection(cardChannel: cardChannel)
-//            } catch {
-//                logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
-//                
-//                DispatchQueue.main.async {
-//                    self.errorMessage = "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)"
-//                }
-//                session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//    
-//    private func handleConnection(cardChannel: CardChannel) async throws {
-//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-//        
-//        let (statusApdu, cardType) = try await fetchCardStatus()
-//
-//        cardStatus = try CardStatus(rapdu: statusApdu)
-//        
-//        //FaceId integration seems to not be possible for the desired flow, needs further discussion
-//        
-//        if let cardStatus = cardStatus, !cardStatus.setupDone {
-//            // Card needs setup
-//            
-//            // let version = getCardVersionInt(cardStatus: cardStatus)
-//            // if version <= 0x00010001 {
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let self = self else { return }
-//                    homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
-//                }
-//                session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
-//                return
-//            // }
-//        } else {
-//            // card needs PIN
-//            
-//            guard let pinForMasterCard = pinForMasterCard else {
-//                session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let self = self else { return }
-//                    homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
-//                }
-//                return
-//            }
-//            
-//            let pinBytes = Array(pinForMasterCard.utf8)
-//            do {
-//                var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-//                self.isPinVerificationSuccess = true
-//            } catch CardError.wrongPIN(let retryCounter){
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
-//                if retryCounter == 0 {
-//                    logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
-//                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
-//                } else {
-//                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
-//                }
-//                return
-//                // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
-//            } catch CardError.pinBlocked {
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
-//                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
-//                return
-//            } catch {
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
-//                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//                return
-//            }
-//        }
-//        
-//        // Check authenticity
-//        try await verifyCardAuthenticity(cardType: .master)
-//        // Fetching authentikey for the first scan and set it in memory
-//        try await fetchAuthentikey(cardType: .master)
-//        
-//        DispatchQueue.main.async {
-//            self.isCardDataAvailable = true
-//        }
-//            
-//        // List all secret headers
-//        do {
-//            let secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-//            self.masterSecretHeaders = secrets //.map { SeedkeeperSecretHeader(secretHeader: $0) }
-//            let fetchedLabel = try cmdSet.cardGetLabel()
-//            self.cardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
-//            print("Secrets: \(secrets)")
-//        } catch let error {
-//            logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
-//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//        }
-//        
-//        session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-//    }
-
-    
-    
-//    func scan() {
-//        print("CardState scan()")
-//        DispatchQueue.main.async {
-//            self.resetState()
-//        }
-//        session = SatocardController(onConnect: onConnection, onFailure: onDisconnection)
-//        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-//    }
-//    
-//    func onConnection(cardChannel: CardChannel) -> Void {
-//        Task {
-//            do {
-//                try await handleConnection(cardChannel: cardChannel)
-//            } catch {
-//                logEvent(log: LogModel(type: .error, message: "onConnection : \(error.localizedDescription)"))
-//                
-//                DispatchQueue.main.async {
-//                    self.errorMessage = "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)"
-//                }
-//                session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//    
-//    private func handleConnection(cardChannel: CardChannel) async throws {
-//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-//        
-//        let (statusApdu, cardType) = try await fetchCardStatus()
-//
-//        cardStatus = try CardStatus(rapdu: statusApdu)
-//        
-//        //FaceId integration seems to not be possible for the desired flow, needs further discussion
-//        
-//        if let cardStatus = cardStatus, !cardStatus.setupDone {
-//            // Card needs setup
-//            
-//            // let version = getCardVersionInt(cardStatus: cardStatus)
-//            // if version <= 0x00010001 {
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let self = self else { return }
-//                    homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
-//                }
-//                session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
-//                return
-//            // }
-//        } else {
-//            // card needs PIN
-//            
-//            guard let pinForMasterCard = pinForMasterCard else {
-//                session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let self = self else { return }
-//                    homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
-//                }
-//                return
-//            }
-//            
-//            let pinBytes = Array(pinForMasterCard.utf8)
-//            do {
-//                var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-//                self.isPinVerificationSuccess = true
-//            } catch CardError.wrongPIN(let retryCounter){
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
-//                if retryCounter == 0 {
-//                    logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
-//                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
-//                } else {
-//                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
-//                }
-//                return
-//                // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
-//            } catch CardError.pinBlocked {
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
-//                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
-//                return
-//            } catch {
-//                self.pinForMasterCard = nil
-//                self.isPinVerificationSuccess = false
-//                logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
-//                self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//                return
-//            }
-//        }
-//        
-//        // Check authenticity
-//        try await verifyCardAuthenticity(cardType: .master)
-//        // Fetching authentikey for the first scan and set it in memory
-//        try await fetchAuthentikey(cardType: .master)
-//        
-//        DispatchQueue.main.async {
-//            self.isCardDataAvailable = true
-//        }
-//            
-//        // List all secret headers
-//        do {
-//            let secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-//            self.masterSecretHeaders = secrets //.map { SeedkeeperSecretHeader(secretHeader: $0) }
-//            let fetchedLabel = try cmdSet.cardGetLabel()
-//            self.cardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
-//            print("Secrets: \(secrets)")
-//        } catch let error {
-//            logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
-//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-//        }
-//        
-//        session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-//    }
 
     // *********************************************************
     // MARK: - On disconnection

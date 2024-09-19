@@ -49,11 +49,6 @@ struct HomeView: View {
     @EnvironmentObject var cardState: CardState
     @State var showCardNeedsToBeScannedAlert: Bool = false
     
-    ///TODO: remove unused
-//    private var isCardScanned: Bool {
-//        return cardState.masterCardStatus != nil && cardState.isPinVerificationSuccess
-//    }
-    
     @State private var showSetupFlow = false
     
     func isFirstTimeUse() -> Bool {
