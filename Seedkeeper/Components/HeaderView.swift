@@ -24,7 +24,7 @@ struct HeaderView: View {
             SatoStatusView()
                 .padding(.leading, 22)
                 .onTapGesture(count: 1){
-                    if let _ = cardState.cardStatus {
+                    if let _ = cardState.masterCardStatus {
                         homeNavigationPath.append(NavigationRoutes.authenticity)
                     } else {
                         showCardNeedsToBeScannedAlert = true
@@ -38,11 +38,11 @@ struct HeaderView: View {
             
             Spacer()
             
-            if let _ = cardState.cardStatus {
+            if let _ = cardState.masterCardStatus {
                 Button(action: {
                     cardState.pinForMasterCard = nil
                     cardState.lastTimeForMasterCardPin = nil
-                    cardState.scan()
+                    cardState.scan(for: .master)
                 }) {
                     Image("ic_refresh_dark")
                         .resizable()

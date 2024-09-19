@@ -40,15 +40,16 @@ extension CardState {
         }
     }
     
-    internal func setCardStatus(statusApdu: APDUResponse, completion: @escaping () -> Void){
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.cardStatus = try? CardStatus(rapdu: statusApdu)
-            completion()
-        }
-    }
+    // TODO: remove unused
+//    internal func setCardStatus(statusApdu: APDUResponse, completion: @escaping () -> Void){
+//        DispatchQueue.main.async { [weak self] in
+//            guard let self = self else { return }
+//            self.cardStatus = try? CardStatus(rapdu: statusApdu)
+//            completion()
+//        }
+//    }
     
-    internal func fetchCardStatus() async throws -> (APDUResponse, CardType) {
+    internal func fetchCardStatus() throws -> (CardStatus, CardType) {
         var statusApdu: APDUResponse?
         var cardType: CardType?
         
@@ -56,15 +57,20 @@ extension CardState {
         (statusApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
         
         statusApdu = try cmdSet.cardGetStatus()
-        
         guard let apdu = statusApdu else {
             throw SatocardError.invalidResponse
         }
         
-        return (apdu, cardType!)
+        do {
+            var cardStatus = try CardStatus(rapdu: apdu)
+            return (cardStatus, cardType!)
+        } catch let error {
+            throw SatocardError.invalidResponse
+        }
+        
     }
     
-    internal func verifyCardAuthenticity(cardType: ScannedCardType) async throws {
+    internal func verifyCardAuthenticity(cardType: ScannedCardType) throws {
         let (certificateCode, certificateDic) = try cmdSet.cardVerifyAuthenticity()
         DispatchQueue.main.async {
             switch cardType {
@@ -91,7 +97,7 @@ extension CardState {
         }
     }
     
-    internal func fetchAuthentikey(cardType: ScannedCardType) async throws {
+    internal func fetchAuthentikey(cardType: ScannedCardType) throws {
         let (_, authentikeyBytes, authentikeyHex) = try cmdSet.cardGetAuthentikey()
         DispatchQueue.main.async {
             switch cardType {

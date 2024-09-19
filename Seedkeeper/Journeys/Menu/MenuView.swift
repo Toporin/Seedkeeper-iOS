@@ -70,7 +70,7 @@ struct MenuView: View {
                             iconWidth: 34, iconHeight: 34,
                             backgroundColor: Colors.darkMenuButton,
                             action: {
-                                if let _ = cardState.cardStatus {
+                                if let _ = cardState.masterCardStatus {
                                     self.homeNavigationPath.append(NavigationRoutes.cardInfo)
                                 } else {
                                     self.showCardNeedsToBeScannedAlert = true
@@ -99,7 +99,7 @@ struct MenuView: View {
                             iconHeight: 34,
                             backgroundColor: Colors.lightMenuButton,
                             action: {
-                                if let _ = cardState.cardStatus {
+                                if let _ = cardState.masterCardStatus {
                                     self.homeNavigationPath.append(NavigationRoutes.backup)
                                 } else {
                                     self.showCardNeedsToBeScannedAlert = true

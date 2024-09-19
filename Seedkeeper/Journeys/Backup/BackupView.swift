@@ -81,6 +81,7 @@ struct BackupView: View {
                 
                 Spacer()
                 
+                // User info when exporting encrypted secrets
                 if (cardState.backupMode == .backupImport){
                     // TODO: provide more context and better instructions to user! + localization
                     if (cardState.masterSecretHeaders.count > 30){
@@ -91,6 +92,21 @@ struct BackupView: View {
                     Spacer()
                 }
                
+                // User info after encrypted secrets
+                else if (cardState.backupMode == .backupExportReady){
+                    // TODO: provide more context and better instructions to user! + localization
+                    // show export progression as it may require several nfc sessions
+                    SatoText(text: "Number of secrets to backup: \(cardState.secretsForBackup.count) out of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)
+                    Spacer()
+                }
+                
+                else if (cardState.backupMode == .initiateBackupExport){
+                    // TODO: provide more context and better instructions to user! + localization
+                    // show export progression as it may require several nfc sessions
+                    SatoText(text: "Secrets imported: \(cardState.backupIndex) out of \(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
+                    Spacer()
+                }
+                
                 Image(getIndicationImageName())
                     .resizable()
                     .frame(width: 315, height: 149)
@@ -103,9 +119,8 @@ struct BackupView: View {
                     case .start:
                         cardState.backupMode = .pairBackupCard
                     case .pairBackupCard:
-                        cardState.scanBackupCard()
+                        cardState.scan(for: .backup)
                     case .backupImport:
-                        //cardState.requestFetchSecretsForBackup()
                         cardState.requestExportSecretsForBackup()
                     case .backupExportReady:
                         cardState.backupMode = .initiateBackupExport

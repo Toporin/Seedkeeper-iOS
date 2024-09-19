@@ -125,7 +125,7 @@ struct ShowSecretView: View {
                 
                 // MARK: action buttons
                 HStack {
-                    if let version = cardState.cardStatus?.protocolVersion, version >= 0x0002 {
+                    if let version = cardState.masterCardStatus?.protocolVersion, version >= 0x0002 {
                         SKActionButtonSmall(title: String(localized: "delete"), icon: "ic_trash", isEnabled: .constant(true)) {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()

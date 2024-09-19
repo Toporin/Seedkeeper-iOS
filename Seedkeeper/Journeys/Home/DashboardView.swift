@@ -177,7 +177,7 @@ struct DashboardView: View {
             }
             .refreshable {
                 Task {
-                    cardState.scan()
+                    cardState.scan(for: .master)
                 }
             }
             .listStyle(PlainListStyle())

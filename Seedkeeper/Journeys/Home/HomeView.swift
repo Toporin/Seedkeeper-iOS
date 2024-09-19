@@ -49,9 +49,10 @@ struct HomeView: View {
     @EnvironmentObject var cardState: CardState
     @State var showCardNeedsToBeScannedAlert: Bool = false
     
-    private var isCardScanned: Bool {
-        return cardState.cardStatus != nil && cardState.isPinVerificationSuccess
-    }
+    ///TODO: remove unused
+//    private var isCardScanned: Bool {
+//        return cardState.masterCardStatus != nil && cardState.isPinVerificationSuccess
+//    }
     
     @State private var showSetupFlow = false
     
@@ -74,7 +75,7 @@ struct HomeView: View {
                     
                     Spacer().frame(height: 16)
                     
-                    if isCardScanned {
+                    if cardState.isCardDataAvailable {
                         DashboardView(homeNavigationPath: $cardState.homeNavigationPath)
                     } else {
                         EmptyScanStateOverlay(homeNavigationPath: $cardState.homeNavigationPath)

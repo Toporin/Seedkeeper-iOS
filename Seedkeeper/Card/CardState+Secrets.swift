@@ -52,7 +52,7 @@ extension CardState {
             
             var rapdu = try cmdSet.cardSetLabel(label: cardLabelToSet)
             if rapdu {
-                self.cardLabel = cardLabelToSet
+                self.masterCardLabel = cardLabelToSet
                 self.cardLabelToSet = nil
             }
             session?.stop(alertMessage: String(localized: "nfcLabelSetSuccess"))
@@ -219,47 +219,48 @@ extension CardState {
     // *********************************************************
     
     // TODO: rename as it actually fetches secret headers, not secrets
-    func requestFetchSecrets() {
-        session = SatocardController(onConnect: onFetchSecrets, onFailure: onDisconnection)
-        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
-    }
-    
-    private func onFetchSecrets(cardChannel: CardChannel) -> Void  {
-        guard let pinForMasterCard = pinForMasterCard else {
-            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
-            // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
-            return
-        }
-        
-        let pinBytes = Array(pinForMasterCard.utf8)
-        
-        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
-        
-//        var sids = [Int]()
-//        var secrets = [SeedkeeperSecretObject]()
-//        var fingerprints = [String]()
-        
-        do {
-            var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            
-            if !isAuthentikeyValid {
-                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                return
-            }
-            
-            var secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-            self.masterSecretHeaders = secrets //secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
-            session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-            print("Secrets: \(secrets)")
-        } catch let error {
-            logEvent(log: LogModel(type: .error, message: "onFetchSecrets : \(error.localizedDescription)"))
-            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-        }
-    }
+    // TODO: remove as unused
+//    func requestFetchSecrets() {
+//        session = SatocardController(onConnect: onFetchSecrets, onFailure: onDisconnection)
+//        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
+//    }
+//    
+//    private func onFetchSecrets(cardChannel: CardChannel) -> Void  {
+//        guard let pinForMasterCard = pinForMasterCard else {
+//            session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+//            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+//            // homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
+//            return
+//        }
+//        
+//        let pinBytes = Array(pinForMasterCard.utf8)
+//        
+//        cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+//        
+////        var sids = [Int]()
+////        var secrets = [SeedkeeperSecretObject]()
+////        var fingerprints = [String]()
+//        
+//        do {
+//            var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
+//            
+//            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+//            
+//            if !isAuthentikeyValid {
+//                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+//                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+//                return
+//            }
+//            
+//            var secrets: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+//            self.masterSecretHeaders = secrets //secrets.map { SeedkeeperSecretHeaderDto(secretHeader: $0) }
+//            session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+//            print("Secrets: \(secrets)")
+//        } catch let error {
+//            logEvent(log: LogModel(type: .error, message: "onFetchSecrets : \(error.localizedDescription)"))
+//            session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+//        }
+//    }
     
     // *********************************************************
     // MARK: - Delete secret

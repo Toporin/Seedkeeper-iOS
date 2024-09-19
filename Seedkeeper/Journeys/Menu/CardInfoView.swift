@@ -32,7 +32,7 @@ struct CardInfoView: View {
     let certButtonTitle = "certDetails"
     
     func getCardVersionString() -> String {
-        if let cardStatus = cardState.cardStatus {
+        if let cardStatus = cardState.masterCardStatus {
             let str = "Seedkeeper v\(cardStatus.protocolMajorVersion).\(cardStatus.protocolMinorVersion)-\(cardStatus.appletMajorVersion).\(cardStatus.appletMinorVersion)"
             return str
         } else {
@@ -64,7 +64,7 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 14)
 
-                EditableCardInfoBox(mode: .text(self.cardState.cardLabel), backgroundColor: Colors.lightMenuButton) { result in
+                EditableCardInfoBox(mode: .text(self.cardState.masterCardLabel), backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .text(let value):
                         print("Edited text : \(value)")
@@ -83,7 +83,7 @@ struct CardInfoView: View {
                 EditableCardInfoBox(mode: .pin, backgroundColor: Colors.lightMenuButton) { result in
                     switch result {
                     case .pin:
-                        guard let _ = cardState.cardStatus else {
+                        guard let _ = cardState.masterCardStatus else {
                             return
                         }
                         homeNavigationPath.append(NavigationRoutes.editPinCodeRequest)

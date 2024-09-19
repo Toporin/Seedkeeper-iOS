@@ -21,7 +21,7 @@ struct EmptyScanStateOverlay: View {
                 
                 ScanButton {
                     Task {
-                        cardState.scan()
+                        cardState.scan(for: .master)
                     }
                 }
                 
