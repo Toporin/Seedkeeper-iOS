@@ -49,7 +49,10 @@ class CardState: ObservableObject {
     var cardLabelToSet: String?
     
     var session: SatocardController?
-    //var cardController: SatocardController? // TODO: remove
+    
+    // *********************************************************
+    // MARK: Properties for PIN mgmt
+    // *********************************************************
     
     private(set) var isPinVerificationSuccess: Bool = false
     
@@ -74,7 +77,7 @@ class CardState: ObservableObject {
         }
     }
     var lastTimeForMasterCardPin: Date?
-    var pinForBackupCard: String?
+    
     
     func isPinExpired() -> Bool {
         guard let lastTimeForMasterCardPin = lastTimeForMasterCardPin else {
@@ -90,16 +93,11 @@ class CardState: ObservableObject {
         lastTimeForMasterCardPin = Date()
     }
     
+    // *********************************************************
+    // MARK: Properties for secret mgmt
+    // *********************************************************
+    
     @Published var masterSecretHeaders: [SeedkeeperSecretHeaderDto] = []
-    
-    // TODO: rename to backupMode
-    @Published var mode: BackupMode = .start {
-        didSet {
-            print("backup mode is set to : \(mode)")
-        }
-    }
-    
-    var secretsForBackup: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
     
     var currentSecretHeader: SeedkeeperSecretHeaderDto?
     @Published var currentSecretObject: SeedkeeperSecretObject? {
@@ -116,6 +114,26 @@ class CardState: ObservableObject {
     
     var secretPayloadToImportOnCard: Payload?
     
+    func logEvent(log: LogModel) {
+        // TODO: do not persist logs?
+        dataControllerContext.saveLogEntry(log: log)
+    }
+
+    // *********************************************************
+    // MARK: Properties for backup
+    // *********************************************************
+    @Published var backupMode: BackupMode = .start {
+        didSet {
+            print("backup mode is set to : \(backupMode)")
+        }
+    }
+    var pinForBackupCard: String?
+    
+    @Published var backupIndex = 0
+//    var backupBusy = false
+//    var exportDone = false
+    var secretsForBackup: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+    
     var backupAuthentiKeySid: Int?
     var backupAuthentiKeyFingerprintBytes: [UInt8]?
     var backupAuthentiKeyBytes: [UInt8]?
@@ -124,13 +142,8 @@ class CardState: ObservableObject {
     var masterAuthentiKeyFingerprintBytes: [UInt8]?
     var masterAuthentiKeyBytes: [UInt8]?
     
-    func logEvent(log: LogModel) {
-        // TODO: do not persist logs?
-        dataControllerContext.saveLogEntry(log: log)
-    }
-
     // *********************************************************
-    // MARK: - Master card connection
+    // MARK: Master card connection
     // *********************************************************
     func scan() {
         print("CardState scan()")

@@ -11,9 +11,9 @@ import SwiftUI
 enum BackupMode {
     case start
     case pairBackupCard
-    case backupImport
+    case backupImport // TODO: rename to backupExport (from master)
     case backupExportReady
-    case initiateBackupExport
+    case initiateBackupExport // TODO: rename to initiateBackupImport (to backup card)
 }
 
 struct BackupView: View {
@@ -22,7 +22,7 @@ struct BackupView: View {
     @Binding var homeNavigationPath: NavigationPath
     
     func getActionButtonTitle() -> String {
-        switch cardState.mode {
+        switch cardState.backupMode {
         case .start:
             return String(localized: "start")
         case .pairBackupCard:
@@ -37,7 +37,7 @@ struct BackupView: View {
     }
     
     func getViewSubtitle() -> String {
-        switch cardState.mode {
+        switch cardState.backupMode {
         case .start:
             return "backupStartSubtitle"
         case .pairBackupCard:
@@ -52,7 +52,7 @@ struct BackupView: View {
     }
     
     func getIndicationImageName() -> String {
-        switch cardState.mode {
+        switch cardState.backupMode {
         case .start:
             return "il_backup_master_backup"
         case .pairBackupCard:
@@ -80,7 +80,13 @@ struct BackupView: View {
                 SatoText(text: getViewSubtitle(), style: .SKStrongBodyDark)
                 
                 Spacer()
-                    
+                
+                if (cardState.backupMode == .backupImport){
+                    // show export progression as it may require several nfc sessions
+                    SatoText(text: "Secret: \(cardState.backupIndex) of \(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
+                    Spacer()
+                }
+               
                 Image(getIndicationImageName())
                     .resizable()
                     .frame(width: 315, height: 149)
@@ -89,16 +95,16 @@ struct BackupView: View {
                     .frame(height: 16)
                 
                 SKButton(text: getActionButtonTitle(), style: .regular, horizontalPadding: 66, action: {
-                    switch cardState.mode {
+                    switch cardState.backupMode {
                     case .start:
-                        cardState.mode = .pairBackupCard
+                        cardState.backupMode = .pairBackupCard
                     case .pairBackupCard:
                         cardState.scanBackupCard()
                     case .backupImport:
                         //cardState.requestFetchSecretsForBackup()
                         cardState.requestExportSecretsForBackup()
                     case .backupExportReady:
-                        cardState.mode = .initiateBackupExport
+                        cardState.backupMode = .initiateBackupExport
                     case .initiateBackupExport:
                         cardState.requestImportSecretsToBackupCard()
                     }

@@ -14,6 +14,9 @@ import SwiftUI
 import MnemonicSwift
 
 extension CardState {
+
+
+    
     // *********************************************************
     // MARK: Import secrets to the backup card
     // *********************************************************
@@ -84,12 +87,11 @@ extension CardState {
     // *********************************************************
     
     func requestExportSecretsForBackup(){
-        // TODO: manage multiple nfc session in case of time-out...
         
         session = SatocardController(
             onConnect: { [weak self] cardChannel in
                 guard let self = self else { return }
-               
+
                 guard let pinForMasterCard = pinForMasterCard else {
                     session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
                     homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
@@ -110,6 +112,8 @@ extension CardState {
                     }
                     
                     // get the list of secrets headers
+                    // TODO: reuse list already fetched during scan()?
+                    // TODO: use self.masterSecretHeaders
                     let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
                     
                     // check whether the backup authentikey is already present in card
@@ -128,20 +132,36 @@ extension CardState {
                     
                     var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
                     
-                    for secretHeader in secretHeaders {
+                    //for secretHeader in secretHeaders {
+                    //for (index, secretHeader) in secretHeaders.enumerated() {
+                    for index in backupIndex ..< secretHeaders.count {
+                        // TODO: skip authentikeys?
+                        let secretHeader = secretHeaders[index]
+                        
                         //var secretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid)
                         
                         let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
                         
                         fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+                        
+                        backupIndex = index+1
+                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
+                        sleep(1)// for debug purpose!
                     }
+                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
                     
                     self.secretsForBackup = fetchedSecretsFromCard
-                    
                     print("secretsToImport : \(fetchedSecretsFromCard)")
-                    mode = .backupExportReady
-                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+                    
+                    DispatchQueue.main.async {
+                        self.backupMode = .backupExportReady
+                        // self.backupIndex = 0 // todo: reset index for next backup
+                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
+                    }
+                    print("requestExportSecretsForBackupSession backupMode: \(backupMode)")
+                    
                 } catch let error {
+                    print("requestExportSecretsForBackupSession catch error: \(error)")
                     logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                 }
@@ -150,14 +170,310 @@ extension CardState {
             onFailure: { [weak self] error in
                 // these are errors related to NFC communication
                 guard let self = self else { return }
+                print("requestExportSecretsForBackupSession onFailure: \(error)")
                 self.onDisconnection(error: error)
             }
         )// session
-
+        
+        print("In while loop backupMode: \(backupMode)")
         session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+        print("After while loop backupMode: \(backupMode)")
+        
     }
     
+    // multisession while loop in 1 function
+//    func requestExportSecretsForBackup(){
+//        
+//        var exportBusy = false
+//        var exportDone = false
+//        
+//        
+//        session = SatocardController(
+//            onConnect: { [weak self] cardChannel in
+//                guard let self = self else {
+////                    self?.session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined")) // TODO: required?
+////                    self?.backupBusy = false
+//                    return
+//                }
+//                
+//                //self.backupBusy = true //infinite loop
+//                exportBusy = true
+//                
+//                guard let pinForMasterCard = pinForMasterCard else {
+//                    session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+//                    exportBusy = false
+//                    homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+//                    return
+//                }
+//                
+//                cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+//                
+//                do {
+//                    let pinBytes = Array(pinForMasterCard.utf8)
+//                    var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+//                    
+//                    let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+//                    if !isAuthentikeyValid {
+//                        logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+//                        session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+//                        return
+//                    }
+//                    
+//                    // get the list of secrets headers
+//                    // TODO: reuse list already fetched during scan()?
+//                    // TODO: use self.masterSecretHeaders
+//                    let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+//                    
+//                    // check whether the backup authentikey is already present in card
+//                    let authentikeySecretBytes = [UInt8(authentikeyBytesForBackup!.count)] + authentikeyBytesForBackup!
+//                    let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: authentikeySecretBytes)
+//                    var authentikeySid = 0
+//                    if let authentikeyHeader = secretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
+//                        // the backup authentikey is already store in the card, get its sid
+//                        authentikeySid = authentikeyHeader.sid
+//                        print("Backup authentikey is already present in card with sid: \(authentikeySid)")
+//                    } else {
+//                        // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
+//                        authentikeySid = try self.importAuthentikeyAsSecret(for: .backup)
+//                        print("Backup authentikey imported in card with sid: \(authentikeySid)")
+//                    }
+//                    
+//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+//                    
+//                    //for secretHeader in secretHeaders {
+//                    //for (index, secretHeader) in secretHeaders.enumerated() {
+//                    for index in backupIndex ..< secretHeaders.count {
+//                        // TODO: skip authentikeys?
+//                        let secretHeader = secretHeaders[index]
+//                        
+//                        //var secretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid)
+//                        
+//                        let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
+//                        
+//                        fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+//                        
+//                        backupIndex = index+1
+//                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
+//                        sleep(1)// for debug purpose!
+//                    }
+//                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+//                    
+//                    self.secretsForBackup = fetchedSecretsFromCard
+//                    
+//                    print("secretsToImport : \(fetchedSecretsFromCard)")
+//                    print("requestExportSecretsForBackupSession backupMode before update: \(backupMode)")
+//                    //backupMode = .backupExportReady
+//                    exportDone = true
+//                    print("requestExportSecretsForBackupSession backupMode after update: \(backupMode)")
+////                    DispatchQueue.main.sync {
+////                        self.backupMode = .backupExportReady
+////                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
+////                    }
+////                    DispatchQueue.main.async { [weak self] in
+////                        guard let self = self else {
+////                            print("requestExportSecretsForBackupSession DispatchQueue RETURN")
+////                            return
+////                        }
+////                        backupMode = .backupExportReady
+////                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(backupMode)")
+////                    }
+//                    DispatchQueue.main.async {
+//                        self.backupMode = .backupExportReady
+//                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
+//                    }
+//                    print("requestExportSecretsForBackupSession backupMode: \(backupMode)")
+//                    
+//                    //session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+//                    exportBusy = false
+//                } catch let error {
+//                    print("requestExportSecretsForBackupSession catch error: \(error)")
+//                    logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
+//                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+//                    exportBusy = false
+//                }
+//                
+//            },
+//            onFailure: { [weak self] error in
+//                // these are errors related to NFC communication
+//                guard let self = self else { return }
+//                print("requestExportSecretsForBackupSession onFailure: \(error)")
+//                self.onDisconnection(error: error)
+//                exportBusy = false
+//            }
+//        )// session
+//        
+////        print("In while loop backupMode: \(backupMode)")
+////        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+////        print("After while loop backupMode: \(backupMode)")
+//        
+//        //while (backupMode != .backupExportReady){
+//        while (!exportDone){
+//            if (!exportBusy){
+//                print("in requestExportSecretsForBackup while START")
+//                session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+//                print("in requestExportSecretsForBackup while END")
+//            }
+//            sleep(1)
+//        }
+//        print("requestExportSecretsForBackup Function END")
+//    }
     
+    
+//    func requestExportSecretsForBackup(){
+//        backupBusy = false
+//        exportDone = false
+//        //while (backupMode != .backupExportReady){
+//        while (!exportDone){
+//            if (!backupBusy){
+//                print("in requestExportSecretsForBackup while START")
+//                requestExportSecretsForBackupSession()
+//                print("in requestExportSecretsForBackup while END")
+//            }
+//            sleep(1)
+//        }
+//        print("requestExportSecretsForBackup Function END")
+//    }
+//    
+//    func requestExportSecretsForBackupSession(){
+//        // TODO: manage multiple nfc session in case of time-out...
+//        
+//        // manage multi-session
+//        //var backupIndex = 0
+//        //var backupBusy = false //while loop finish immediately
+//        //var exportDone = false
+//        
+//        session = SatocardController(
+//            onConnect: { [weak self] cardChannel in
+//                guard let self = self else {
+////                    self?.session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined")) // TODO: required?
+////                    self?.backupBusy = false
+//                    return
+//                }
+//                
+//                //self.backupBusy = true //infinite loop
+//                self.backupBusy = true
+//                
+//                guard let pinForMasterCard = pinForMasterCard else {
+//                    session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+//                    self.backupBusy = false
+//                    homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+//                    return
+//                }
+//                
+//                cmdSet = SatocardCommandSet(cardChannel: cardChannel)
+//                
+//                do {
+//                    let pinBytes = Array(pinForMasterCard.utf8)
+//                    var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+//                    
+//                    let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
+//                    if !isAuthentikeyValid {
+//                        logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
+//                        session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+//                        return
+//                    }
+//                    
+//                    // get the list of secrets headers
+//                    // TODO: reuse list already fetched during scan()?
+//                    // TODO: use self.masterSecretHeaders
+//                    let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
+//                    
+//                    // check whether the backup authentikey is already present in card
+//                    let authentikeySecretBytes = [UInt8(authentikeyBytesForBackup!.count)] + authentikeyBytesForBackup!
+//                    let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: authentikeySecretBytes)
+//                    var authentikeySid = 0
+//                    if let authentikeyHeader = secretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
+//                        // the backup authentikey is already store in the card, get its sid
+//                        authentikeySid = authentikeyHeader.sid
+//                        print("Backup authentikey is already present in card with sid: \(authentikeySid)")
+//                    } else {
+//                        // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
+//                        authentikeySid = try self.importAuthentikeyAsSecret(for: .backup)
+//                        print("Backup authentikey imported in card with sid: \(authentikeySid)")
+//                    }
+//                    
+//                    var fetchedSecretsFromCard: [SeedkeeperSecretHeaderDto:SeedkeeperSecretObject] = [:]
+//                    
+//                    //for secretHeader in secretHeaders {
+//                    //for (index, secretHeader) in secretHeaders.enumerated() {
+//                    for index in backupIndex ..< secretHeaders.count {
+//                        // TODO: skip authentikeys?
+//                        let secretHeader = secretHeaders[index]
+//                        
+//                        //var secretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid)
+//                        
+//                        let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)// TODO: check that backupAuthentiKeySid is correct, or (better) refactor
+//                        
+//                        fetchedSecretsFromCard[SeedkeeperSecretHeaderDto(secretHeader: secretHeader)] = encryptedSecretObject
+//                        
+//                        backupIndex = index+1
+//                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
+//                        sleep(1)// for debug purpose!
+//                    }
+//                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+//                    
+//                    self.secretsForBackup = fetchedSecretsFromCard
+//                    
+//                    print("secretsToImport : \(fetchedSecretsFromCard)")
+//                    print("requestExportSecretsForBackupSession backupMode before update: \(backupMode)")
+//                    //backupMode = .backupExportReady
+//                    exportDone = true
+//                    print("requestExportSecretsForBackupSession backupMode after update: \(backupMode)")
+////                    DispatchQueue.main.sync {
+////                        self.backupMode = .backupExportReady
+////                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
+////                    }
+////                    DispatchQueue.main.async { [weak self] in
+////                        guard let self = self else {
+////                            print("requestExportSecretsForBackupSession DispatchQueue RETURN")
+////                            return
+////                        }
+////                        backupMode = .backupExportReady
+////                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(backupMode)")
+////                    }
+//                    DispatchQueue.main.async {
+//                        self.backupMode = .backupExportReady
+//                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
+//                    }
+//                    print("requestExportSecretsForBackupSession backupMode: \(backupMode)")
+//                    
+//                    //session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+//                    backupBusy = false
+//                } catch let error {
+//                    print("requestExportSecretsForBackupSession catch error: \(error)")
+//                    logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
+//                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+//                    backupBusy = false
+//                }
+//                
+//            },
+//            onFailure: { [weak self] error in
+//                // these are errors related to NFC communication
+//                guard let self = self else { return }
+//                print("requestExportSecretsForBackupSession onFailure: \(error)")
+//                self.onDisconnection(error: error)
+//                backupBusy = false
+//            }
+//        )// session
+//        
+//        print("In while loop backupMode: \(backupMode)")
+//        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+//        print("After while loop backupMode: \(backupMode)")
+//        
+////        backupBusy = false
+////        while (!exportDone){
+////            if (!backupBusy){
+////                print("in requestExportSecretsForBackup while START")
+////                session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+////                print("in requestExportSecretsForBackup while END")
+////            }
+////            sleep(1)
+////        }
+////        print("requestExportSecretsForBackup Function END")
+//        
+//        
+//        //session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+//    }
     
     // MARK: Old code to remove
     
@@ -225,7 +541,7 @@ extension CardState {
             }
             
             let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: authentikeySecretBytes)
-            let authentikeyLabel = "Seedkeeper authentikey"
+            let authentikeyLabel = "Seedkeeper authentikey" //TODO: use better label!
             let authentikeySecretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.pubkey,
                                                       subtype: UInt8(0x00),
                                                       fingerprintBytes: authentikeyFingerprintBytes,
@@ -284,8 +600,12 @@ extension CardState {
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         let (statusApdu, cardType) = try await fetchCardStatus()
-
-        backupCardStatus = try CardStatus(rapdu: statusApdu)
+        
+        let status = try CardStatus(rapdu: statusApdu)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            backupCardStatus = status
+        }
         
         if let cardStatus = backupCardStatus, !cardStatus.setupDone {
             // let version = getCardVersionInt(cardStatus: cardStatus)
@@ -339,7 +659,10 @@ extension CardState {
                 
         // self.importAuthentikeyAsSecret(for: .backup)
         
-        self.mode = .backupImport
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.backupMode = .backupImport
+        }
         
         session?.stop(alertMessage: String(localized: "nfcBackupCardPairedSuccess"))
     }
@@ -359,7 +682,7 @@ extension CardState {
         backupAuthentiKeyFingerprintBytes = nil
         
         secretsForBackup = [:]
-        mode = .start
+        backupMode = .start
         if clearPin {
             pinForBackupCard = nil
         }
