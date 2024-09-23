@@ -33,14 +33,13 @@ class CardState: ObservableObject {
     @Published var backupCardStatus: CardStatus?
     
     @Published var isCardDataAvailable = false
-    //@Published var authentikeyHex = ""
+    
     var authentikeyBytes: [UInt8]?
     @Published var certificateDic = [String: String]()
     @Published var certificateCode = PkiReturnCode.unknown
     @Published var errorMessage: String?
     @Published var homeNavigationPath = NavigationPath()
     
-    //@Published var authentikeyHexForBackup = ""
     var authentikeyBytesForBackup: [UInt8]? // TODO: rename to backupAuthentikeyBytes
     @Published var certificateDicForBackup = [String: String]() // TODO: remove as unused?
     @Published var certificateCodeForBackup = PkiReturnCode.unknown // TODO: remove as unused?
@@ -54,8 +53,6 @@ class CardState: ObservableObject {
     // *********************************************************
     // MARK: Properties for PIN mgmt
     // *********************************************************
-    
-    //private(set) var isPinVerificationSuccess: Bool = false // TODO: remove
     
     var pinCodeToSetup: String?
     private var _pinForMasterCard: String?
@@ -133,16 +130,14 @@ class CardState: ObservableObject {
     
     var pinForBackupCard: String?
     
-    @Published var backupIndex = 0
-    var secretsForBackup: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
+    @Published var exportIndex = 0 
+    @Published var secretHeadersForBackup: [SeedkeeperSecretHeader] = []
+    //var secretsForBackup: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
+    var secretsForBackup: [SeedkeeperSecretObject] = []
     
-//    var backupAuthentiKeySid: Int?
-//    var backupAuthentiKeyFingerprintBytes: [UInt8]?
-//    var backupAuthentiKeyBytes: [UInt8]?
-//    
-//    var masterAuthentiKeySid: Int?
-//    var masterAuthentiKeyFingerprintBytes: [UInt8]?
-//    var masterAuthentiKeyBytes: [UInt8]?
+    @Published var importIndex = 0
+    
+    var backupError: String = "" // TODO: improve
     
     // *********************************************************
     // MARK: scan card to fetch secrets
@@ -281,6 +276,11 @@ class CardState: ObservableObject {
                             self.isCardDataAvailable = true
                         case .backup:
                             self.backupMode = .backupImport
+                            // get an array of secretHeaders that are in masterSecretHeaders but not in backupSecretHeaders
+                            // These are the secrets that must be backuped
+                            self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }
+                            print("requestExportSecretsForBackup: secretHeadersForBackup: \(self.secretHeadersForBackup)")
+                            print("requestExportSecretsForBackup: secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)")
                         }
                     }
                     

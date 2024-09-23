@@ -41,6 +41,7 @@ enum NavigationRoutes: Hashable {
     case generateSuccess(String)
     case backup
     case backupSuccess
+    case backupFailed
 }
 
 struct HomeView: View {
@@ -129,6 +130,8 @@ struct HomeView: View {
                     BackupView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .backupSuccess:
                     BackupCongratsView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .backupFailed:
+                    BackupFailedView(homeNavigationPath: $cardState.homeNavigationPath)
                 }
             }
         }

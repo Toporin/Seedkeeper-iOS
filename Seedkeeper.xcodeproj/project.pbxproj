@@ -14,6 +14,7 @@
 		0DAF450D2C9815BB001FDE73 /* GenerateDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450C2C9815BB001FDE73 /* GenerateDataView.swift */; };
 		0DAF450F2C981973001FDE73 /* GenerateDescriptorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */; };
 		0DAF45112C985F89001FDE73 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45102C985F89001FDE73 /* Payload.swift */; };
+		0DAF45132C9DA47E001FDE73 /* BackupFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45122C9DA47E001FDE73 /* BackupFailedView.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -120,6 +121,7 @@
 		0DAF450C2C9815BB001FDE73 /* GenerateDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateDataView.swift; sourceTree = "<group>"; };
 		0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateDescriptorView.swift; sourceTree = "<group>"; };
 		0DAF45102C985F89001FDE73 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
+		0DAF45122C9DA47E001FDE73 /* BackupFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFailedView.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 			children = (
 				D03540122C04A3DC00ABF9C7 /* BackupView.swift */,
 				D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */,
+				0DAF45122C9DA47E001FDE73 /* BackupFailedView.swift */,
 			);
 			path = Backup;
 			sourceTree = "<group>";
@@ -716,6 +719,7 @@
 				D07141772BF4DFC000A4939A /* Dimensions.swift in Sources */,
 				D0D8323B2C20AA9200AE2984 /* CardState+Helpers.swift in Sources */,
 				D080FD702C260ED000B50489 /* Constants.swift in Sources */,
+				0DAF45132C9DA47E001FDE73 /* BackupFailedView.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
 				D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */,

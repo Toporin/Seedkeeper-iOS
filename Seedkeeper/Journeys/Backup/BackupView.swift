@@ -84,11 +84,14 @@ struct BackupView: View {
                 // User info when exporting encrypted secrets
                 if (cardState.backupMode == .backupImport){
                     // TODO: provide more context and better instructions to user! + localization
-                    if (cardState.masterSecretHeaders.count > 30){
+                    if (cardState.secretHeadersForBackup.count > 30){
                         SatoText(text: "Note: multiple NFC sessions may be required as you are backuping a large number of secrets!", style: .SKStrongBodyDark)
                     }
                     // show export progression as it may require several nfc sessions
-                    SatoText(text: "Secret: \(cardState.backupIndex) of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)
+                    //SatoText(text: "Secret: \(cardState.exportIndex) of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)
+                    SatoText(text: "Secret: \(cardState.exportIndex) of \(cardState.secretHeadersForBackup.count) ", style: .SKStrongBodyDark)
+                   
+                    
                     Spacer()
                 }
                
@@ -100,10 +103,11 @@ struct BackupView: View {
                     Spacer()
                 }
                 
+                // User inf during secret import to backup card
                 else if (cardState.backupMode == .initiateBackupExport){
                     // TODO: provide more context and better instructions to user! + localization
                     // show export progression as it may require several nfc sessions
-                    SatoText(text: "Secrets imported: \(cardState.backupIndex) out of \(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
+                    SatoText(text: "Secrets imported: \(cardState.importIndex) out of \(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
                     Spacer()
                 }
                 
