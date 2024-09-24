@@ -140,6 +140,16 @@ class CardState: ObservableObject {
     var backupError: String = "" // TODO: improve
     
     // *********************************************************
+    // MARK: Properties for factory reset
+    // *********************************************************
+    @Published var resetMode: ResetMode = .start {
+        didSet {
+            print("reset mode is set to : \(resetMode)")
+        }
+    }
+    @Published var resetRemainingSteps: UInt8 = 0xFF
+    
+    // *********************************************************
     // MARK: scan card to fetch secrets
     // *********************************************************
     
@@ -153,7 +163,7 @@ class CardState: ObservableObject {
                     cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                     
                     // get status
-                    let (cardStatus, cardType) = try fetchCardStatus()
+                    let (cardStatus, cardType) = try selectAppletAndGetStatus() //fetchCardStatus()
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:

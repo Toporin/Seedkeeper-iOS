@@ -24,6 +24,7 @@ enum SatoTextStyle {
     case slotTitle
     case balanceLarge
     case cellSmallTitle
+    case danger
     //SeedKeeper:
     case SKMenuItemTitle
     case SKMenuItemSubtitle
@@ -62,6 +63,8 @@ enum SatoTextStyle {
             return 24
         case .SKStrongBodyLight:
             return 24
+        case .danger:
+            return 24
         }
     }
     
@@ -99,12 +102,14 @@ enum SatoTextStyle {
             return 16
         case .SKStrongBodyLight:
             return 16
+        case .danger:
+            return 16
         }
     }
 
     var font: Font {
         switch self {
-        case .title, .titleWhite, .cellTitle, .balanceLarge, .lightTitle, .lightTitleDark, .lightTitleSmall, .cellSmallTitle, .extraLightSubtitle:
+        case .title, .titleWhite, .cellTitle, .balanceLarge, .lightTitle, .lightTitleDark, .lightTitleSmall, .cellSmallTitle, .extraLightSubtitle, .danger:
             return .custom("Outfit-Medium", size: self.fontSize)
         case .subtitle, .SKMenuItemTitle:
             return .custom("OpenSans-variable", size: self.fontSize)
@@ -147,6 +152,8 @@ enum SatoTextStyle {
             return .black
         case .SKStrongBodyLight:
             return .white
+        case .danger:
+            return .red
         }
     }
 
@@ -170,6 +177,8 @@ enum SatoTextStyle {
             return .regular
         case .SKStrongBodyLight:
             return .regular
+        case .danger:
+            return .bold
         }
     }
 }

@@ -42,6 +42,7 @@ struct SettingsView: View {
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalGroupSeparator)
                     
+                    // Show onboarding screen setting
                     SatoText(text: "settings.showIntroduction", style: .SKMenuItemTitle)
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
@@ -59,6 +60,7 @@ struct SettingsView: View {
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalGroupSeparator)
                     
+                    // Debug mode settings
                     SatoText(text: "settings.debugMode", style: .SKMenuItemTitle)
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
@@ -75,11 +77,27 @@ struct SettingsView: View {
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalGroupSeparator)
                     
+                    // Show app logs
                     SKButton(text: showLogsButtonTitle, style: .inform) {
                         homeNavigationPath.append(NavigationRoutes.logs)
                     }
                     
                     Spacer()
+                    
+                    // WARNING: CARD RESET TO FACTORY
+                    SatoText(text: "cardResetToFactory", style: .SKMenuItemTitle)
+                    Spacer()
+                        .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
+                    SatoText(text: "cardResetToFactorySubtitle", style: .SKMenuItemSubtitle)
+                    CardInfoBox(
+                        text: "Warning: this will erase all secrets!", //TODO: localize
+                        backgroundColor: Colors.ledRed)
+                    {
+                        self.homeNavigationPath.append(NavigationRoutes.factoryReset)
+                    }
+                    
+                    Spacer()
+                    
                 }
                 .padding([.leading, .trailing], 20)
             }

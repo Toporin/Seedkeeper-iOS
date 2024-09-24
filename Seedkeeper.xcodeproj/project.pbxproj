@@ -15,6 +15,9 @@
 		0DAF450F2C981973001FDE73 /* GenerateDescriptorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */; };
 		0DAF45112C985F89001FDE73 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45102C985F89001FDE73 /* Payload.swift */; };
 		0DAF45132C9DA47E001FDE73 /* BackupFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45122C9DA47E001FDE73 /* BackupFailedView.swift */; };
+		0DAF45162CA15FE7001FDE73 /* FactoryResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45152CA15FE7001FDE73 /* FactoryResetView.swift */; };
+		0DAF45182CA163D8001FDE73 /* CardState+FactoryReset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45172CA163D8001FDE73 /* CardState+FactoryReset.swift */; };
+		0DAF451C2CA172D7001FDE73 /* FactoryResetResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF451B2CA172D7001FDE73 /* FactoryResetResultView.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -122,6 +125,9 @@
 		0DAF450E2C981973001FDE73 /* GenerateDescriptorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateDescriptorView.swift; sourceTree = "<group>"; };
 		0DAF45102C985F89001FDE73 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		0DAF45122C9DA47E001FDE73 /* BackupFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFailedView.swift; sourceTree = "<group>"; };
+		0DAF45152CA15FE7001FDE73 /* FactoryResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryResetView.swift; sourceTree = "<group>"; };
+		0DAF45172CA163D8001FDE73 /* CardState+FactoryReset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+FactoryReset.swift"; sourceTree = "<group>"; };
+		0DAF451B2CA172D7001FDE73 /* FactoryResetResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryResetResultView.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -235,6 +241,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0DAF45142CA15FBD001FDE73 /* FactoryReset */ = {
+			isa = PBXGroup;
+			children = (
+				0DAF45152CA15FE7001FDE73 /* FactoryResetView.swift */,
+				0DAF451B2CA172D7001FDE73 /* FactoryResetResultView.swift */,
+			);
+			path = FactoryReset;
+			sourceTree = "<group>";
+		};
 		D03110962BE4178D00ED0997 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +279,7 @@
 				D0D832362C20A8B400AE2984 /* CardState+Backup.swift */,
 				D0D832382C20AA3500AE2984 /* CardState+Pin.swift */,
 				D0D8323C2C20ABD600AE2984 /* CardState+Secrets.swift */,
+				0DAF45172CA163D8001FDE73 /* CardState+FactoryReset.swift */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -419,6 +435,7 @@
 		D0E4337B2BD3F978008DBAA6 /* Journeys */ = {
 			isa = PBXGroup;
 			children = (
+				0DAF45142CA15FBD001FDE73 /* FactoryReset */,
 				D080FD662C260D8B00B50489 /* Onboarding */,
 				D03540112C04A3B300ABF9C7 /* Backup */,
 				D07141732BF4DC7400A4939A /* Secret */,
@@ -708,6 +725,7 @@
 				D080FD742C261CD600B50489 /* SKActionButtonSmall.swift in Sources */,
 				D080FD6E2C260E1100B50489 /* OnboardingNFCView.swift in Sources */,
 				0DAF45112C985F89001FDE73 /* Payload.swift in Sources */,
+				0DAF451C2CA172D7001FDE73 /* FactoryResetResultView.swift in Sources */,
 				D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */,
 				D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */,
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
@@ -746,8 +764,10 @@
 				D0E433A72BD425AA008DBAA6 /* SKButton.swift in Sources */,
 				D09A8BAC2C74DAC2003659F0 /* UsedLoginModel.swift in Sources */,
 				D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */,
+				0DAF45162CA15FE7001FDE73 /* FactoryResetView.swift in Sources */,
 				0DAF450D2C9815BB001FDE73 /* GenerateDataView.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
+				0DAF45182CA163D8001FDE73 /* CardState+FactoryReset.swift in Sources */,
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,
 				D03540132C04A3DC00ABF9C7 /* BackupView.swift in Sources */,
 				D0BA413E2BCFDDF000FD25B9 /* SeedkeeperApp.swift in Sources */,

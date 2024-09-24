@@ -39,12 +39,32 @@ extension CardState {
         }
     }
     
-    internal func fetchCardStatus() throws -> (CardStatus, CardType) {
-        var statusApdu: APDUResponse?
+    internal func selectApplet() throws -> (APDUResponse, CardStatus?, CardType) {
+        var selectApdu: APDUResponse?
+        var cardStatus: CardStatus?
         var cardType: CardType?
         
-        // TODO: for v2, status is already provided in select response
-        (statusApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
+        (selectApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
+        
+        guard let selectApdu = selectApdu,
+                let cardType = cardType else {
+            throw SatocardError.invalidResponse
+        }
+        
+        // for Seedkeeper v2 and higher, the cardStatus is already provided in select response
+        if selectApdu.data.count >= 7 {
+            do {
+                cardStatus = try CardStatus(rapdu: selectApdu)
+            } catch let error {
+                print("selectApplet: failed to parse cardStatus from selectApdu: \(error)")
+            }
+        }
+        
+        return (selectApdu, cardStatus, cardType)
+    }
+    
+    internal func getCardStatus() throws -> CardStatus {
+        var statusApdu: APDUResponse?
         
         statusApdu = try cmdSet.cardGetStatus()
         guard let apdu = statusApdu else {
@@ -53,7 +73,38 @@ extension CardState {
         
         do {
             var cardStatus = try CardStatus(rapdu: apdu)
-            return (cardStatus, cardType!)
+            return cardStatus
+        } catch let error {
+            throw SatocardError.invalidResponse
+        }
+    }
+    
+    internal func selectAppletAndGetStatus() throws -> (CardStatus, CardType) {
+        var selectApdu: APDUResponse?
+        var cardType: CardType?
+        
+        (selectApdu, cardType) = try cmdSet.selectApplet(cardType: .seedkeeper)
+        
+        guard let selectApdu = selectApdu,
+                let cardType = cardType else {
+            throw SatocardError.invalidResponse
+        }
+        
+        // for Seedkeeper v2 and higher, the cardStatus is already provided in select response
+        if selectApdu.data.count >= 7 {
+            do {
+                var cardStatus = try CardStatus(rapdu: selectApdu)
+                return (cardStatus, cardType)
+            } catch let error {
+                print("selectApplet: failed to parse cardStatus from selectApdu: \(error)")
+            }
+        }
+        
+        // if cardStatus cannot be recovered from select apdu, send getStatus command
+        do {
+            var statusApdu = try cmdSet.cardGetStatus()
+            var cardStatus = try CardStatus(rapdu: statusApdu)
+            return (cardStatus, cardType)
         } catch let error {
             throw SatocardError.invalidResponse
         }

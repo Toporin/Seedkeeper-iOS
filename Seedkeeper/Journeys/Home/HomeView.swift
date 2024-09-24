@@ -42,6 +42,9 @@ enum NavigationRoutes: Hashable {
     case backup
     case backupSuccess
     case backupFailed
+    case factoryReset
+    case factoryResetResult(ResetResult)
+
 }
 
 struct HomeView: View {
@@ -132,6 +135,10 @@ struct HomeView: View {
                     BackupCongratsView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .backupFailed:
                     BackupFailedView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .factoryReset:
+                    FactoryResetView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .factoryResetResult(let resultCode):
+                    FactoryResetResultView(homeNavigationPath: $cardState.homeNavigationPath, resultCode: resultCode)
                 }
             }
         }
