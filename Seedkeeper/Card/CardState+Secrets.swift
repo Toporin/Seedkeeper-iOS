@@ -138,7 +138,15 @@ extension CardState {
                     
                     onSuccess()
                     
+                } catch let error as StatusWord where error == .secureImportDataTooLong {
+                    
+                    print("onImportSecret ERROR \(error.localizedDescription)")
+                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret secret too long: \(error.localizedDescription)"))
+                    
+                    onFail()
                 } catch let error {
+                    
                     print("onImportSecret ERROR \(error.localizedDescription)")
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret : \(error.localizedDescription)"))

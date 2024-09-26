@@ -71,13 +71,19 @@ extension CardState {
                 do {
                     let secret = self.secretsForBackup[index]
                     try cmdSet.seedkeeperImportSecret(secretObject: secret, sidPubkey: authentikeySid)
+                    
                     // TODO: check rapdu
                     
                     importIndex = index+1 // todo: dispatchQueue
                     
+                } catch let error as StatusWord where error == .secureImportDataTooLong {
+                    // TODO: add to report
+                    print("onImportSecretsToBackupCard error during import: \(error)")
+                    self.backupError += "Secret \(self.secretsForBackup[index].secretHeader.label) is too long, skipped"
+                    logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
+                    
                 } catch let error as StatusWord where error == .noMemoryLeft {
                     // TODO: add to report
-                    // TODO: catch noMemoryLeft error
                     print("onImportSecretsToBackupCard error during import: \(error)")
                     self.backupError = "no memory available!"
                     logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))

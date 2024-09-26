@@ -265,6 +265,9 @@ struct GeneratePasswordView: View {
 
                         }
                         
+                        // TODO: add msg here in case of error
+                        // e.g. if secret too long?
+                        
                         Spacer().frame(height: 16)
                         
                     }
