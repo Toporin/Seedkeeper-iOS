@@ -136,6 +136,7 @@ struct DashboardView: View {
             }
             .listStyle(PlainListStyle())
             .background(Color.clear)
+            .id(UUID()) // force update of list when array changes?
             
             Spacer()
         }

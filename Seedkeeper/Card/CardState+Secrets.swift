@@ -166,9 +166,8 @@ extension CardState {
     }
     
     private func addSecretToMasterList(secretHeader: SeedkeeperSecretHeader) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            masterSecretHeaders.insert(secretHeader, at: 0)
+        DispatchQueue.main.async {
+            self.masterSecretHeaders.insert(secretHeader, at: 0)
         }
     }
     
@@ -246,7 +245,6 @@ extension CardState {
             var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
             var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            
             if !isAuthentikeyValid {
                 logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
                 session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
@@ -255,9 +253,11 @@ extension CardState {
             
             var rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
+            
             homeNavigationPath.removeLast()
             session?.stop(alertMessage: String(localized: "nfcSecretDeleted"))
             deleteSecretsFromList(secretHeader: currentSecretHeader)
+            
         } catch let error {
             logEvent(log: LogModel(type: .error, message: "onDeleteSecret : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")

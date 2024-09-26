@@ -223,7 +223,6 @@ class CardState: ObservableObject {
                                 self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
                             }
                             return
-                            // TODO: NB: CardError.pinBlocked is not returned when pin is blocked on card
                         } catch CardError.pinBlocked {
                             DispatchQueue.main.async {
                                 switch scannedCardType {
