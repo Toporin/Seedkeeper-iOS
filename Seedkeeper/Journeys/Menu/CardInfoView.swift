@@ -39,6 +39,19 @@ struct CardInfoView: View {
             return "n/a"
         }
     }
+    
+    func getSeedkeeperDataString() -> String {
+        if let seedkeeperStatus = cardState.masterSeedkeeperStatus,
+           let cardStatus = cardState.masterCardStatus{
+            // note: memory might not be up-to-date if secrets were deleted in the meantime
+            return "Seedkeeper v\(cardStatus.protocolMajorVersion).\(cardStatus.protocolMinorVersion)-\(cardStatus.appletMajorVersion).\(cardStatus.appletMinorVersion) \n" +
+                    "Number of secrets: \(cardState.masterSecretHeaders.count) \n" +
+                    "Available memory: \(seedkeeperStatus.freeMemory) bytes \n" +
+                    "Total memory: \(seedkeeperStatus.totalMemory) bytes"
+        } else {
+            return "Number of secrets: \(cardState.masterSecretHeaders.count)"
+        }
+    }
 
     // MARK: - View
     var body: some View {
@@ -51,14 +64,29 @@ struct CardInfoView: View {
                 Spacer()
                     .frame(height: 66)
                 
-                // CARD VERSION
-                SatoText(text: "cardVersionTitle", style: .lightSubtitleDark)
+                // SEEDKEEPER DATA
+                SatoText(text: "**Seedkeeper status**", style: .lightSubtitleDark)
                 Spacer()
                     .frame(height: 14)
-                CardInfoBox(text: self.getCardVersionString(), backgroundColor: Colors.lightMenuButton)
+                //CardInfoBox(text: self.getSeedkeeperDataString(), backgroundColor: Colors.lightMenuButton, lineLimit: 3)
+                SatoText(text: self.getSeedkeeperDataString(), style: .SKStrongBodyLight)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(height: 180)
+                    .background(Colors.lightMenuButton)
+                    .cornerRadius(20)
                 
                 Spacer()
                     .frame(height: 20)
+                
+                // CARD VERSION
+//                SatoText(text: "cardVersionTitle", style: .lightSubtitleDark)
+//                Spacer()
+//                    .frame(height: 14)
+//                CardInfoBox(text: self.getCardVersionString(), backgroundColor: Colors.lightMenuButton)
+//                
+//                Spacer()
+//                    .frame(height: 20)
                 
                 // CARD LABEL
                 SatoText(text: "cardLabel", style: .lightSubtitleDark)

@@ -32,6 +32,8 @@ class CardState: ObservableObject {
     @Published var masterCardStatus: CardStatus?
     @Published var backupCardStatus: CardStatus?
     
+    @Published var masterSeedkeeperStatus: SeedkeeperStatus?
+    
     @Published var isCardDataAvailable = false
     
     var authentikeyBytes: [UInt8]?
@@ -255,6 +257,11 @@ class CardState: ObservableObject {
                     // Fetching authentikey for the first scan and set it in memory
                     try fetchAuthentikey(cardType: scannedCardType)
                         
+                    // get seedkeeper status (for v2)
+                    if scannedCardType == .master && cardStatus.protocolVersion >= 2 {
+                        (_, masterSeedkeeperStatus) = try cmdSet.seedkeeperGetStatus()
+                    }
+                    
                     // List all secret headers
                     do {
                         let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()

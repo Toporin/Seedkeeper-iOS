@@ -254,9 +254,12 @@ extension CardState {
             var rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")
             
-            homeNavigationPath.removeLast()
+            DispatchQueue.main.async {
+                self.homeNavigationPath.removeLast()
+                self.masterSecretHeaders.removeAll { $0 == currentSecretHeader } //
+            }
             session?.stop(alertMessage: String(localized: "nfcSecretDeleted"))
-            deleteSecretsFromList(secretHeader: currentSecretHeader)
+            //deleteSecretsFromList(secretHeader: currentSecretHeader)
             
         } catch let error {
             logEvent(log: LogModel(type: .error, message: "onDeleteSecret : \(error.localizedDescription)"))
@@ -264,11 +267,11 @@ extension CardState {
         }
     }
     
-    func deleteSecretsFromList(secretHeader: SeedkeeperSecretHeader) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.masterSecretHeaders.removeAll { $0 == secretHeader }
-        }
-    }
+//    func deleteSecretsFromList(secretHeader: SeedkeeperSecretHeader) {
+//        DispatchQueue.main.async { [weak self] in
+//            guard let self = self else { return }
+//            self.masterSecretHeaders.removeAll { $0 == secretHeader }
+//        }
+//    }
     
 }
