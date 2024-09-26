@@ -137,7 +137,7 @@ class CardState: ObservableObject {
     
     @Published var importIndex = 0
     
-    var backupError: String = "" // TODO: improve
+    var backupError: String = "" // TODO: improve using enum
     
     // *********************************************************
     // MARK: Properties for factory reset
@@ -175,9 +175,14 @@ class CardState: ObservableObject {
                     
                     if !cardStatus.setupDone {
                         // Card needs setup
-                        DispatchQueue.main.async { [weak self] in
-                            guard let self = self else { return }
-                            homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
+                        DispatchQueue.main.async {
+                            switch scannedCardType {
+                            case .master:
+                                self.homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
+                            case .backup:
+                                self.homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCodeForBackupCard, pinCode: nil)))
+                            }
+                            
                         }
                         session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
                         return
@@ -285,7 +290,7 @@ class CardState: ObservableObject {
                         case .master:
                             self.isCardDataAvailable = true
                         case .backup:
-                            self.backupMode = .backupImport
+                            self.backupMode = .backupExportFromMaster
                             // get an array of secretHeaders that are in masterSecretHeaders but not in backupSecretHeaders
                             // These are the secrets that must be backuped
                             self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }

@@ -35,7 +35,7 @@ struct BackupFailedView: View {
                 Spacer()
                 
                 // User inf during secret import to backup card
-                if (cardState.backupMode == .initiateBackupExport){
+                if (cardState.backupMode == .initiateImportToBackup){
                     // TODO: provide more context and better instructions to user! + localization
                     // show export progression as it may require several nfc sessions
                     SatoText(text: "Failed to complete backup: \(cardState.backupError)", style: .SKStrongBodyDark)

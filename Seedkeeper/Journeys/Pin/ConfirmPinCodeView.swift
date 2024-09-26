@@ -55,7 +55,7 @@ struct ConfirmPinCodeView: View {
                     }
                     
                     if pinCodeConfirmation == pinCodeToValidate {
-                        print("Pin codes matches: \(pinCodeConfirmation) == \(pinCodeToValidate)")
+                        //print("Pin codes matches: \(pinCodeConfirmation) == \(pinCodeToValidate)") //TODO: remove
                         cardState.pinCodeToSetup = pinCodeConfirmation
                         if pinCodeNavigationData.mode == .confirmPinCode {
                             cardState.requestInitPinOnCard()
