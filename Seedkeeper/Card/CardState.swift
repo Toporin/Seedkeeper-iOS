@@ -152,6 +152,14 @@ class CardState: ObservableObject {
     @Published var resetRemainingSteps: UInt8 = 0xFF
     
     // *********************************************************
+    // MARK: Properties for card logs
+    // *********************************************************
+    @Published var shouldUpdateCardLogs = true // TODO: flag if cardLogs should be updated 
+    @Published var cardLogs: [SeedkeeperLog] = [SeedkeeperLog]()
+    @Published var nbTotalLogs: Int = 0
+    @Published var nbAvailableLogs: Int = 0
+    
+    // *********************************************************
     // MARK: scan card to fetch secrets
     // *********************************************************
     
