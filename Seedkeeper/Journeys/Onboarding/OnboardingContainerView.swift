@@ -46,7 +46,7 @@ struct OnboardingContainerView: View {
     
     func completeOnboarding() {
         UserDefaults.standard.set(false, forKey: Constants.Keys.firstTimeUse)
-        print("firstTimeUse : \(UserDefaults.standard.bool(forKey: Constants.Keys.firstTimeUse))")
+        cardState.logger.info("firstTimeUse : \(UserDefaults.standard.bool(forKey: Constants.Keys.firstTimeUse))", tag: "completeOnboarding")
         cardState.homeNavigationPath = .init()
     }
     

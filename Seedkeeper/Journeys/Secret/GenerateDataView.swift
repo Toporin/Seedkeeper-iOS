@@ -92,7 +92,7 @@ struct GenerateDataView: View {
                             // Import button for manual import
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
                                 var payload = DataPayload(label: labelText!, data: dataText)
-                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
+                                cardState.requestImportSecret(secretPayload: payload)
                             })
                         }
                         

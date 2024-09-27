@@ -171,16 +171,12 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     // Extract descriptor size and descriptor if available
     var descriptor: String? = nil
     if index < (bytes.count-1) {
-        print("in parseMnemonicCardData: there is a descriptor")
         let descriptorSize = Int(bytes[index])*256 + Int(bytes[index+1])
-        print("in parseMnemonicCardData: there is a descriptor with size \(descriptorSize)")
         index += 2
         if descriptorSize > 0 && (index + descriptorSize) <= bytes.count {
             let descriptorBytes = Array(bytes[index..<(index + descriptorSize)])
-            print("in parseMnemonicCardData: there is a descriptorBytes \(descriptorBytes.bytesToHex)")
             index += descriptorSize
             descriptor = String(bytes: descriptorBytes, encoding: .utf8)
-            print("in parseMnemonicCardData: there is a descriptor \(descriptor)")
         }
     }
 
@@ -273,8 +269,6 @@ func parseToMasterseedPayload(bytes: [UInt8]) -> MasterseedPayload? {
     
     let masterseedBytes = Array(bytes[index..<(index + masterseedSize)])
     
-    print("Blob Bytes: \(masterseedBytes.bytesToHex)")
-    
     return MasterseedPayload(label: "", masterseedBytes: masterseedBytes)
 }
 
@@ -290,7 +284,6 @@ func parseToDescriptorPayload(bytes: [UInt8]) -> DescriptorPayload? {
     }
     
     let dataBytes = Array(bytes[index..<(index + dataSize)])
-    print("Blob Bytes: \(dataBytes.bytesToHex)")
     
     guard let data = String(bytes: dataBytes, encoding: .utf8) else {
         print("Failed to convert dataBytes to string")
@@ -312,7 +305,6 @@ func parseToDataPayload(bytes: [UInt8]) -> DataPayload? {
     }
     
     let dataBytes = Array(bytes[index..<(index + dataSize)])
-    print("Blob Bytes: \(dataBytes.bytesToHex)")
     
     guard let data = String(bytes: dataBytes, encoding: .utf8) else {
         print("Failed to convert dataBytes to string")
@@ -334,9 +326,7 @@ func parseToPubkeyPayload(bytes: [UInt8]) -> PubkeyPayload? {
     }
     
     let pubkeyBytes = Array(bytes[index..<(index + pubkeySize)])
-    
-    print("Blob Bytes: \(pubkeyBytes.bytesToHex)")
-    
+        
     return PubkeyPayload(label: "", pubkeyBytes: pubkeyBytes)
 }
 
@@ -352,9 +342,7 @@ func parseToSecret2FAPayload(bytes: [UInt8]) -> Secret2FAPayload? {
     }
     
     let secret2FABytes = Array(bytes[index..<(index + secret2FASize)])
-    
-    print("Blob Bytes: \(secret2FABytes.bytesToHex)")
-    
+        
     return Secret2FAPayload(label: "", secretBytes: secret2FABytes)
 }
 
@@ -370,8 +358,6 @@ func parseToDefaultPayload(bytes: [UInt8]) -> DefaultPayload? {
     }
     
     let defaultBytes = Array(bytes[index..<(index + defaultSize)])
-    
-    print("Blob Bytes: \(defaultBytes.bytesToHex)")
-    
+       
     return DefaultPayload(label: "", defaultBytes: defaultBytes)
 }

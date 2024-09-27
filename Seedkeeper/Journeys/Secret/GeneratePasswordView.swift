@@ -225,7 +225,7 @@ struct GeneratePasswordView: View {
                                                               password: password,
                                                               login: loginText,
                                                               url: urlText)
-                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
+                                cardState.requestImportSecret(secretPayload: payload)
                             })
                         } else {
                             // (re)generate and import buttons
@@ -254,8 +254,7 @@ struct GeneratePasswordView: View {
                                         isEnabled: canManualImportPassword,
                                         action: {
                                             if let passwordPayload = self.passwordPayload {
-                                                print("will import password")
-                                                cardState.requestImportSecret(secretPayload: passwordPayload, onSuccess: {}, onFail: {})
+                                                cardState.requestImportSecret(secretPayload: passwordPayload)
                                             }
                                     })
                                 }

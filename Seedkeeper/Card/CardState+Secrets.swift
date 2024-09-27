@@ -67,7 +67,7 @@ extension CardState {
     // MARK: - Import secret
     // *********************************************************
     
-    func requestImportSecret(secretPayload: Payload, onSuccess: @escaping () -> Void, onFail: @escaping () -> Void){
+    func requestImportSecret(secretPayload: Payload){
         session = SatocardController(
             onConnect: { [weak self] cardChannel in
                 guard let self = self else { return }

@@ -112,7 +112,6 @@ struct CreatePinCodeView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "next"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
-                    //print("pinCode: \(pinCode)") // TODO: remove
                     guard Validator.isPinValid(pin: pinCode) else {
                         shouldShowPinCodeError = true
                         return

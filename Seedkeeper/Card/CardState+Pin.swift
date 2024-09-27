@@ -144,7 +144,6 @@ extension CardState {
             }
             
         } catch let error {
-            print("Error: \(error)")
             session?.stop(errorMessage: String(localized: "nfcPinCodeSetFailed"))
             logger.error("\(String(localized: "nfcPinCodeSetFailed")) \(error.localizedDescription)", tag: "onSetPinCodeForBackupCard")
         }

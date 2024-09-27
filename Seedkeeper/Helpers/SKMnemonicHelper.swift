@@ -2106,12 +2106,12 @@ struct SKMnemonicEnglish {
         
         var bitStream = ""
         for word in words {
-            var index = SKMnemonicEnglish.wordList.firstIndex(of: String(word))
+            let index = SKMnemonicEnglish.wordList.firstIndex(of: String(word))
             let binary = String(index!, radix: 2)
-            print("*** binary *** : \(binary)")
+//            print("*** binary *** : \(binary)")
             let padded = String(String(binary.reversed()).padding(toLength: 11, withPad: "0", startingAt: 0).reversed())
             bitStream += padded
-            print("***\(word) \(index!) \(padded)***")
+//            print("***\(word) \(index!) \(padded)***")
         }
         
         let checksumSize = getChecksumSizeFromWordsCount(of: words.count)

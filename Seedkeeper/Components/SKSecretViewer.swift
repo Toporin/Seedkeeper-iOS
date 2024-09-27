@@ -11,13 +11,16 @@ import QRCode
 import SatochipSwift
 
 struct SKSecretViewer: View {
+    // MARK: - Properties
     var secretType: SeedkeeperSecretType
+    @EnvironmentObject var cardState: CardState
     @Binding var shouldShowSeedQRCode: Bool
-    @Binding var contentText: String {
-        didSet {
-            print("contentText: \(contentText)")
-        }
-    }
+    @Binding var contentText: String 
+//    {
+//        didSet {
+//            print("contentText: \(contentText)")
+//        }
+//    }
     
     var isEditable: Bool = false
     var userInputResult: ((String) -> Void)? = nil
@@ -52,7 +55,7 @@ struct SKSecretViewer: View {
             let image = UIImage(cgImage: generated)
             return image
         } catch {
-            print("Failed to generate QR code: \(error.localizedDescription)")
+            cardState.logger.error("Failed to generate QR code: \(error.localizedDescription)", tag: "generateMnemonicStandardSeedQR")
             return nil
         }
     }
@@ -68,7 +71,7 @@ struct SKSecretViewer: View {
             let image = UIImage(cgImage: generated)
             return image
         } catch {
-            print("Failed to generate QR code: \(error.localizedDescription)")
+            cardState.logger.error("Failed to generate QR code: \(error.localizedDescription)", tag: "generateMnemonicCompactSeedQR")
             return nil
         }
     }

@@ -91,7 +91,7 @@ struct GenerateDescriptorView: View {
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
                                                                                                     
                                 var payload = DescriptorPayload(label: labelText!, descriptor: descriptorText)
-                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
+                                cardState.requestImportSecret(secretPayload: payload)
                                 
                             })
                         }

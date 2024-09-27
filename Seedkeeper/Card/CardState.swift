@@ -60,17 +60,17 @@ class CardState: ObservableObject {
     private var _pinForMasterCard: String?
     var pinForMasterCard: String? {
         set {
-            print("(set) - Setting pin for master")
+            logger.info("Setting PIN for master", tag: "pinForMasterCard")
             _pinForMasterCard = newValue
             lastTimeForMasterCardPin = Date()
         }
         get {
             if isPinExpired() {
-                print("(get) - Pin is expired!")
+                logger.info("PIN is expired", tag: "pinForMasterCard")
                 _pinForMasterCard = nil
                 return nil
             } else {
-                print("(get) - refreshing pin expiry")
+                logger.info("Refreshing PIN expiry", tag: "pinForMasterCard")
                 refreshPinExpiry()
                 return _pinForMasterCard
             }
@@ -125,7 +125,7 @@ class CardState: ObservableObject {
     // *********************************************************
     @Published var backupMode: BackupMode = .start {
         didSet {
-            print("backup mode is set to : \(backupMode)")
+            logger.info("backup mode is set to : \(backupMode)", tag: "backupMode")
         }
     }
     
@@ -147,7 +147,7 @@ class CardState: ObservableObject {
     // *********************************************************
     @Published var resetMode: ResetMode = .start {
         didSet {
-            print("reset mode is set to : \(resetMode)")
+            logger.info("reset mode is set to : \(resetMode)", tag: "resetMode")
         }
     }
     @Published var resetRemainingSteps: UInt8 = 0xFF
@@ -319,8 +319,8 @@ class CardState: ObservableObject {
                             // get an array of secretHeaders that are in masterSecretHeaders but not in backupSecretHeaders
                             // These are the secrets that must be backuped
                             self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }
-                            print("requestExportSecretsForBackup: secretHeadersForBackup: \(self.secretHeadersForBackup)")
-                            print("requestExportSecretsForBackup: secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)")
+                            //print("requestExportSecretsForBackup: secretHeadersForBackup: \(self.secretHeadersForBackup)")
+                            self.logger.info("secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)", tag: "requestExportSecretsForBackup")
                         }
                     }
                     

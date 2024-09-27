@@ -81,7 +81,6 @@ extension CardState {
                     
                 } catch let error as StatusWord where error == .secureImportDataTooLong {
                     // TODO: add to report
-                    print("onImportSecretsToBackupCard error during import: \(error)")
                     self.backupError += "Secret \(self.secretsForBackup[index].secretHeader.label) is too long, skipped \n"
                     logger.error("Secret '\(self.secretsForBackup[index].secretHeader.label)' is too long, skipped", tag: "onImportSecretsToBackupCard")
                     
@@ -113,7 +112,6 @@ extension CardState {
             }
             
         } catch let error {
-            print("onImportSecretsToBackupCard error: \(error)")
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onImportSecretsToBackupCard")
         }
@@ -211,12 +209,9 @@ extension CardState {
                     DispatchQueue.main.async {
                         self.backupMode = .backupExportReady
                         self.exportIndex = 0
-                        print("requestExportSecretsForBackupSession DispatchQueue backupMode: \(self.backupMode)")
                     }
-                    print("requestExportSecretsForBackupSession backupMode: \(backupMode)")
                     
                 } catch let error {
-                    print("requestExportSecretsForBackupSession catch error: \(error)")
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestExportSecretsForBackup")
                 }

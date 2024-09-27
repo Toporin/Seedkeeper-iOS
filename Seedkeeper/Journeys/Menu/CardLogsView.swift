@@ -25,7 +25,6 @@ struct CardLogsView: View {
                         .frame(height: 16)
                     
                     HStack {
-                        //Text("\(String(localized: "logsNumberOfEntries")) : \(cardState.cardLogs.count)")
                         Text("\(String(localized: "logsNumberOfEntries")) : \(cardState.nbAvailableLogs)")
                             .font(.custom("OpenSans-light", size: 16))
                             .fontWeight(.thin)

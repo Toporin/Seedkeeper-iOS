@@ -66,7 +66,7 @@ struct GenerateMnemonicView: View {
             return mnemonic
             
         } catch {
-            print("Error generating mnemonic: \(error)")
+            cardState.logger.error("Error generating mnemonic: \(error)", tag:"GenerateMnemonicView.generateMnemonic")
         }
         return nil
     }
@@ -166,7 +166,7 @@ struct GenerateMnemonicView: View {
                                                               mnemonic: seedPhrase,
                                                               passphrase: passphraseText,
                                                               descriptor: descriptorText)
-                                cardState.requestImportSecret(secretPayload: payload, onSuccess: {}, onFail: {})
+                                cardState.requestImportSecret(secretPayload: payload)
                             })
                         } else {
                             HStack(alignment: .center, spacing: 0) {
@@ -186,8 +186,7 @@ struct GenerateMnemonicView: View {
                                     // import button
                                     SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 20, isEnabled: canManualImportMnemonic, action: {
                                             if let mnemonicPayload = self.mnemonicPayload {
-                                                print("will import mnemonic")
-                                                cardState.requestImportSecret(secretPayload: mnemonicPayload, onSuccess: {}, onFail: {})
+                                                cardState.requestImportSecret(secretPayload: mnemonicPayload)
                                             }
                                     })
                                     
@@ -320,7 +319,6 @@ struct MnemonicPayload : Payload {
             payload.append(contentsOf: descriptorSize)
             payload.append(contentsOf: descriptorBytes)
         }
-        print("Debug getV2PayloadBytes: \(payload.bytesToHex)")
         return payload
     }
     

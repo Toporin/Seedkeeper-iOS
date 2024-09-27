@@ -38,6 +38,7 @@ struct MenuView: View {
     func openURL(_ satochipURL: SatochipURL) {
         guard let url = satochipURL.url else {
             print("Invalid URL")
+            cardState.logger.error("Invalid URL", tag: "openURL")
             return
         }
         UIApplication.shared.open(url)
