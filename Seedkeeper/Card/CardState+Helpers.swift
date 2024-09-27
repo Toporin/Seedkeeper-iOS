@@ -53,17 +53,13 @@ extension CardState {
         
         // for Seedkeeper v2 and higher, the cardStatus is already provided in select response
         if selectApdu.data.count >= 7 {
-            do {
-                cardStatus = try CardStatus(rapdu: selectApdu)
-            } catch let error {
-                print("selectApplet: failed to parse cardStatus from selectApdu: \(error)")
-            }
+            cardStatus = CardStatus(rapdu: selectApdu)
         }
         
         return (selectApdu, cardStatus, cardType)
     }
     
-    internal func getCardStatus() throws -> CardStatus {
+    internal func getCardStatus() throws -> CardStatus? {
         var statusApdu: APDUResponse?
         
         statusApdu = try cmdSet.cardGetStatus()
@@ -71,15 +67,11 @@ extension CardState {
             throw SatocardError.invalidResponse
         }
         
-        do {
-            var cardStatus = try CardStatus(rapdu: apdu)
-            return cardStatus
-        } catch let error {
-            throw SatocardError.invalidResponse
-        }
+        var cardStatus = CardStatus(rapdu: apdu)
+        return cardStatus
     }
     
-    internal func selectAppletAndGetStatus() throws -> (CardStatus, CardType) {
+    internal func selectAppletAndGetStatus() throws -> (CardStatus?, CardType) {
         var selectApdu: APDUResponse?
         var cardType: CardType?
         
@@ -92,23 +84,14 @@ extension CardState {
         
         // for Seedkeeper v2 and higher, the cardStatus is already provided in select response
         if selectApdu.data.count >= 7 {
-            do {
-                var cardStatus = try CardStatus(rapdu: selectApdu)
-                return (cardStatus, cardType)
-            } catch let error {
-                print("selectApplet: failed to parse cardStatus from selectApdu: \(error)")
-            }
+            var cardStatus = CardStatus(rapdu: selectApdu)
+            return (cardStatus, cardType)
         }
         
         // if cardStatus cannot be recovered from select apdu, send getStatus command
-        do {
-            var statusApdu = try cmdSet.cardGetStatus()
-            var cardStatus = try CardStatus(rapdu: statusApdu)
-            return (cardStatus, cardType)
-        } catch let error {
-            throw SatocardError.invalidResponse
-        }
-        
+        var statusApdu = try cmdSet.cardGetStatus()
+        var cardStatus = CardStatus(rapdu: statusApdu)
+        return (cardStatus, cardType)
     }
     
     internal func verifyCardAuthenticity(cardType: ScannedCardType) throws {
@@ -139,7 +122,7 @@ extension CardState {
     }
     
     internal func fetchAuthentikey(cardType: ScannedCardType) throws {
-        let (_, authentikeyBytes, authentikeyHex) = try cmdSet.cardGetAuthentikey()
+        let (_, authentikeyBytes, _) = try cmdSet.cardGetAuthentikey()
         DispatchQueue.main.async {
             switch cardType {
             case .master:

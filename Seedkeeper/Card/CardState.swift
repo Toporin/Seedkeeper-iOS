@@ -173,7 +173,7 @@ class CardState: ObservableObject {
                     cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                     
                     // get status
-                    let (cardStatus, cardType) = try selectAppletAndGetStatus() //fetchCardStatus()
+                    let (cardStatus, cardType) = try selectAppletAndGetStatus()
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:
@@ -181,6 +181,11 @@ class CardState: ObservableObject {
                         case .backup:
                             self.backupCardStatus = cardStatus
                         }
+                    }
+                    
+                    guard let cardStatus = cardStatus else {
+                        session?.stop(alertMessage: String(localized: "nfcFailedToConnect"))
+                        return
                     }
                     
                     if !cardStatus.setupDone {
