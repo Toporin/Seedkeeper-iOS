@@ -1,6 +1,6 @@
 //
 //  OnboardingInfoView.swift
-//  Satodime
+//  Seedkeeper
 //
 //  Created by Lionel Delvaux on 25/09/2023.
 //

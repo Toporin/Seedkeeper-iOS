@@ -24,8 +24,12 @@ extension CardState {
     }
     
     func onImportSecretsToBackupCard(cardChannel: CardChannel) -> Void {
+        
+        logger.info("\(String(localized: "Start import secret to backup card"))", tag: "onImportSecretsToBackupCard")
+        
         guard let pinForBackupCard = pinForBackupCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeError"))
+            logger.info("\(String(localized: "nfcPinCodeError"))", tag: "onImportSecretsToBackupCard")
             return
         }
         
@@ -40,14 +44,13 @@ extension CardState {
                 // In this case, a lockError can be generated in the next command sent to card.
                 // just try again
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-                print("onImportSecretsToBackupCard catch error: \(error)")
-                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
+                logger.info("LockError - retry", tag: "onImportSecretsToBackupCard")
             }
             
             let isAuthentikeyValid = try isAuthentikeyValid(for: .backup)
             if !isAuthentikeyValid {
-                logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
                 session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onImportSecretsToBackupCard")
                 return
             }
             
@@ -58,11 +61,11 @@ extension CardState {
             if let authentikeyHeader = backupSecretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
                 // the backup authentikey is already store in the card, get its sid
                 authentikeySid = authentikeyHeader.sid
-                print("Master authentikey is already present in card with sid: \(authentikeySid)")
+                logger.info("Master authentikey is already present in card with sid: \(authentikeySid)", tag: "onImportSecretsToBackupCard")
             } else {
                 // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
                 authentikeySid = try self.importAuthentikeyAsSecret(for: .master)
-                print("Backup authentikey imported in card with sid: \(authentikeySid)")
+                logger.info("Backup authentikey imported in card with sid: \(authentikeySid)", tag: "onImportSecretsToBackupCard")
             }
             
             //for secret in self.secretsForBackup {
@@ -72,49 +75,47 @@ extension CardState {
                     let secret = self.secretsForBackup[index]
                     try cmdSet.seedkeeperImportSecret(secretObject: secret, sidPubkey: authentikeySid)
                     
-                    // TODO: check rapdu
-                    
-                    importIndex = index+1 // todo: dispatchQueue
+                    DispatchQueue.main.async {
+                        self.importIndex = index+1
+                    }
                     
                 } catch let error as StatusWord where error == .secureImportDataTooLong {
                     // TODO: add to report
                     print("onImportSecretsToBackupCard error during import: \(error)")
-                    self.backupError += "Secret \(self.secretsForBackup[index].secretHeader.label) is too long, skipped"
-                    logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
+                    self.backupError += "Secret \(self.secretsForBackup[index].secretHeader.label) is too long, skipped \n"
+                    logger.error("Secret '\(self.secretsForBackup[index].secretHeader.label)' is too long, skipped", tag: "onImportSecretsToBackupCard")
                     
                 } catch let error as StatusWord where error == .noMemoryLeft {
                     // TODO: add to report
-                    print("onImportSecretsToBackupCard error during import: \(error)")
-                    self.backupError = "no memory available!"
-                    logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
-                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    self.backupError = "no memory available! \n"
+                    session?.stop(errorMessage: "\(String(localized: "nfcNoMemoryLeft"))")
+                    logger.error("\(String(localized: "nfcNoMemoryLeft"))", tag: "onImportSecretsToBackupCard")
                     DispatchQueue.main.async {
                         self.homeNavigationPath.append(NavigationRoutes.backupFailed)
                     }
                     
                 } catch {
                     // TODO: add to report
-                    print("onImportSecretsToBackupCard error during import: \(error)")
                     self.backupError = "\(error.localizedDescription)"
-                    logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-                    return // TODO: something depending of error type?
+                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onImportSecretsToBackupCard")
+                    return
                 }
                 
             } // for
             
             session?.stop(alertMessage: String(localized: "nfcBackupSuccess"))
+            logger.info("\(String(localized: "nfcBackupSuccess"))", tag: "onImportSecretsToBackupCard")
             
             DispatchQueue.main.async {
                 self.homeNavigationPath.append(NavigationRoutes.backupSuccess)
                 self.importIndex = 0
             }
             
-            
         } catch let error {
             print("onImportSecretsToBackupCard error: \(error)")
-            logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : \(error.localizedDescription)"))
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+            logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onImportSecretsToBackupCard")
         }
     }
     
@@ -127,9 +128,12 @@ extension CardState {
         session = SatocardController(
             onConnect: { [weak self] cardChannel in
                 guard let self = self else { return }
-
+                
+                logger.info("Starting export encrypted secrets for backup", tag: "requestExportSecretsForBackup")
+                
                 guard let pinForMasterCard = pinForMasterCard else {
                     session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+                    logger.info(String(localized: "nfcPinCodeIsNotDefined"), tag: "requestExportSecretsForBackup")
                     DispatchQueue.main.async {
                         self.homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
                     }
@@ -147,14 +151,13 @@ extension CardState {
                         // In this case, a lockError can be generated in the next command sent to card.
                         // just try again
                         var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-                        print("requestExportSecretsForBackupSession catch error: \(error)")
-                        logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
+                        logger.info("LockError - trying again", tag: "requestExportSecretsForBackup")
                     }
                     
                     let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
                     if !isAuthentikeyValid {
-                        logEvent(log: LogModel(type: .error, message: "onImportSecretsToBackupCard : invalid AuthentiKey"))
                         session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                        logger.error(String(localized: "nfcAuthentikeyError"), tag: "requestExportSecretsForBackup")
                         return
                     }
                     
@@ -169,11 +172,11 @@ extension CardState {
                     if let authentikeyHeader = masterSecretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
                         // the backup authentikey is already store in the card, get its sid
                         authentikeySid = authentikeyHeader.sid
-                        print("Backup authentikey is already present in card with sid: \(authentikeySid)")
+                        logger.info("Backup authentikey is already present in card with sid: \(authentikeySid)", tag: "requestExportSecretsForBackup")
                     } else {
                         // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
                         authentikeySid = try self.importAuthentikeyAsSecret(for: .backup)
-                        print("Backup authentikey imported in card with sid: \(authentikeySid)")
+                        logger.info("Backup authentikey imported in card with sid: \(authentikeySid)", tag: "requestExportSecretsForBackup")
                     }
                     
                     // we export secrets, possibly on multiple nfc sessions if needed
@@ -185,7 +188,7 @@ extension CardState {
                         // TODO: perform these checks before initiating scan session for performance
                         // TODO: skip all pubkeys or only the backup authentikey?
                         if secretHeader.type == .pubkey {
-                            // TODO: log
+                            logger.info("Skip export pubkey with label: '\(secretHeader.label)'", tag: "requestExportSecretsForBackup")
                             continue
                         }
                         
@@ -198,10 +201,12 @@ extension CardState {
                             self.exportIndex = index+1
                         }
                         
-                        print("Exported secret sid: \(encryptedSecretObject.secretHeader.sid) at index: \(index)")
+                        logger.info("Exported secret sid: \(encryptedSecretObject.secretHeader.sid)", tag: "requestExportSecretsForBackup")
+                        
                         //sleep(1)// force multiple nfc session - for debug purpose!
                     }
                     session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+                    logger.info(String(localized: "nfcSecretsListSuccess"), tag: "requestExportSecretsForBackup")
                     
                     DispatchQueue.main.async {
                         self.backupMode = .backupExportReady
@@ -212,23 +217,19 @@ extension CardState {
                     
                 } catch let error {
                     print("requestExportSecretsForBackupSession catch error: \(error)")
-                    logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestExportSecretsForBackup")
                 }
                 
             },
             onFailure: { [weak self] error in
                 // these are errors related to NFC communication
                 guard let self = self else { return }
-                print("requestExportSecretsForBackupSession onFailure: \(error)")
                 self.onDisconnection(error: error)
             }
         )// session
         
-        print("In while loop backupMode: \(backupMode)")
         session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
-        print("After while loop backupMode: \(backupMode)")
-        
     }
     
     func importAuthentikeyAsSecret(for cardType: ScannedCardType) throws -> Int {

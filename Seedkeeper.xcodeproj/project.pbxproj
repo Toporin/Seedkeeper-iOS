@@ -20,6 +20,8 @@
 		0DAF451C2CA172D7001FDE73 /* FactoryResetResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF451B2CA172D7001FDE73 /* FactoryResetResultView.swift */; };
 		0DAF451E2CA5E8BA001FDE73 /* CardState+Logs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF451D2CA5E8B9001FDE73 /* CardState+Logs.swift */; };
 		0DAF45202CA5EE8E001FDE73 /* CardLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF451F2CA5EE8E001FDE73 /* CardLogsView.swift */; };
+		0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45222CA698A4001FDE73 /* LoggerService.swift */; };
+		0DAF45252CA698F1001FDE73 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45242CA698F1001FDE73 /* Log.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -32,7 +34,6 @@
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
 		D062F01B2C85E4CC001CF243 /* bip39-2048-english.txt in Resources */ = {isa = PBXBuildFile; fileRef = D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */; };
 		D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D062F01C2C862F5B001CF243 /* SKImageButton.swift */; };
-		D07141572BF2533700A4939A /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141562BF2533700A4939A /* LogModel.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
 		D07141662BF26DFD00A4939A /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */; };
 		D07141672BF26DFF00A4939A /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141652BF26D9000A4939A /* OpenSans-Medium.ttf */; };
@@ -132,6 +133,8 @@
 		0DAF451B2CA172D7001FDE73 /* FactoryResetResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryResetResultView.swift; sourceTree = "<group>"; };
 		0DAF451D2CA5E8B9001FDE73 /* CardState+Logs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardState+Logs.swift"; sourceTree = "<group>"; };
 		0DAF451F2CA5EE8E001FDE73 /* CardLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLogsView.swift; sourceTree = "<group>"; };
+		0DAF45222CA698A4001FDE73 /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
+		0DAF45242CA698F1001FDE73 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -144,7 +147,6 @@
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
 		D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bip39-2048-english.txt"; sourceTree = "<group>"; };
 		D062F01C2C862F5B001CF243 /* SKImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKImageButton.swift; sourceTree = "<group>"; };
-		D07141562BF2533700A4939A /* LogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		D07141642BF26D9000A4939A /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
@@ -254,6 +256,14 @@
 			path = FactoryReset;
 			sourceTree = "<group>";
 		};
+		0DAF45212CA69878001FDE73 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0DAF45222CA698A4001FDE73 /* LoggerService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		D03110962BE4178D00ED0997 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,9 +302,9 @@
 		D07141552BF2532100A4939A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				D07141562BF2533700A4939A /* LogModel.swift */,
 				D09A8BAB2C74DAC2003659F0 /* UsedLoginModel.swift */,
 				0DAF45102C985F89001FDE73 /* Payload.swift */,
+				0DAF45242CA698F1001FDE73 /* Log.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -358,6 +368,7 @@
 		D0BA413C2BCFDDF000FD25B9 /* Seedkeeper */ = {
 			isa = PBXGroup;
 			children = (
+				0DAF45212CA69878001FDE73 /* Services */,
 				D05EB84A2BFE4E73006B84BB /* Card */,
 				D07141582BF255B100A4939A /* Repositories */,
 				D07141552BF2532100A4939A /* Models */,
@@ -723,7 +734,6 @@
 				D0E433812BD3FA48008DBAA6 /* SatoStatusView.swift in Sources */,
 				D080FD6C2C260DF200B50489 /* OnboardingInfoView.swift in Sources */,
 				0DAF45092C92CD1D001FDE73 /* GeneratePasswordView.swift in Sources */,
-				D07141572BF2533700A4939A /* LogModel.swift in Sources */,
 				D080FD6A2C260DD100B50489 /* OnBoardingWelcomeView.swift in Sources */,
 				D071416E2BF2772600A4939A /* EditableCardInfoBox.swift in Sources */,
 				D0E433832BD3FB08008DBAA6 /* SatoText.swift in Sources */,
@@ -759,9 +769,11 @@
 				D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */,
 				D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */,
 				D0E4339C2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift in Sources */,
+				0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */,
 				D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */,
 				D03110952BE40D2400ED0997 /* LogsView.swift in Sources */,
 				D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */,
+				0DAF45252CA698F1001FDE73 /* Log.swift in Sources */,
 				D0C939D62BD69CAD00F2A17B /* ConfirmPinCodeView.swift in Sources */,
 				D03110982BE417A000ED0997 /* Formatter.swift in Sources */,
 				D080FD782C261D1E00B50489 /* OptionSelectorView.swift in Sources */,

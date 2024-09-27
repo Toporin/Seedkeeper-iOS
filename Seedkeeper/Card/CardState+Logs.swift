@@ -23,6 +23,7 @@ extension CardState {
                 
                 guard let pinForMasterCard = pinForMasterCard else {
                     session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
+                    logger.info("\(String(localized: "nfcPinCodeIsNotDefined"))", tag: "requestCardLogs")
                     DispatchQueue.main.async {
                         self.homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
                     }
@@ -32,22 +33,23 @@ extension CardState {
                 cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                 
                 do {
-                    var cardStatus: CardStatus?
+                    let cardStatus: CardStatus?
                     (_, cardStatus, _) = try self.selectApplet()
                     
                     let pinBytes = Array(pinForMasterCard.utf8)
-                    var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                    let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                         
                     let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
                     if !isAuthentikeyValid {
-                        logEvent(log: LogModel(type: .error, message: "requestCardLogs : invalid AuthentiKey"))
                         session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                        logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestCardLogs")
                         return
                     }
                         
-                    var (logs, nbAvailable, nbTotal) = try cmdSet.seedkeeperPrintLogs(printAll: true)
+                    let (logs, nbAvailable, nbTotal) = try cmdSet.seedkeeperPrintLogs(printAll: true)
                         
                     session?.stop(alertMessage: "\(String(localized: "nfcLogsFetchedSuccessful"))")
+                    logger.info("\(String(localized: "nfcLogsFetchedSuccessful"))", tag: "requestCardLogs")
                     
                     DispatchQueue.main.async {
                         self.cardLogs = logs
@@ -56,18 +58,15 @@ extension CardState {
                         self.homeNavigationPath.append(NavigationRoutes.showCardLogs)
                     }
                     
-                    
                 } catch let error {
-                    print("requestCardLogs catch error: \(error)")
-                    logEvent(log: LogModel(type: .error, message: "requestCardLogs : \(error.localizedDescription)"))
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestCardLogs")
                 }
                 
             },
             onFailure: { [weak self] error in
                 // these are errors related to NFC communication
                 guard let self = self else { return }
-                print("requestCardLogs onFailure: \(error)")
                 self.onDisconnection(error: error)
             }
         )// session

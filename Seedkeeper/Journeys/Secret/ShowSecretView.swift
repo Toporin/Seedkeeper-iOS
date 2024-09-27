@@ -137,7 +137,7 @@ struct ShowSecretView: View {
                     
                     // TODO: replace "show" by "export"
                     SKActionButtonSmall(title: String(localized: "show"), icon: "ic_eye", isEnabled: .constant(true)) {
-                        cardState.requestGetSecret(with: secret)
+                        cardState.requestExportSecret(with: secret)
                         isSecretHeaderFetched = true
                     }
                 }

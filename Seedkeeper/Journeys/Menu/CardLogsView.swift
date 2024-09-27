@@ -63,7 +63,7 @@ struct CardLogsView: View {
                                         .multilineTextAlignment(.center)
                                         .lineSpacing(8)
                                     
-                                    Text("sid1: \(log.sid1)")
+                                    Text("sid1: \( (log.sid1 != 0xFFFF) ? String(log.sid1) : "-")")
                                         .font(.custom("OpenSans-regular", size: 16))
                                         .fontWeight(.medium)
                                         .frame(maxWidth: .infinity, alignment: .center)

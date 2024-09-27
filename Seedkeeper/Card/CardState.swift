@@ -1,6 +1,6 @@
 //
 //  CardData.swift
-//  Satodime
+//  Seedkeeper
 //
 //  Created by Satochip on 01/12/2023.
 //
@@ -114,10 +114,11 @@ class CardState: ObservableObject {
     
     var secretPayloadToImportOnCard: Payload?
     
-    func logEvent(log: LogModel) {
-        // TODO: do not persist logs?
-        dataControllerContext.saveLogEntry(log: log)
-    }
+    // *********************************************************
+    // MARK: Properties for logging
+    // *********************************************************
+    
+    let logger = LoggerService.shared
 
     // *********************************************************
     // MARK: Properties for backup
@@ -169,6 +170,8 @@ class CardState: ObservableObject {
             onConnect: { [weak self] cardChannel in
                 guard let self = self else { return }
                 
+                logger.info("Start scaning card", tag: "scan")
+                
                 do{
                     cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                     
@@ -200,12 +203,14 @@ class CardState: ObservableObject {
                             
                         }
                         session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
+                        logger.info("\(String(localized: "nfcCardNeedsSetup"))", tag: "scan")
                         return
 
                     } else {
                         // card needs PIN
                         guard let pin = (scannedCardType == .master) ? pinForMasterCard : pinForBackupCard else {
                             session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
+                            logger.info("\(String(localized: "nfcPinCodeIsNotDefined"))", tag: "scan")
                             DispatchQueue.main.async {
                                 switch scannedCardType {
                                 case .master:
@@ -230,12 +235,12 @@ class CardState: ObservableObject {
                                 }
                             }
                             
-                            logEvent(log: LogModel(type: .error, message: "onVerifyPin : \("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)"))"))
                             if retryCounter == 0 {
-                                logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
                                 self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                                logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "scan")
                             } else {
                                 self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                                logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "scan")
                             }
                             return
                         } catch CardError.pinBlocked {
@@ -247,8 +252,8 @@ class CardState: ObservableObject {
                                     self.pinForBackupCard = nil
                                 }
                             }
-                            logEvent(log: LogModel(type: .error, message: "onVerifyPin : \(String(localized: "nfcWrongPinBlocked"))"))
                             self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "scan")
                             return
                         } catch {
                             DispatchQueue.main.async {
@@ -259,8 +264,8 @@ class CardState: ObservableObject {
                                     self.pinForBackupCard = nil
                                 }
                             }
-                            logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
                             self.session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                            logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
                             return
                         }
                     } // if/else
@@ -297,13 +302,14 @@ class CardState: ObservableObject {
                             }
                         }
                         
-                        print("Secret headers: \(secretHeaders)")
                     } catch let error {
-                        logEvent(log: LogModel(type: .error, message: "handleConnection : \(error.localizedDescription)"))
+                        logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
                         session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     }
+                    
                     session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-
+                    logger.info("\(String(localized: "nfcSecretsListSuccess"))", tag: "scan")
+                    
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:
@@ -319,9 +325,8 @@ class CardState: ObservableObject {
                     }
                     
                 } catch let error {
-                    print("onImportSecret ERROR \(error.localizedDescription)")
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-                    logEvent(log: LogModel(type: .error, message: "onAddPasswordSecret : \(error.localizedDescription)"))
+                    logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
                 }
                 
             },

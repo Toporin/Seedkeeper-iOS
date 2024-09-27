@@ -51,11 +51,11 @@ class DataController: ObservableObject {
 // MARK: - Logs
 
 extension NSManagedObjectContext {
-    func saveLogEntry(log: LogModel) {
+    func saveLogEntry(log: Log) {
         let logEntry = LogEntry(context: self)
-        logEntry.date = log.date
-        logEntry.type = log.type.rawValue
-        logEntry.message = log.message
+        logEntry.date = log.time
+        logEntry.type = log.level.rawValue
+        logEntry.message = log.msg
         try? save()
     }
 }

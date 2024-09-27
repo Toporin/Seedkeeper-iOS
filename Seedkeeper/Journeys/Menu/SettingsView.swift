@@ -71,7 +71,7 @@ struct SettingsView: View {
                                    backgroundColor: Colors.lightMenuButton,
                                    isOn: $debugModeIsOn,
                                    onToggle: { newValue in
-                        
+
                     })
                     
                     Spacer()

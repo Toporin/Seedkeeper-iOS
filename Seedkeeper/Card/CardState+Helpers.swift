@@ -30,15 +30,6 @@ extension CardState {
         masterSecretHeaders = []
     }
     
-    internal func popToBackupFlow() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            if homeNavigationPath.count >= 2 {
-                homeNavigationPath.removeLast(2)
-            }
-        }
-    }
-    
     internal func selectApplet() throws -> (APDUResponse, CardStatus?, CardType) {
         var selectApdu: APDUResponse?
         var cardStatus: CardStatus?
@@ -126,10 +117,8 @@ extension CardState {
         DispatchQueue.main.async {
             switch cardType {
             case .master:
-                //self.authentikeyHex = authentikeyHex
                 self.authentikeyBytes = authentikeyBytes
             case .backup:
-                //self.authentikeyHexForBackup = authentikeyHex
                 self.authentikeyBytesForBackup = authentikeyBytes
             }
         }
@@ -153,15 +142,13 @@ extension CardState {
     }
     
     public func checkEqual<T: Equatable>(_ lhs: T, _ rhs: T, tag: String) throws {
-        // let log = LoggerService.shared
         if (lhs != rhs){
             let msg = "CheckEqual failed: got \(lhs) but expected \(rhs) in \(tag)"
-            // log.error(msg, tag: tag)
             throw SatocardError.testError("[\(tag)] \(msg)")
         }
-        else {
-            // log.debug("CheckEqual ok for: \(lhs)", tag: tag)
-        }
+//        else {
+//            log.debug("CheckEqual ok for: \(lhs)", tag: tag)
+//        }
     }
 
 }

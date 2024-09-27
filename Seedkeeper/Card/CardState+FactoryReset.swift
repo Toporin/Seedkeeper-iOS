@@ -37,7 +37,6 @@ extension CardState {
                             cardStatus = try getCardStatus()
                             
                             DispatchQueue.main.async {
-                                print("DispatchQueue.main.async update masterCardStatus with \(cardStatus)")
                                 self.masterCardStatus = cardStatus
                             }
                         }
@@ -45,7 +44,8 @@ extension CardState {
                     
                     // at this point, cardStatus should be available
                     guard let cardStatus = cardStatus else {
-                        session?.stop(alertMessage: String(localized: "resetResultSentBold"))
+                        session?.stop(alertMessage: String(localized: "nfcFailedToConnect"))
+                        logger.error("\(String(localized: "nfcFailedToConnect"))", tag: "requestFactoryReset")
                         DispatchQueue.main.async {
                             self.homeNavigationPath.append(NavigationRoutes.factoryResetResult(.unknown))
                         }
@@ -54,7 +54,8 @@ extension CardState {
                     
                     // there is no point to reset card if it is not initialized
                     if !cardStatus.setupDone {
-                        session?.stop(alertMessage: String(localized: "resetResultSentBold"))
+                        session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
+                        logger.warning("\(String(localized: "nfcCardNeedsSetup"))", tag: "requestFactoryReset")
                         DispatchQueue.main.async {
                             self.homeNavigationPath.append(NavigationRoutes.factoryResetResult(.notSetup))
                         }
@@ -62,31 +63,30 @@ extension CardState {
                     
                     var rapdu: APDUResponse? = nil
                     let version = cardStatus.protocolVersion
-                    print("requestFactoryReset version: \(version)")
+                    logger.warning("Start factory reset for Seedkeeper v\(version)", tag: "requestFactoryReset")
                     
                     // Send factory reset command
                     if version == 1 {
                         // factory reset v1 command (legacy)
                         rapdu = try cmdSet.cardSendResetCommand()
+                        logger.warning("Factory reset sent reset command!", tag: "requestFactoryReset")
                         
                     } else {
                         // factory reset v2
                         if cardStatus.pin0RemainingTries > 0 {
-                            print("reset pin")
                             // send random pin until card blocks
                             var pinBytes = [UInt8](repeating: 0, count: 8)
                             let status = SecRandomCopyBytes(kSecRandomDefault, pinBytes.count, &pinBytes)
                             if status == errSecSuccess {
                                 do {
                                     rapdu = try cmdSet.cardVerifyPIN(pin: pinBytes)
-                                } catch {
+                                } catch let error {
                                     // catch wrong pin error
-                                    print("resetFactory wrong PIN")
+                                    logger.warning("Factory reset sent wrong PIN command! \(error.localizedDescription)", tag: "requestFactoryReset")
                                     rapdu = APDUResponse(sw1: 0x63, sw2: 0xC0, data: [UInt8]())
                                 }
                             }
                         } else if cardStatus.puk0RemainingTries > 0 {
-                            print("reset puk")
                             // send random puk until card blocks
                             var pukBytes = [UInt8](repeating: 0, count: 8)
                             let status = SecRandomCopyBytes(kSecRandomDefault, pukBytes.count, &pukBytes)
@@ -107,6 +107,7 @@ extension CardState {
                                     // other errors
                                     rapdu = APDUResponse(sw1: 0x00, sw2: 0x00, data: [UInt8]())
                                 }
+                                logger.warning("Factory reset sent wrong PUK command - sw: \(String(format:"%04X", rapdu?.data ?? 0x00))", tag: "requestFactoryReset")
                             }
                         } // if pin else puk
                     } // if version
@@ -117,12 +118,16 @@ extension CardState {
                         // update NFC toast
                         if rapdu.sw1 == 0xFF && rapdu.sw2 == 0x00 {
                             session?.stop(alertMessage: String(localized: "resetResultSuccessBold"))
+                            logger.warning("\(String(localized: "resetResultSuccessBold"))", tag: "requestFactoryReset")
                         } else if rapdu.sw1 == 0xFF && rapdu.sw2 == 0xFF {
                             session?.stop(alertMessage: String(localized: "resetResultFailedBold"))
+                            logger.warning("\(String(localized: "resetResultFailedBold"))", tag: "requestFactoryReset")
                         } else if rapdu.sw1 == 0xFF && rapdu.sw2 > 0x00 {
                             session?.stop(alertMessage: String(localized: "resetResultSentBold"))
+                            logger.warning("\(String(localized: "resetResultSentBold"))", tag: "requestFactoryReset")
                         } else {
                             session?.stop(alertMessage: String(localized: "resetResultSentBold"))
+                            logger.warning("\(String(localized: "resetResultSentBold"))", tag: "requestFactoryReset")
                         }
                         
                         // update screen
@@ -145,7 +150,6 @@ extension CardState {
                                     (rapdu.sw1 == 0x9C && rapdu.sw2 == 0x02) // wrong pin (legacy)
                             {
                                 // V2: command sent successfully, may need to be repeated several times
-                                print("reset factory v2 wrong pin code \(cardStatus.pin0RemainingTries)  \(cardStatus.puk0RemainingTries)")
                                 self.resetMode = .sendResetCommand
                                 self.resetRemainingSteps = cardStatus.pin0RemainingTries + cardStatus.puk0RemainingTries - 1
                             } else if rapdu.sw1 == 0x9C && rapdu.sw2 == 0x04 {
@@ -166,21 +170,19 @@ extension CardState {
                     } // if
                     
                 } catch let error {
-                    print("requestFactoryResetV2 catch error: \(error)")
-                    logEvent(log: LogModel(type: .error, message: "onFetchSecretsForBackup : \(error.localizedDescription)"))
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
+                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestFactoryReset")
                 }
                 
             },
             onFailure: { [weak self] error in
                 // these are errors related to NFC communication
                 guard let self = self else { return }
-                print("requestFactoryResetV2 onFailure: \(error)")
                 self.onDisconnection(error: error)
             }
         )// session
         
-        session?.start(alertMessage: String(localized: "nfcScanCardForReset")) // TODO: change txt? nfcHoldSatodime
+        session?.start(alertMessage: String(localized: "nfcScanCardForReset"))
     }
     
 }

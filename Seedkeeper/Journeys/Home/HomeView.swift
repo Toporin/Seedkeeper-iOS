@@ -110,7 +110,8 @@ struct HomeView: View {
                 case .pinCode(let action):
                     PinCodeView(homeNavigationPath: $cardState.homeNavigationPath, actionAfterPin: action)
                 case .logs:
-                    LogsView(homeNavigationPath: $cardState.homeNavigationPath)
+//                    LogsView(homeNavigationPath: $cardState.homeNavigationPath)
+                    LogsView()
                 case .cardInfo:
                     CardInfoView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .authenticity:
