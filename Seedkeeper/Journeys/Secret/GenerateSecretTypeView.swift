@@ -32,8 +32,8 @@ struct GenerateSecretTypeView: View {
                 
                 // Use buttons
                 MenuButton(
-                    title: "Password", //String(localized: "generateASecret"),
-                    iconName: "ic_magic_wand", // TODO: icon
+                    title: String(localized: "passwordTitle"),
+                    iconName: "ic_3DotsUnderlined",
                     iconWidth: 50,
                     iconHeight: 50,
                     backgroundColor: Colors.purpleBtn,
@@ -41,15 +41,15 @@ struct GenerateSecretTypeView: View {
                         homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .password, secretCreationMode: secretCreationMode)))
                     },
                     forcedHeight: 100,
-                    subTitle: String(localized: "generateASecretSubtitle") // TODO: txt
+                    subTitle: String(localized: "passwordDescription")
                 )
                 
                 Spacer()
                     .frame(height: 24)
                 
                 MenuButton(
-                    title: "Mnemonic", //String(localized: "generateASecret"), // TODO: localize
-                    iconName: "ic_magic_wand", // TODO: icon
+                    title: String(localized: "mnemonicTitle"),
+                    iconName: "ic_leaf",
                     iconWidth: 50,
                     iconHeight: 50,
                     backgroundColor: Colors.purpleBtn,
@@ -57,7 +57,7 @@ struct GenerateSecretTypeView: View {
                         homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .mnemonic, secretCreationMode: secretCreationMode)))
                     },
                     forcedHeight: 100,
-                    subTitle: String(localized: "generateASecretSubtitle") // TODO: txt
+                    subTitle: String(localized: "mnemonicDescription")
                 )
                 
                 Spacer()
@@ -65,8 +65,8 @@ struct GenerateSecretTypeView: View {
                 
                 if (secretCreationMode == SecretCreationMode.manualImport){
                     MenuButton(
-                        title: "Descriptor", //String(localized: "generateASecret"), // TODO: localize
-                        iconName: "ic_magic_wand", // TODO: icon
+                        title: String(localized: "descriptorTitle"),
+                        iconName: "rectangle.dashed.and.paperclip",
                         iconWidth: 50,
                         iconHeight: 50,
                         backgroundColor: Colors.purpleBtn,
@@ -74,7 +74,7 @@ struct GenerateSecretTypeView: View {
                             homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .descriptor, secretCreationMode: secretCreationMode)))
                         },
                         forcedHeight: 100,
-                        subTitle: String(localized: "generateASecretSubtitle") // TODO: txt
+                        subTitle: String(localized: "descriptorDescription")
                     )
                     
                     Spacer()
@@ -83,8 +83,8 @@ struct GenerateSecretTypeView: View {
                 
                 if (secretCreationMode == SecretCreationMode.manualImport){
                     MenuButton(
-                        title: "Data", //String(localized: "generateASecret"), // TODO: localize
-                        iconName: "ic_magic_wand", // TODO: icon
+                        title: String(localized: "dataTitle"),
+                        iconName: "doc.plaintext",
                         iconWidth: 50,
                         iconHeight: 50,
                         backgroundColor: Colors.purpleBtn,
@@ -92,7 +92,7 @@ struct GenerateSecretTypeView: View {
                             homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .data, secretCreationMode: secretCreationMode)))
                         },
                         forcedHeight: 100,
-                        subTitle: String(localized: "generateASecretSubtitle") // TODO: txt
+                        subTitle: String(localized: "dataDescription")
                     )
                     
                     Spacer()

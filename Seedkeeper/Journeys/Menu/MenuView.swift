@@ -279,6 +279,7 @@ struct MenuButton: View {
                                     .padding([.leading, .trailing])
                             }
                             Spacer()
+                            
                             Image(iconName)
                                 .resizable()
                                 .renderingMode(.template)

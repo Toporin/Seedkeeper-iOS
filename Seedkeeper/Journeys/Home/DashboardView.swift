@@ -165,12 +165,18 @@ struct SKSecretButton: View {
     
     func getSecretIcon(secretType: SeedkeeperSecretType) -> String {
         switch secretType {
+        case .password:
+            return "ic_3DotsUnderlined"
         case .bip39Mnemonic:
             return "ic_leaf"
         case .masterseed:
             return "ic_leaf"
-        case .password:
-            return "ic_3DotsUnderlined"
+        case .electrumMnemonic:
+            return "atom"
+        case .walletDescriptor:
+            return "rectangle.dashed.and.paperclip"
+        case .data:
+            return "doc.plaintext"
         default:
             return "ic_key"
         }
