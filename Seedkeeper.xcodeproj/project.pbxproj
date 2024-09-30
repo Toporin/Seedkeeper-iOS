@@ -23,7 +23,6 @@
 		0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45222CA698A4001FDE73 /* LoggerService.swift */; };
 		0DAF45252CA698F1001FDE73 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45242CA698F1001FDE73 /* Log.swift */; };
 		0DAF45272CAAA862001FDE73 /* EditLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45262CAAA862001FDE73 /* EditLabelView.swift */; };
-		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
 		D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */; };
@@ -137,7 +136,6 @@
 		0DAF45222CA698A4001FDE73 /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
 		0DAF45242CA698F1001FDE73 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		0DAF45262CAAA862001FDE73 /* EditLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLabelView.swift; sourceTree = "<group>"; };
-		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorBox.swift; sourceTree = "<group>"; };
@@ -419,7 +417,6 @@
 			children = (
 				D0C939D12BD6860700F2A17B /* CreatePinCodeView.swift */,
 				D0C939D52BD69CAD00F2A17B /* ConfirmPinCodeView.swift */,
-				D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */,
 				D03540142C04D2B700ABF9C7 /* PinCodeView.swift */,
 			);
 			path = Pin;
@@ -769,7 +766,6 @@
 				D08722502C19FC2500E0FBE5 /* SKMnemonicHelper.swift in Sources */,
 				D0C939D82BD6A35900F2A17B /* Validator.swift in Sources */,
 				D0BEA31A2BF5193100BD05D7 /* GenerateSuccessView.swift in Sources */,
-				D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */,
 				D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */,
 				D0E4339C2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift in Sources */,
 				0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */,
