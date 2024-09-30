@@ -11,14 +11,13 @@ import CoreData
 
 enum EditableCardInfoBoxContentMode  {
     case text(String)
-    case pin  // TODO: remove
-    case fixedText(String)  //TODO: remove
 }
 
 enum SelectableCardInfoBoxContentMode<T: CaseIterable & Hashable & HumanReadable> {
     case dropdown(PickerOptions<T>)
 }
 
+// MARK: SelectableCardInfoBox
 struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
     
     @State private var editableText: String
@@ -90,8 +89,8 @@ struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
     }
 }
 
+// MARK: EditableCardInfoBox
 struct EditableCardInfoBox: View {
-    @State private var isEditing = false // TODO: not used, remove?
     @State private var editableText: String
     @FocusState private var isFocused: Bool
     
@@ -122,14 +121,7 @@ struct EditableCardInfoBox: View {
         self.shouldDisplaySuggestions = shouldDisplaySuggestions
         self.focusAction = focusAction
         
-        switch mode {
-        case .text(let initialText):
-            _editableText = State(initialValue: "")
-        case .pin:
-            _editableText = State(initialValue: "Update PIN code")
-        case .fixedText(let initialText):
-            _editableText = State(initialValue: initialText)
-        }
+        _editableText = State(initialValue: "")
     }
     
     private func filterSuggestions() {
@@ -177,7 +169,6 @@ struct EditableCardInfoBox: View {
                                 } else {
 //                                    print("TextField focus removed: \(editableText)") // TODO: debug
                                     action(.text(editableText))
-                                    isEditing = false
                                 }
                             })
                             .focused($isFocused)
@@ -190,39 +181,15 @@ struct EditableCardInfoBox: View {
                             .textFieldStyle(PlainTextFieldStyle())
                             .padding(.leading, 16)
                         }
-                    } else {
-                        Text(editableText)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .lineLimit(1)
-                            .fontWeight(.light)
-                            .foregroundColor(Color.white.opacity(0.8))
-                            .padding(.leading, 16)
                     }
                 }
-                .onTapGesture {
-                    if case .text = mode {
-                        isEditing = true
-                    } else if case .pin = mode {
-                        action(.pin)
-                    }
-                }
+                .onTapGesture {}
                 
                 Spacer()
                 
-                Button(action: {
-                    print("DEBUG Clicked on TextField button!") //TODO: remove
-                    if case .text = mode {
-                        isEditing = true
-                    } else if case .pin = mode {
-                        action(.pin)
-                    }
-                }) {
-                    if case .fixedText = mode {
-                        // nothing
-                    }
-                    else {
-                        Image(systemName: "pencil")
-                    }
+                Button(action: {}) 
+                {
+                    Image(systemName: "pencil")
                 }
                 .padding(.trailing, 12)
             }

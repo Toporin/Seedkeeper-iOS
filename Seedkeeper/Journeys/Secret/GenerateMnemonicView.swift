@@ -124,13 +124,7 @@ struct GenerateMnemonicView: View {
                             SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                                 showPickerSheet = true
                             }
-                        } 
-//                        else if generatorModeNavData.secretCreationMode == .manualImport {
-//                            // TODO: remove?
-//                            EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-//                                showPickerSheet = true
-//                            }
-//                        }
+                        }
                             
                         Spacer()
                             .frame(height: 16)
