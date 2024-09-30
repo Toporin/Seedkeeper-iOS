@@ -81,8 +81,7 @@ struct GenerateDataView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .data, shouldShowSeedQRCode: .constant(false), contentText: $dataText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                        }
+                        SKSecretViewer(secretType: .data, contentText: $dataText, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
 
                         Spacer()
                             .frame(height: 16)

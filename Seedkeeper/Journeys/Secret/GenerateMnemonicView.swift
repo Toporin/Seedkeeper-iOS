@@ -140,14 +140,13 @@ struct GenerateMnemonicView: View {
                             Spacer()
                                 .frame(height: 16)
                             
-                            SKSecretViewer(secretType: .walletDescriptor, shouldShowSeedQRCode: .constant(false), contentText: $descriptorText, isEditable: true, placeholder: "Wallet descriptor (optional)")
+                            SKSecretViewer(secretType: .walletDescriptor, contentText: $descriptorText, isEditable: true, placeholder: "Wallet descriptor (optional)")
                         }
                             
                         Spacer()
                             .frame(height: 60)
                         
-                        SKSecretViewer(secretType: .masterseed, shouldShowSeedQRCode: .constant(false), contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                        }
+                        SKSecretViewer(secretType: .masterseed, contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
 
                         Spacer()
                             .frame(height: 16)

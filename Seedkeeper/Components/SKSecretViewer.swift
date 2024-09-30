@@ -14,18 +14,13 @@ struct SKSecretViewer: View {
     // MARK: - Properties
     var secretType: SeedkeeperSecretType
     @EnvironmentObject var cardState: CardState
-    @Binding var shouldShowSeedQRCode: Bool
-    @Binding var contentText: String 
-//    {
-//        didSet {
-//            print("contentText: \(contentText)")
-//        }
-//    }
+    @Binding var contentText: String
     
     var isEditable: Bool = false
     var placeholder: String = String(localized: "placeholder.yourSecret")
     var userInputResult: ((String) -> Void)? = nil
     
+    @State private var showSeedQRCode: Bool = false
     @State private var showQRCode: Bool = false
     @State private var showText: Bool = true // false
     var contentTextClear: String {
@@ -87,10 +82,23 @@ struct SKSecretViewer: View {
                 // MARK: qr, copy & hide buttons
                 HStack {
                     Spacer()
+                    
+                    if (secretType == .bip39Mnemonic || secretType == .masterseed) {
+                        // SeedSigner button
+                        Button(action: {
+                            showSeedQRCode = true
+                            showQRCode = false
+                        }) {
+                            Image(systemName: "pill")
+                                .foregroundColor(.white)
+                                .padding(5)
+                        }
+                    }
+                    
                     // qr button
                     Button(action: {
-                            showQRCode.toggle()
-                            shouldShowSeedQRCode = false
+                            showSeedQRCode = false
+                            showQRCode = true
                         }) {
                             Image("ic_qr")
                                 .foregroundColor(.white)
@@ -106,12 +114,12 @@ struct SKSecretViewer: View {
                             .padding(5)
                     }
                     
-                    // hide/view
+                    // hide/view button
                     if !isEditable {
                         Button(action: {
                             showText.toggle()
                             showQRCode = false
-                            shouldShowSeedQRCode = false
+                            showSeedQRCode = false
                         }) {
                             Image(systemName: showText ? "eye.slash" : "eye")
                                 .foregroundColor(.white)
@@ -139,7 +147,7 @@ struct SKSecretViewer: View {
                         
                     }
                 } else {
-                    if shouldShowSeedQRCode &&
+                    if showSeedQRCode &&
                         (secretType == .bip39Mnemonic || secretType == .masterseed), // TODO: distinguish masterseed by subtype
                            let seedQRImage = self.generateMnemonicStandardSeedQR(with: contentText)  {
                             

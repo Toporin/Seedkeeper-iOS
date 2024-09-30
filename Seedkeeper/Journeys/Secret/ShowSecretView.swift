@@ -16,7 +16,6 @@ struct ShowSecretView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     var secret: SeedkeeperSecretHeader
-    @State var shouldShowSeedQR: Bool = false
     @State var isSecretHeaderFetched: Bool = false
     
     var body: some View {
@@ -70,7 +69,6 @@ struct ShowSecretView: View {
                                     Spacer()
                                 }
                                 SKSecretViewer(secretType: .walletDescriptor,
-                                               shouldShowSeedQRCode: .constant(false),
                                                contentText:  .constant(descriptor)
                                 )
                             }
@@ -104,39 +102,16 @@ struct ShowSecretView: View {
                         Spacer()
                     }
                     
-                    // MARK: action buttons for mnemonic
-                    // TODO: refactor into SKSecretViewer?
-                    if secret.type == .bip39Mnemonic || (secret.type == .masterseed && secret.subtype == 0x01) || secret.type == .electrumMnemonic {
-                        Spacer()
-                            .frame(height: 30)
-                        
-                        HStack {
-                            SKActionButtonSmall(title: "Seed", icon: "ic_bip85", isEnabled: $isSecretHeaderFetched) {
-                                shouldShowSeedQR = false
-                            }
-                            
-                            Spacer()
-                            
-                            SKActionButtonSmall(title: "SeedQR", icon: "ic_qr", isEnabled: $isSecretHeaderFetched) {
-                                shouldShowSeedQR = true
-                            }
-                            
-                        }
-                        .padding([.leading, .trailing], 0)
-                    }
-                    
                     Spacer()
-                        .frame(height: 30)
+                        .frame(height: 16)
                     
                     if let payload = cardState.currentSecretPayload {
                         SKSecretViewer(secretType: secret.type,
-                                       shouldShowSeedQRCode: $shouldShowSeedQR,
                                        contentText:  .constant(payload.getContentString())
                         )
                     }else {
                         // empty secret field
                         SKSecretViewer(secretType: .password, // TODO: use something else?
-                                       shouldShowSeedQRCode: $shouldShowSeedQR,
                                        contentText: .constant("Click on export to show secret data"))
                         
                     }

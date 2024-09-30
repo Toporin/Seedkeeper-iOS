@@ -209,8 +209,7 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .password, shouldShowSeedQRCode: .constant(false), contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                        }
+                        SKSecretViewer(secretType: .password, contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
 
                         Spacer()
                             .frame(height: 16)

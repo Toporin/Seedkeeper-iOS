@@ -80,8 +80,7 @@ struct GenerateDescriptorView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .walletDescriptor, shouldShowSeedQRCode: .constant(false), contentText: $descriptorText, isEditable: generatorModeNavData.secretCreationMode == .manualImport) { result in
-                        }
+                        SKSecretViewer(secretType: .walletDescriptor, contentText: $descriptorText, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
 
                         Spacer()
                             .frame(height: 16)
