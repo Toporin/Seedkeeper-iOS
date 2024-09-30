@@ -26,12 +26,16 @@ extension CardState {
     func onSetCardLabel(cardChannel: CardChannel) -> Void {
         guard let pinForMasterCard = pinForMasterCard else {
             session?.stop(errorMessage: String(localized: "nfcPinCodeIsNotDefined"))
-            homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+            logger.info(String(localized: "nfcPinCodeIsNotDefined"), tag: "onSetCardLabel")
+            DispatchQueue.main.async {
+                self.homeNavigationPath.append(NavigationRoutes.pinCode(.dismiss))
+            }
             return
         }
         
         guard let cardLabelToSet = cardLabelToSet else {
             session?.stop(errorMessage: String(localized: "nfcCardLabelIsNotDefined"))
+            logger.info(String(localized: "nfcCardLabelIsNotDefined"), tag: "onSetCardLabel")
             return
         }
         
@@ -51,9 +55,13 @@ extension CardState {
             
             let isOk = try cmdSet.cardSetLabel(label: cardLabelToSet)
             if isOk {
-                self.masterCardLabel = cardLabelToSet
-                self.cardLabelToSet = nil
+                DispatchQueue.main.async {
+                    self.masterCardLabel = cardLabelToSet
+                    self.cardLabelToSet = nil
+                    self.homeNavigationPath.removeLast()
+                }
             }
+            
             session?.stop(alertMessage: String(localized: "nfcLabelSetSuccess"))
             logger.info("\(String(localized: "nfcLabelSetSuccess"))", tag: "onSetCardLabel")
             
@@ -61,6 +69,8 @@ extension CardState {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onSetCardLabel")
         }
+        
+        
     }
     
     // *********************************************************
@@ -128,11 +138,11 @@ extension CardState {
                     }
                     
                 } catch let error as StatusWord where error == .secureImportDataTooLong {
-                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestImportSecret")
+                    session?.stop(errorMessage: "\(String(localized: "nfcSecretTooLong"))")
+                    logger.error("\(String(localized: "nfcSecretTooLong")) \(error.localizedDescription)", tag: "requestImportSecret")
                 } catch let error as StatusWord where error == .noMemoryLeft {
-                    session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
-                    logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestImportSecret")
+                    session?.stop(errorMessage: "\(String(localized: "nfcNoMemoryLeft"))")
+                    logger.error("\(String(localized: "nfcNoMemoryLeft")) \(error.localizedDescription)", tag: "requestImportSecret")
                 } catch let error {
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestImportSecret")
@@ -185,6 +195,7 @@ extension CardState {
             }
             
             var secret = try cmdSet.seedkeeperExportSecret(sid: currentSecretHeader.sid)
+            
             DispatchQueue.main.async {
                 self.currentSecretObject = secret
             }

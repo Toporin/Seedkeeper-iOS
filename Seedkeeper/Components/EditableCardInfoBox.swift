@@ -11,8 +11,8 @@ import CoreData
 
 enum EditableCardInfoBoxContentMode  {
     case text(String)
-    case pin
-    case fixedText(String)
+    case pin  // TODO: remove
+    case fixedText(String)  //TODO: remove
 }
 
 enum SelectableCardInfoBoxContentMode<T: CaseIterable & Hashable & HumanReadable> {
@@ -91,7 +91,7 @@ struct SelectableCardInfoBox<T: CaseIterable & Hashable & HumanReadable>: View {
 }
 
 struct EditableCardInfoBox: View {
-    @State private var isEditing = false
+    @State private var isEditing = false // TODO: not used, remove?
     @State private var editableText: String
     @FocusState private var isFocused: Bool
     
@@ -173,9 +173,9 @@ struct EditableCardInfoBox: View {
                                 if editingChanged {
                                     filterSuggestions()
                                     self.focusAction?()
-                                    print("TextField focused")
+//                                    print("TextField focus:  \(editableText)") // TODO: debug
                                 } else {
-                                    print("TextField focus removed")
+//                                    print("TextField focus removed: \(editableText)") // TODO: debug
                                     action(.text(editableText))
                                     isEditing = false
                                 }
@@ -183,6 +183,8 @@ struct EditableCardInfoBox: View {
                             .focused($isFocused)
                             .onChange(of: editableText) { _ in
                                 self.filterSuggestions()
+                                action(.text(editableText)) // update textfield as soon as changed
+//                                print("TextField onChange:  \(editableText)") // TODO: debug
                             }
                             .disableAutocorrection(true)
                             .textFieldStyle(PlainTextFieldStyle())
@@ -208,11 +210,9 @@ struct EditableCardInfoBox: View {
                 Spacer()
                 
                 Button(action: {
+                    print("DEBUG Clicked on TextField button!") //TODO: remove
                     if case .text = mode {
-                        isEditing.toggle()
-                        if !isEditing {
-                            action(.text(editableText))
-                        }
+                        isEditing = true
                     } else if case .pin = mode {
                         action(.pin)
                     }

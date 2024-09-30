@@ -27,9 +27,10 @@ enum NavigationRoutes: Hashable {
     case settings
     case createPinCode(PinCodeNavigationData)
     case confirmPinCode(PinCodeNavigationData)
-    case setupFaceId(FaceIdNavData)
+    case setupFaceId(FaceIdNavData) // TODO: remove?
     case logs
     case cardInfo
+    case editLabel(String)
     case authenticity
     case editPinCodeRequest
     case editPinCode
@@ -114,6 +115,8 @@ struct HomeView: View {
                     LogsView()
                 case .cardInfo:
                     CardInfoView(homeNavigationPath: $cardState.homeNavigationPath)
+                case .editLabel(let currentLabel):
+                    EditLabelView(homeNavigationPath: $cardState.homeNavigationPath, currentLabel: currentLabel)
                 case .authenticity:
                     AuthenticityView(homeNavigationPath: $cardState.homeNavigationPath)
                 case .editPinCodeRequest:

@@ -46,7 +46,7 @@ class CardState: ObservableObject {
     @Published var certificateDicForBackup = [String: String]() // TODO: remove as unused?
     @Published var certificateCodeForBackup = PkiReturnCode.unknown // TODO: remove as unused?
     
-    @Published var masterCardLabel: String = "n/a"
+    @Published var masterCardLabel: String = ""
     @Published var backupCardLabel: String = ""
     var cardLabelToSet: String?
     
@@ -107,6 +107,9 @@ class CardState: ObservableObject {
                 let secretSubtype = currentSecretObject?.secretHeader.subtype 
             {
                 currentSecretPayload = parseBytesToPayload(secretType: secretType, secretSubtype: secretSubtype, bytes: secretBytes)
+                logger.info("Parsed exported secret with type: \(secretType)", tag: "cardState.currentSecretObject")
+            } else {
+                logger.warning("Failed to parse exported secret!", tag: "cardState.currentSecretObject")
             }
         }
     }

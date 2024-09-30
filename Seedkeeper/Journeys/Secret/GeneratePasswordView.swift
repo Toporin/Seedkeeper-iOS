@@ -23,7 +23,6 @@ struct GeneratePasswordView: View {
     @State private var urlText: String?
     
     @State var password = ""
-    @State private var passwordPayload: PasswordPayload?
         
     var canGeneratePassword: Bool {
         if let labelText = labelText {
@@ -216,52 +215,38 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        
-                        if generatorModeNavData.secretCreationMode == .manualImport {
-                            // Import button for manual import
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportPassword, action: {
-                                                                    
-                                var payload = PasswordPayload(label: labelText!,
-                                                              password: password,
-                                                              login: loginText,
-                                                              url: urlText)
-                                cardState.requestImportSecret(secretPayload: payload)
-                            })
-                        } else {
-                            // (re)generate and import buttons
-                            HStack(alignment: .center, spacing: 0) {
-                                Spacer()
-                                
-                                HStack(alignment: .center, spacing: 12) {
-                                    
-                                    SKButton(
-                                        text: String(localized: "generate"),
-                                        style: .regular,
-                                        horizontalPadding: 20,
-                                        isEnabled: canGeneratePassword,
-                                        action: {
-                                                password = generatePassword(options: passwordOptions)
-                                                passwordPayload = PasswordPayload(label: labelText!,
-                                                                                  password: password,
-                                                                                  login: loginText,
-                                                                                  url: urlText)
-                                    })
-                                    
-                                    SKButton(
-                                        text: String(localized: "import"),
-                                        style: .regular, 
-                                        horizontalPadding: 20,
-                                        isEnabled: canManualImportPassword,
-                                        action: {
-                                            if let passwordPayload = self.passwordPayload {
-                                                cardState.requestImportSecret(secretPayload: passwordPayload)
-                                            }
-                                    })
-                                }
-                                
-                                Spacer()
+                        HStack(alignment: .center, spacing: 0) {
+                            Spacer()
+                            
+                            if generatorModeNavData.secretCreationMode == .generate {
+                                SKButton(
+                                    text: String(localized: "generate"),
+                                    style: .regular,
+                                    horizontalPadding: 20,
+                                    isEnabled: canGeneratePassword,
+                                    action: {
+                                        password = generatePassword(options: passwordOptions)
+                                        
+                                    }
+                                )
                             }
-
+                            
+                            SKButton(
+                                text: String(localized: "import"),
+                                style: .regular,
+                                horizontalPadding: 20,
+                                isEnabled: canManualImportPassword,
+                                action: {
+                                    let passwordPayload = PasswordPayload(label: labelText!,
+                                                                      password: password,
+                                                                      login: loginText,
+                                                                      url: urlText)
+                                    cardState.requestImportSecret(secretPayload: passwordPayload)
+                                }
+                            )
+                            
+                            Spacer()
+                            
                         }
                         
                         // TODO: add msg here in case of error
@@ -313,6 +298,10 @@ struct PasswordPayload : Payload {
             let loginSize = UInt8(loginBytes.count)
             payload.append(loginSize)
             payload.append(contentsOf: loginBytes)
+        } else {
+            // add null byte
+            let loginSize = UInt8(0)
+            payload.append(loginSize)
         }
 
         if let url = url {
@@ -320,6 +309,8 @@ struct PasswordPayload : Payload {
             let urlSize = UInt8(urlBytes.count)
             payload.append(urlSize)
             payload.append(contentsOf: urlBytes)
+        } else {
+            // we could add a null byte
         }
 
         return payload

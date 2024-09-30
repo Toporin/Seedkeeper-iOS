@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+//TODO: remove?
 struct FaceIdNavData: Hashable {
     let pinCode: String
     let authentiKey: String

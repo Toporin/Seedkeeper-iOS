@@ -23,8 +23,6 @@ struct GenerateMnemonicView: View {
     @State private var passphraseText: String?
     @State private var descriptorText: String?
     
-    @State private var mnemonicPayload: MnemonicPayload?
-    
     @State var seedPhrase = ""
     
     @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
@@ -126,12 +124,13 @@ struct GenerateMnemonicView: View {
                             SelectableCardInfoBox(mode: .dropdown(self.mnemonicSizeOptions), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
                                 showPickerSheet = true
                             }
-                        } else if generatorModeNavData.secretCreationMode == .manualImport {
-                            // TODO: remove?
-                            EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
-                                showPickerSheet = true
-                            }
-                        }
+                        } 
+//                        else if generatorModeNavData.secretCreationMode == .manualImport {
+//                            // TODO: remove?
+//                            EditableCardInfoBox(mode: .fixedText("Mnemonic"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { options in
+//                                showPickerSheet = true
+//                            }
+//                        }
                             
                         Spacer()
                             .frame(height: 16)
@@ -142,12 +141,15 @@ struct GenerateMnemonicView: View {
                             }
                         }
                         
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
-                            if case .text(let customDescriptorText) = descriptorTextResult {
-                                descriptorText = customDescriptorText
+                        // only for v2 and higher; for v1, memory is too limited.
+                        if let version = cardState.masterCardStatus?.protocolVersion, version >= 0x0002 {
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
+                                if case .text(let customDescriptorText) = descriptorTextResult {
+                                    descriptorText = customDescriptorText
+                                }
                             }
                         }
                             
@@ -160,41 +162,36 @@ struct GenerateMnemonicView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        if generatorModeNavData.secretCreationMode == .manualImport {
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canManualImportMnemonic, action: {
-                                var payload = MnemonicPayload(label: labelText!,
-                                                              mnemonic: seedPhrase,
-                                                              passphrase: passphraseText,
-                                                              descriptor: descriptorText)
-                                cardState.requestImportSecret(secretPayload: payload)
-                            })
-                        } else {
-                            HStack(alignment: .center, spacing: 0) {
-                                Spacer()
-                                
-                                HStack(alignment: .center, spacing: 12) {
-                                    
+                        
+                        HStack(alignment: .center, spacing: 0) {
+                            Spacer()
+                            
+                                if generatorModeNavData.secretCreationMode == .generate {
                                     // generate button
-                                    SKButton(text: String(localized: "generate"), style: .regular, horizontalPadding: 20, isEnabled: canGenerateMnemonic, action: {
+                                    SKButton(text: String(localized: "generate"), 
+                                             style: .regular, horizontalPadding: 20,
+                                             isEnabled: canGenerateMnemonic,
+                                             action: {
                                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
-                                                mnemonicPayload = MnemonicPayload(label: labelText!,
-                                                                                  mnemonic: seedPhrase,
-                                                                                  passphrase: passphraseText,
-                                                                                  descriptor: descriptorText)
-                                    })
-                                    
-                                    // import button
-                                    SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 20, isEnabled: canManualImportMnemonic, action: {
-                                            if let mnemonicPayload = self.mnemonicPayload {
-                                                cardState.requestImportSecret(secretPayload: mnemonicPayload)
                                             }
-                                    })
-                                    
+                                    )
                                 }
                                 
-                                Spacer()
-                            }
-
+                                // import button
+                                SKButton(text: String(localized: "import"), 
+                                         style: .regular, horizontalPadding: 20,
+                                         isEnabled: canManualImportMnemonic, 
+                                         action: {
+                                            let mnemonicPayload = MnemonicPayload(label: labelText!,
+                                                                              mnemonic: seedPhrase,
+                                                                              passphrase: passphraseText,
+                                                                              descriptor: descriptorText)
+//                                            print("DEBUG: mnemonicPayload: \(mnemonicPayload)")
+                                            cardState.requestImportSecret(secretPayload: mnemonicPayload)
+                                        }
+                                )
+                                
+                            Spacer()
                         }
                         
                         Spacer().frame(height: 16)
@@ -277,6 +274,7 @@ struct MnemonicPayload : Payload {
     var subtype = UInt8(0x01)
     
     func getPayloadBytes() -> [UInt8] { // getV2PayloadBytes
+        
         var payload: [UInt8] = []
         
         // convert mnemonic phrase to masterseed
@@ -304,20 +302,26 @@ struct MnemonicPayload : Payload {
             payload.append(UInt8(0x00))
         }
         
-        // add passphrase
+        // add passphrase (optional)
         if let passphrase = passphrase {
             let passphraseBytes = [UInt8](passphrase.utf8)
             let passphraseSize = UInt8(passphraseBytes.count)
             payload.append(passphraseSize)
             payload.append(contentsOf: passphraseBytes)
+        } else {
+            // add a passphrase size of 0!
+            let passphraseSize = UInt8(0)
+            payload.append(passphraseSize)
         }
         
-        // add descriptor
+        // add descriptor (optional)
         if let descriptor = descriptor {
             let descriptorBytes = [UInt8](descriptor.utf8)
             let descriptorSize = [UInt8((descriptorBytes.count>>8)%256), UInt8(descriptorBytes.count%256)]
             payload.append(contentsOf: descriptorSize)
             payload.append(contentsOf: descriptorBytes)
+        } else {
+            // we could add 2 zero-bytes...
         }
         return payload
     }

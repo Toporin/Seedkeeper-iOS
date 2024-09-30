@@ -22,6 +22,7 @@
 		0DAF45202CA5EE8E001FDE73 /* CardLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF451F2CA5EE8E001FDE73 /* CardLogsView.swift */; };
 		0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45222CA698A4001FDE73 /* LoggerService.swift */; };
 		0DAF45252CA698F1001FDE73 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45242CA698F1001FDE73 /* Log.swift */; };
+		0DAF45272CAAA862001FDE73 /* EditLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45262CAAA862001FDE73 /* EditLabelView.swift */; };
 		D03110932BE39C9700ED0997 /* SetupFaceIdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
@@ -135,6 +136,7 @@
 		0DAF451F2CA5EE8E001FDE73 /* CardLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLogsView.swift; sourceTree = "<group>"; };
 		0DAF45222CA698A4001FDE73 /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
 		0DAF45242CA698F1001FDE73 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		0DAF45262CAAA862001FDE73 /* EditLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLabelView.swift; sourceTree = "<group>"; };
 		D03110922BE39C9700ED0997 /* SetupFaceIdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFaceIdView.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 				D07141692BF2725400A4939A /* CardInfoView.swift */,
 				D071416F2BF4C0E500A4939A /* AuhenticityView.swift */,
 				0DAF451F2CA5EE8E001FDE73 /* CardLogsView.swift */,
+				0DAF45262CAAA862001FDE73 /* EditLabelView.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -786,6 +789,7 @@
 				D080FD722C261CBC00B50489 /* SKLabel.swift in Sources */,
 				0DAF45162CA15FE7001FDE73 /* FactoryResetView.swift in Sources */,
 				0DAF450D2C9815BB001FDE73 /* GenerateDataView.swift in Sources */,
+				0DAF45272CAAA862001FDE73 /* EditLabelView.swift in Sources */,
 				D0E4337F2BD3F9FD008DBAA6 /* HeaderView.swift in Sources */,
 				0DAF45182CA163D8001FDE73 /* CardState+FactoryReset.swift in Sources */,
 				D0D8323D2C20ABD600AE2984 /* CardState+Secrets.swift in Sources */,

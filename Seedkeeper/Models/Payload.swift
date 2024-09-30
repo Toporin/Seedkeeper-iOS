@@ -107,11 +107,13 @@ func parseToPasswordPayload(bytes: [UInt8]) -> PasswordPayload? {
 
 // MARK: MasterseedMnemonicPayload
 func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
+    let logger = LoggerService.shared
+    logger.info("START parsing secret to MasterseedMnemonic", tag: "parseToMasterseedMnemonicPayload")
     
     var index = 0
     // Check index before accessing bytes
     guard index < bytes.count else {
-        print("Index out of bounds when reading masterseedSize")
+        logger.error("Index out of bounds when reading masterseedSize", tag: "parseToMasterseedMnemonicPayload")
         return nil
     }
     
@@ -119,7 +121,7 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     let masterseedSize = Int(bytes[index])
     index += 1
     guard index + masterseedSize <= bytes.count else {
-        print("Invalid masterseed size")
+        logger.error("Invalid masterseed size: \(masterseedSize)", tag: "parseToMasterseedMnemonicPayload")
         return nil
     }
     let masterseedBytes = Array(bytes[index..<(index + masterseedSize)])
@@ -127,7 +129,7 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     
     // get wordlist selector
     guard index <= bytes.count else {
-        print("Index out of bounds when reading wordlistSelector")
+        logger.error("Index out of bounds when reading wordlistSelector", tag: "parseToMasterseedMnemonicPayload")
         return nil
     }
     let wordlistSelector = Int(bytes[index]) // TODO: use selector
@@ -135,13 +137,13 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     
     // Extract entropy if available
     guard index <= bytes.count else {
-        print("Index out of bounds when reading entropySize")
+        logger.error("Index out of bounds when reading entropySize", tag: "parseToMasterseedMnemonicPayload")
         return nil
     }
     let entropySize = Int(bytes[index])
     index += 1
     guard index + entropySize <= bytes.count else {
-        print("Index out of bounds when reading entropy")
+        logger.error("Index out of bounds when reading entropy", tag: "parseToMasterseedMnemonicPayload")
         return nil
     }
     let entropyBytes = Array(bytes[index..<(index + entropySize)])
@@ -151,8 +153,8 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     var mnemonic = "n/a"
     do {
         mnemonic = try Mnemonic.entropyToMnemonic(entropy: entropyBytes)
-    } catch {
-        print("Failed to convert entropy to mnemonic")
+    } catch let error {
+        logger.error("Failed to convert entropy to mnemonic: \(error)", tag: "parseToMasterseedMnemonicPayload")
         mnemonic = "Failed to recover mnemonic from entropy: \(entropyBytes.bytesToHex)"
     }
     
@@ -162,9 +164,12 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
         let passphraseSize = Int(bytes[index])
         index += 1
         if passphraseSize > 0 && index + passphraseSize <= bytes.count {
+            logger.info("Found passphrase with size: \(passphraseSize) ", tag: "parseToMasterseedMnemonicPayload")
             let passphraseBytes = Array(bytes[index..<(index + passphraseSize)])
             index += passphraseSize
             passphrase = String(bytes: passphraseBytes, encoding: .utf8)
+        } else {
+            logger.info("Wrong passphrase size: \(passphraseSize) ", tag: "parseToMasterseedMnemonicPayload")
         }
     }
     
@@ -174,12 +179,16 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
         let descriptorSize = Int(bytes[index])*256 + Int(bytes[index+1])
         index += 2
         if descriptorSize > 0 && (index + descriptorSize) <= bytes.count {
+            logger.info("Found descriptor with size: \(descriptorSize) ", tag: "parseToMasterseedMnemonicPayload")
             let descriptorBytes = Array(bytes[index..<(index + descriptorSize)])
             index += descriptorSize
             descriptor = String(bytes: descriptorBytes, encoding: .utf8)
+        } else {
+            logger.info("Wrong descriptor size: \(descriptorSize) ", tag: "parseToMasterseedMnemonicPayload")
         }
     }
-
+    logger.info("END parsing secret to MasterseedMnemonic", tag: "parseToMasterseedMnemonicPayload")
+    
     return MnemonicPayload(label: "", mnemonic: mnemonic, passphrase: passphrase, descriptor: descriptor)
 }
 

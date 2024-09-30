@@ -125,18 +125,18 @@ struct ShowSecretView: View {
                 
                 // MARK: action buttons
                 HStack {
+                    
                     if let version = cardState.masterCardStatus?.protocolVersion, version >= 0x0002 {
+                        // Only show delete button if supported by card
                         SKActionButtonSmall(title: String(localized: "delete"), icon: "ic_trash", isEnabled: .constant(true)) {
                             cardState.currentSecretHeader = secret
                             cardState.requestDeleteSecret()
                         }
                     }
-                    // TODO: show disable button if delete not supported?
                     
                     Spacer()
                     
-                    // TODO: replace "show" by "export"
-                    SKActionButtonSmall(title: String(localized: "show"), icon: "ic_eye", isEnabled: .constant(true)) {
+                    SKActionButtonSmall(title: String(localized: "export"), icon: "ic_eye", isEnabled: .constant(true)) {
                         cardState.requestExportSecret(with: secret)
                         isSecretHeaderFetched = true
                     }

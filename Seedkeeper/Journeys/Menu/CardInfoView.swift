@@ -12,7 +12,6 @@ struct CardInfoView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
-    @State var shouldShowAuthenticityScreen = false
     
     // MARK: - Literals
     let title = "cardInfo"
@@ -86,14 +85,10 @@ struct CardInfoView: View {
                         SatoText(text: "cardLabel", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        
-                        EditableCardInfoBox(mode: .text(self.cardState.masterCardLabel), backgroundColor: Colors.lightMenuButton) { result in
-                            switch result {
-                            case .text(let value):
-                                self.cardState.requestSetCardLabel(label: value)
-                            default:
-                                break
-                            }
+                        CardInfoBox(text: self.cardState.masterCardLabel, backgroundColor: Colors.lightMenuButton)
+                        {
+                            //TODO: label edit screen?
+                            homeNavigationPath.append(NavigationRoutes.editLabel(self.cardState.masterCardLabel))
                         }
                         
                         Spacer()
@@ -103,16 +98,12 @@ struct CardInfoView: View {
                         SatoText(text: "pinCodeBold", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        EditableCardInfoBox(mode: .pin, backgroundColor: Colors.lightMenuButton) { result in
-                            switch result {
-                            case .pin:
-                                guard let _ = cardState.masterCardStatus else {
-                                    return
-                                }
-                                homeNavigationPath.append(NavigationRoutes.editPinCodeRequest)
-                            default:
-                                break
+                        CardInfoBox(text: "updatePinButton", backgroundColor: Colors.lightMenuButton)
+                        {
+                            guard let _ = cardState.masterCardStatus else {
+                                return
                             }
+                            homeNavigationPath.append(NavigationRoutes.editPinCodeRequest)
                         }
                         
                         Spacer()
