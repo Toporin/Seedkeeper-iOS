@@ -38,26 +38,31 @@ struct ShowSecretView: View {
                     
                     SatoText(text: "secretInfoSubtitle", style: .SKStrongBodyDark)
                     
+                    Spacer()
+                        .frame(height: 16)
+                    
                     SKLabel(title: "label", content: secret.label)
                     
                     // MARK: Fields specific per secret type
                     if secret.type == .password {
-                        
                         if let payload = cardState.currentSecretPayload as? PasswordPayload {
-                            SKLabel(title: "Login", content: payload.login ?? "(none)")
-                            SKLabel(title: "Url", content: payload.url ?? "(none)")
-                        } else {
-                            SKLabel(title: "Login", content: "")
-                            SKLabel(title: "Url", content: "")
+                            if let login = payload.login {
+                                SKLabel(title: "Login", content: login)
+                            }
+                            if let url = payload.url {
+                                SKLabel(title: "Url", content: url)
+                            }
                         }
-                        
+
                     } else if secret.type == .masterseed && secret.subtype == 0x01 {
                         
                         if let payload = cardState.currentSecretPayload as? MnemonicPayload {
-                            SKLabel(title: "mnemonicSize", content: payload.getMnemonicSize()?.humanReadableName() ?? "(none)")
-                            SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
-                            //SKLabel(title: "descriptor", content: payload.descriptor ?? "(none)")
-                            
+                            if let mnemonicSize = payload.getMnemonicSize(){
+                                SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
+                            }
+                            if let passphrase = payload.passphrase {
+                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                            }
                             if let descriptor = payload.descriptor {
                                 // we use a SKSecretViewer for descriptor
                                 HStack {
@@ -70,34 +75,37 @@ struct ShowSecretView: View {
                                 )
                             }
                             
-                        } else {
-                            SKLabel(title: "mnemonicSize", content: "")
-                            SKLabel(title: "passphrase", content: "")
-                            SKLabel(title: "descriptor", content: "")
                         }
                         
                     } else if secret.type == .bip39Mnemonic {
-                        
                         if let payload = cardState.currentSecretPayload as? Bip39MnemonicPayload {
-                            SKLabel(title: "mnemonicSize", content: payload.getMnemonicSize()?.humanReadableName() ?? "(none)")
-                            SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
-                        } else {
-                            SKLabel(title: "mnemonicSize", content: "")
-                            SKLabel(title: "passphrase", content: "")
+                            if let mnemonicSize = payload.getMnemonicSize(){
+                                SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
+                            }
+                            if let passphrase = payload.passphrase {
+                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                            }
                         }
                         
                     } else if secret.type == .electrumMnemonic {
                         if let payload = cardState.currentSecretPayload as? ElectrumMnemonicPayload {
-                            SKLabel(title: "mnemonicSize", content: payload.getMnemonicSize()?.humanReadableName() ?? "(none)")
-                            SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
-                        } else {
-                            SKLabel(title: "mnemonicSize", content: "")
-                            SKLabel(title: "passphrase", content: "")
+                            if let mnemonicSize = payload.getMnemonicSize(){
+                                SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
+                            }
+                            if let passphrase = payload.passphrase {
+                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                            }
                         }
-                        
+                    }
+                    
+                    // MARK: secret field
+                    HStack {
+                        SatoText(text: cardState.currentSecretPayload?.humanReadableName() ?? "Secret", style: .SKStrongBodyDark)
+                        Spacer()
                     }
                     
                     // MARK: action buttons for mnemonic
+                    // TODO: refactor into SKSecretViewer?
                     if secret.type == .bip39Mnemonic || (secret.type == .masterseed && secret.subtype == 0x01) || secret.type == .electrumMnemonic {
                         Spacer()
                             .frame(height: 30)
@@ -120,7 +128,6 @@ struct ShowSecretView: View {
                     Spacer()
                         .frame(height: 30)
                     
-                    // MARK: secret field
                     if let payload = cardState.currentSecretPayload {
                         SKSecretViewer(secretType: secret.type,
                                        shouldShowSeedQRCode: $shouldShowSeedQR,

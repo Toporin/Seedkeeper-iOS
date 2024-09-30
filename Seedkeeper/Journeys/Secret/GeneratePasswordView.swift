@@ -323,4 +323,8 @@ struct PasswordPayload : Payload {
     func getContentString() -> String {
         return password
     }
+    
+    func humanReadableName() -> String {
+        return String(localized: "password");
+    }
 }

@@ -328,6 +328,10 @@ struct MnemonicPayload : Payload {
         return mnemonic
     }
 
+    func humanReadableName() -> String {
+        return "BIP39 seed";
+    }
+    
     func getMnemonicSize() -> MnemonicSize? {
         let mnemonicWords = mnemonic.split(separator: " ")
         switch mnemonicWords.count {

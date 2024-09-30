@@ -145,4 +145,8 @@ struct DataPayload : Payload {
     func getContentString() -> String {
         return data
     }
+    
+    func humanReadableName() -> String {
+        return "Data";
+    }
 }

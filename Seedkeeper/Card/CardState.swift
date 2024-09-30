@@ -299,9 +299,9 @@ class CardState: ObservableObject {
                         DispatchQueue.main.async {
                             switch scannedCardType {
                             case .master:
-                                self.masterCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
+                                self.masterCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : ""
                             case .backup:
-                                self.backupCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : "n/a"
+                                self.backupCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : ""
                             }
                         }
                         

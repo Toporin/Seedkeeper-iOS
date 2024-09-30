@@ -63,9 +63,9 @@ enum GeneratorMode: String, CaseIterable, Hashable, HumanReadable {
         case .password:
             return String(localized: "loginPasswordPhrase")
         case .descriptor:
-            return "descriptor" //String(localized: "loginPasswordPhrase") //TODO: translation
+            return "descriptor"
         case .data:
-            return "data" //String(localized: "loginPasswordPhrase") //TODO: translation
+            return "data"
         }
     }
 }
@@ -97,6 +97,10 @@ struct MasterseedPayload : Payload {
     
     func getContentString() -> String {
         return masterseedBytes.bytesToHex
+    }
+    
+    func humanReadableName() -> String {
+        return "Masterseed";
     }
     
 }
@@ -134,6 +138,10 @@ struct ElectrumMnemonicPayload : Payload {
     
     func getContentString() -> String {
         return mnemonic
+    }
+    
+    func humanReadableName() -> String {
+        return "Electrum seed";
     }
     
     func getMnemonicSize() -> MnemonicSize? {
@@ -186,6 +194,10 @@ struct Bip39MnemonicPayload : Payload {
         return mnemonic
     }
     
+    func humanReadableName() -> String {
+        return "Bip39 seed";
+    }
+    
     func getMnemonicSize() -> MnemonicSize? {
         let mnemonicWords = mnemonic.split(separator: " ")
         switch mnemonicWords.count {
@@ -226,6 +238,10 @@ struct PubkeyPayload : Payload {
     func getContentString() -> String {
         return pubkeyBytes.bytesToHex
     }
+    
+    func humanReadableName() -> String {
+        return "Pubkey";
+    }
 }
 
 struct Secret2FAPayload : Payload {
@@ -253,6 +269,10 @@ struct Secret2FAPayload : Payload {
     func getContentString() -> String {
         return secretBytes.bytesToHex
     }
+    
+    func humanReadableName() -> String {
+        return "2FA secret";
+    }
 }
 
 struct DefaultPayload : Payload {
@@ -279,5 +299,9 @@ struct DefaultPayload : Payload {
     
     func getContentString() -> String {
         return defaultBytes.bytesToHex
+    }
+    
+    func humanReadableName() -> String {
+        return "Secret";
     }
 }

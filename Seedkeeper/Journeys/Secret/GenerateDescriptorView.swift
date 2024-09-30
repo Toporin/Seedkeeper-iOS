@@ -145,4 +145,8 @@ struct DescriptorPayload : Payload {
     func getContentString() -> String {
         return descriptor
     }
+    
+    func humanReadableName() -> String {
+        return String(localized: "descriptor");
+    }
 }

@@ -7,7 +7,7 @@
 
 import SatochipSwift
 
-protocol Payload {
+protocol Payload: HumanReadable {
     var label: String { get set }
     var type: SeedkeeperSecretType {get set}
     var subtype: UInt8 {get set}
@@ -102,7 +102,7 @@ func parseToPasswordPayload(bytes: [UInt8]) -> PasswordPayload? {
         }
     }
 
-    return PasswordPayload(label:"", password: password, login: login ?? "n/a", url: url ?? "n/a")
+    return PasswordPayload(label:"", password: password, login: login, url: url)
 }
 
 // MARK: MasterseedMnemonicPayload
@@ -150,7 +150,7 @@ func parseToMasterseedMnemonicPayload(bytes: [UInt8]) -> MnemonicPayload? {
     index += entropySize
     
     // convert entropy to mnemonic
-    var mnemonic = "n/a"
+    var mnemonic = ""
     do {
         mnemonic = try Mnemonic.entropyToMnemonic(entropy: entropyBytes)
     } catch let error {
