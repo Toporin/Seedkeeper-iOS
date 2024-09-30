@@ -21,7 +21,7 @@ struct GenerateMnemonicView: View {
     
     @State private var labelText: String?
     @State private var passphraseText: String?
-    @State private var descriptorText: String?
+    @State private var descriptorText: String = ""
     
     @State var seedPhrase = ""
     
@@ -140,11 +140,7 @@ struct GenerateMnemonicView: View {
                             Spacer()
                                 .frame(height: 16)
                             
-                            EditableCardInfoBox(mode: .text("Wallet descriptor"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { descriptorTextResult in
-                                if case .text(let customDescriptorText) = descriptorTextResult {
-                                    descriptorText = customDescriptorText
-                                }
-                            }
+                            SKSecretViewer(secretType: .walletDescriptor, shouldShowSeedQRCode: .constant(false), contentText: $descriptorText, isEditable: true, placeholder: "Wallet descriptor (optional)")
                         }
                             
                         Spacer()

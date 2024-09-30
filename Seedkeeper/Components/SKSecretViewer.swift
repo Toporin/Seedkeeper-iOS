@@ -23,6 +23,7 @@ struct SKSecretViewer: View {
 //    }
     
     var isEditable: Bool = false
+    var placeholder: String = String(localized: "placeholder.yourSecret")
     var userInputResult: ((String) -> Void)? = nil
     
     @State private var showQRCode: Bool = false
@@ -125,21 +126,18 @@ struct SKSecretViewer: View {
                 
                 // MARK: show "main" secret content as text, starred text, editable text, SeedQR code or normal QR code
                 if isEditable {
-                    TextField(String(localized: "placeholder.yourSecret"), text: $contentText, onEditingChanged: { (editingChanged) in
-                        if editingChanged {
-                            print("TextField focused")
-                        } else {
-                            print("TextField focus removed")
-                            userInputResult?(contentText)
-                        }
-                        
-                    })
+                    //TextField(String(localized: "placeholder.yourSecret"), text: $contentText, axis: .vertical)
+                    TextField(placeholder, text: $contentText, axis: .vertical)
                     .padding()
                     .background(.clear)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .disableAutocorrection(true)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .lineLimit(2...10)
+                    .onChange(of: contentText){ newValue in
+                        
+                    }
                 } else {
                     if shouldShowSeedQRCode &&
                         (secretType == .bip39Mnemonic || secretType == .masterseed), // TODO: distinguish masterseed by subtype
