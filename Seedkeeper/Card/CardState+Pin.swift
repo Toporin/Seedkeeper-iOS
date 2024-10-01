@@ -133,14 +133,30 @@ extension CardState {
         do {
             let pinBytes = Array(pin.utf8)
             var rapdu = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
+            
+            // optional: set label
+            if let masterAuthentikeyBytes = self.authentikeyBytes {
+                var masterLabel = self.masterCardLabel
+                if masterLabel.count > 32 {
+                    masterLabel = masterLabel.prefix(29) + "..."
+                }
+                let masterAuthentikeySecretBytes = [UInt8(masterAuthentikeyBytes.count)] + masterAuthentikeyBytes
+                let masterAuthentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: masterAuthentikeySecretBytes)
+                let backupLabel = "Backup for \(masterAuthentikeyFingerprintBytes):'\(masterLabel)'"
+                let _ = try cmdSet.cardSetLabel(label: backupLabel)
+                logger.info("Successfully set label for backup card", tag: "onSetPinCodeForBackupCard")
+            }
+            
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetSuccess"))
             logger.info("\(String(localized: "nfcPinCodeSetSuccess"))", tag: "onSetPinCodeForBackupCard")
             
             DispatchQueue.main.async {
                 self.pinForBackupCard = pin
                 if self.homeNavigationPath.count >= 2 {
+                    print("DEBUG self.homeNavigationPath.removeLast(2)") // TODO: check if happens
                     self.homeNavigationPath.removeLast(2)
                 }
+                // should be back to backup flow
             }
             
         } catch let error {

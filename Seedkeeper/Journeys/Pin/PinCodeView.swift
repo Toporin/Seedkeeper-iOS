@@ -44,11 +44,11 @@ struct PinCodeView: View {
                     switch actionAfterPin {
                     case .rescanCard:
                         cardState.pinForMasterCard = pinCode
-                        homeNavigationPath = .init()
+                        cardState.isCardDataAvailable = false
                         cardState.scan(for: .master)
                     case .continueBackupFlow:
                         cardState.pinForBackupCard = pinCode
-                        homeNavigationPath.removeLast()
+                        cardState.scan(for: .backup)
                     case .editPinCode:
                         cardState.pinForMasterCard = pinCode
                         homeNavigationPath.append(NavigationRoutes.editPinCode)

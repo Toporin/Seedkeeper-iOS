@@ -21,7 +21,8 @@ struct EmptyScanStateOverlay: View {
                 
                 ScanButton {
                     Task {
-                        cardState.scan(for: .master)
+                        // get pin first then scan card later
+                        homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
                     }
                 }
                 

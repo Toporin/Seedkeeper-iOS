@@ -128,7 +128,7 @@ struct BackupView: View {
                         cardState.backupMode = .pairBackupCard
                         
                     case .pairBackupCard:
-                        cardState.scan(for: .backup)
+                        homeNavigationPath.append(NavigationRoutes.pinCode(.continueBackupFlow))
                     case .backupExportFromMaster:
                         cardState.requestExportSecretsForBackup()
                     case .backupExportReady:

@@ -42,7 +42,7 @@ struct HeaderView: View {
                 Button(action: {
                     cardState.pinForMasterCard = nil
                     cardState.lastTimeForMasterCardPin = nil
-                    cardState.scan(for: .master)
+                    homeNavigationPath.append(NavigationRoutes.pinCode(.rescanCard))
                 }) {
                     Image("ic_refresh_dark")
                         .resizable()

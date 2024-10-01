@@ -196,21 +196,25 @@ class CardState: ObservableObject {
                     
                     if !cardStatus.setupDone {
                         // Card needs setup
+                        session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
+                        logger.info("\(String(localized: "nfcCardNeedsSetup"))", tag: "scan")
+                        
+                        // PIN has already been provided, go to confirmPinCode screen
                         DispatchQueue.main.async {
                             switch scannedCardType {
                             case .master:
-                                self.homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCode, pinCode: nil)))
+                                self.homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCode, pinCode: self.pinForMasterCard)))
                             case .backup:
-                                self.homeNavigationPath.append(NavigationRoutes.createPinCode(PinCodeNavigationData(mode: .createPinCodeForBackupCard, pinCode: nil)))
+                                self.homeNavigationPath.append(NavigationRoutes.confirmPinCode(PinCodeNavigationData(mode: .confirmPinCodeForBackupCard, pinCode: self.pinForBackupCard)))
                             }
-                            
                         }
-                        session?.stop(alertMessage: String(localized: "nfcCardNeedsSetup"))
-                        logger.info("\(String(localized: "nfcCardNeedsSetup"))", tag: "scan")
+                        
                         return
 
                     } else {
                         // card needs PIN
+                        
+                        // TODO: should not be needed since PIN is already requested before scan
                         guard let pin = (scannedCardType == .master) ? pinForMasterCard : pinForBackupCard else {
                             session?.stop(alertMessage: String(localized: "nfcPinCodeIsNotDefined"))
                             logger.info("\(String(localized: "nfcPinCodeIsNotDefined"))", tag: "scan")
@@ -299,37 +303,46 @@ class CardState: ObservableObject {
                         DispatchQueue.main.async {
                             switch scannedCardType {
                             case .master:
-                                self.masterCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : ""
+                                self.masterCardLabel = fetchedLabel
                             case .backup:
-                                self.backupCardLabel = !fetchedLabel.isEmpty ? fetchedLabel : ""
+                                self.backupCardLabel = fetchedLabel
                             }
                         }
+                        
+                        session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+                        logger.info("\(String(localized: "nfcSecretsListSuccess"))", tag: "scan")
                         
                     } catch let error {
                         logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
                         session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     }
                     
-                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-                    logger.info("\(String(localized: "nfcSecretsListSuccess"))", tag: "scan")
-                    
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:
                             self.isCardDataAvailable = true
+                            self.homeNavigationPath = .init()
                         case .backup:
                             self.backupMode = .backupExportFromMaster
                             // get an array of secretHeaders that are in masterSecretHeaders but not in backupSecretHeaders
                             // These are the secrets that must be backuped
                             self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }
-                            //print("requestExportSecretsForBackup: secretHeadersForBackup: \(self.secretHeadersForBackup)")
                             self.logger.info("secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)", tag: "requestExportSecretsForBackup")
+                            self.homeNavigationPath.append(NavigationRoutes.backup)
                         }
                     }
                     
                 } catch let error {
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
+                    DispatchQueue.main.async {
+                        switch scannedCardType {
+                        case .master:
+                            self.homeNavigationPath = .init()
+                        case .backup:
+                            self.homeNavigationPath.append(NavigationRoutes.backup)
+                        }
+                    }
                 }
                 
             },

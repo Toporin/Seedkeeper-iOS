@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreData
 
+// TODO: remove
 enum EditableCardInfoBoxContentMode  {
     case text(String)
 }
@@ -102,7 +103,7 @@ struct EditableCardInfoBox: View {
     
     @State private var filteredLogins: [String] = []
     
-    let mode: EditableCardInfoBoxContentMode
+    let mode: EditableCardInfoBoxContentMode // todo: remove
     let backgroundColor: Color
     var backgroundColorOpacity: Double?
     var width: CGFloat?
