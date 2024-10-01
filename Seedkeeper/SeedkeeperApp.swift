@@ -21,8 +21,3 @@ struct SeedkeeperApp: App {
         }
     }
 }
-
-class NavigationPathSingleton {
-    static let shared = NavigationPathSingleton()
-    var path: NavigationPath = NavigationPath()
-}
