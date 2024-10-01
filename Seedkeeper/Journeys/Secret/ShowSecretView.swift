@@ -60,7 +60,7 @@ struct ShowSecretView: View {
                                 SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
                             }
                             if let passphrase = payload.passphrase {
-                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                                SKLabel(title: "passphrase", content: passphrase)
                             }
                             if let descriptor = payload.descriptor {
                                 // we use a SKSecretViewer for descriptor
@@ -81,7 +81,7 @@ struct ShowSecretView: View {
                                 SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
                             }
                             if let passphrase = payload.passphrase {
-                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                                SKLabel(title: "passphrase", content: passphrase)
                             }
                         }
                         
@@ -91,8 +91,13 @@ struct ShowSecretView: View {
                                 SKLabel(title: "mnemonicSize", content: mnemonicSize.humanReadableName())
                             }
                             if let passphrase = payload.passphrase {
-                                SKLabel(title: "passphrase", content: payload.passphrase ?? "(none)")
+                                SKLabel(title: "passphrase", content: passphrase)
                             }
+                        }
+                        
+                    } else if secret.type == .pubkey {
+                        if let payload = cardState.currentSecretPayload as? PubkeyPayload {
+                            SKLabel(title: "fingerprint", content: payload.getFingerprintBytes().bytesToHex)
                         }
                     }
                     
