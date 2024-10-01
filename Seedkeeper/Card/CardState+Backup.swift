@@ -45,6 +45,7 @@ extension CardState {
                 // just try again
                 var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                 logger.info("LockError - retry", tag: "onImportSecretsToBackupCard")
+                
             }
             
             let isAuthentikeyValid = try isAuthentikeyValid(for: .backup)
@@ -94,7 +95,6 @@ extension CardState {
                     }
                     
                 } catch {
-                    // TODO: add to report
                     self.backupError = "\(error.localizedDescription)"
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onImportSecretsToBackupCard")
@@ -113,6 +113,23 @@ extension CardState {
                 self.isCardDataAvailable = false
             }
             
+        } catch CardError.wrongPIN(let retryCounter) {
+            if retryCounter == 0 {
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onImportSecretsToBackupCard")
+            } else {
+                self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onImportSecretsToBackupCard")
+            }
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
+        } catch CardError.pinBlocked {
+            self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onImportSecretsToBackupCard")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onImportSecretsToBackupCard")
@@ -152,6 +169,7 @@ extension CardState {
                         // just try again
                         var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                         logger.info("LockError - trying again", tag: "requestExportSecretsForBackup")
+                        
                     }
                     
                     let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
@@ -213,7 +231,24 @@ extension CardState {
                         self.exportIndex = 0
                     }
                     
-                } catch let error {
+                } catch CardError.wrongPIN(let retryCounter) {
+                    if retryCounter == 0 {
+                        self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                        logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "requestExportSecretsForBackup")
+                    } else {
+                        self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                        logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "requestExportSecretsForBackup")
+                    }
+                    DispatchQueue.main.async {
+                        self.pinForMasterCard = nil
+                    }
+                } catch CardError.pinBlocked {
+                    self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                    logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "requestExportSecretsForBackup")
+                    DispatchQueue.main.async {
+                        self.pinForMasterCard = nil
+                    }
+                }catch let error {
                     session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "requestExportSecretsForBackup")
                 }

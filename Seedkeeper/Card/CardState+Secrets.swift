@@ -65,6 +65,18 @@ extension CardState {
             session?.stop(alertMessage: String(localized: "nfcLabelSetSuccess"))
             logger.info("\(String(localized: "nfcLabelSetSuccess"))", tag: "onSetCardLabel")
             
+        } catch CardError.wrongPIN(let retryCounter) {
+            self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+            logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onSetCardLabel")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
+        } catch CardError.pinBlocked {
+            self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onSetCardLabel")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onSetCardLabel")
@@ -137,6 +149,18 @@ extension CardState {
                         self.homeNavigationPath.append(NavigationRoutes.generateSuccess(secretPayload.label))
                     }
                     
+                } catch CardError.wrongPIN(let retryCounter) {
+                    session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+                    logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "requestImportSecret")
+                    DispatchQueue.main.async {
+                        self.pinForMasterCard = nil
+                    }
+                } catch CardError.pinBlocked {
+                    session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+                    logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "requestImportSecret")
+                    DispatchQueue.main.async {
+                        self.pinForMasterCard = nil
+                    }
                 } catch let error as StatusWord where error == .secureImportDataTooLong {
                     session?.stop(errorMessage: "\(String(localized: "nfcSecretTooLong"))")
                     logger.error("\(String(localized: "nfcSecretTooLong")) \(error.localizedDescription)", tag: "requestImportSecret")
@@ -202,6 +226,18 @@ extension CardState {
             session?.stop(alertMessage: String(localized: "nfcSecretFetched"))
             logger.info("\(String(localized: "nfcSecretFetched"))", tag: "onExportSecret")
             
+        } catch CardError.wrongPIN(let retryCounter) {
+            session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+            logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onExportSecret")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
+        } catch CardError.pinBlocked {
+            session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onExportSecret")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.error("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onExportSecret")
@@ -253,6 +289,18 @@ extension CardState {
             session?.stop(alertMessage: String(localized: "nfcSecretDeleted"))
             logger.info("\(String(localized: "nfcSecretDeleted"))", tag: "onDeleteSecret")
             
+        } catch CardError.wrongPIN(let retryCounter) {
+            session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+            logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onDeleteSecret")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
+        } catch CardError.pinBlocked {
+            session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onDeleteSecret")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
         } catch let error {
             session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
             logger.info("\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)", tag: "onDeleteSecret")

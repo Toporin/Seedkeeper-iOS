@@ -62,6 +62,18 @@ extension CardState {
                 self.homeNavigationPath = .init()
             }
             
+        } catch CardError.wrongPIN(let retryCounter) {
+            self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
+            logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onUpdatePinCode")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
+        } catch CardError.pinBlocked {
+            self.session?.stop(errorMessage: "\(String(localized: "nfcWrongPinBlocked"))")
+            logger.error("\(String(localized: "nfcWrongPinBlocked"))", tag: "onUpdatePinCode")
+            DispatchQueue.main.async {
+                self.pinForMasterCard = nil
+            }
         } catch let error {
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateFailed"))
             logger.error("\(String(localized: "nfcPinCodeUpdateFailed")) \(error.localizedDescription)", tag: "onUpdatePinCode")
