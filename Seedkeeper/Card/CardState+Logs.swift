@@ -45,8 +45,10 @@ extension CardState {
                         logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestCardLogs")
                         return
                     }
-                        
-                    let (logs, nbAvailable, nbTotal) = try cmdSet.seedkeeperPrintLogs(printAll: true)
+                    
+                    // Note: nbTotal is the total number of events logged, but max nbAvailable are stored.
+                    // so the actual number of events stored is min(nbTotal, nbAvailable)
+                    let (logs, nbTotal, nbAvailable) = try cmdSet.seedkeeperPrintLogs(printAll: true)
                         
                     session?.stop(alertMessage: "\(String(localized: "nfcLogsFetchedSuccessful"))")
                     logger.info("\(String(localized: "nfcLogsFetchedSuccessful"))", tag: "requestCardLogs")
@@ -54,7 +56,7 @@ extension CardState {
                     DispatchQueue.main.async {
                         self.cardLogs = logs
                         self.nbTotalLogs = nbTotal
-                        self.nbAvailableLogs = nbAvailable
+                        self.nbAvailableLogs = min(nbTotal, nbAvailable)
                         self.homeNavigationPath.append(NavigationRoutes.showCardLogs)
                     }
                     
