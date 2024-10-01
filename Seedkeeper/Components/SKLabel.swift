@@ -43,6 +43,12 @@ struct SKLabel: View {
                 Button(
                     action: {
                         UIPasteboard.general.string = content
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.prepare()
+                        generator.impactOccurred()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            generator.impactOccurred()
+                        }
                     }
                 ) {
                     Image(systemName: "square.on.square")

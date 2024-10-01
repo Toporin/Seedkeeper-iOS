@@ -93,7 +93,7 @@ struct AuthenticityView: View {
                                     .frame(width: 15, height: 15)
                                     .foregroundColor(.black)
                                     .onTapGesture(count: 1) {
-                                        // Copy to clipboard
+                                        // TODO: Copy to clipboard
                                     }
                             }
                             

@@ -37,6 +37,13 @@ struct CardLogsView: View {
                             }.joined(separator: "\n")
                             
                             UIPasteboard.general.string = logEntriesString
+                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                            generator.prepare()
+                            generator.impactOccurred()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                generator.impactOccurred()
+                            }
+                            
                         }) {
                             Image(systemName: "square.on.square")
                                 .resizable()

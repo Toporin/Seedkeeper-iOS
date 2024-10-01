@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SatochipSwift
 
 struct CardInfoView: View {
     // MARK: - Properties
@@ -42,6 +43,15 @@ struct CardInfoView: View {
         }
     }
 
+    func getAuthentikeyData() -> String {
+        if let authentikeyBytes = cardState.authentikeyBytes {
+            let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: [UInt8(authentikeyBytes.count)] + authentikeyBytes)
+            return (authentikeyFingerprintBytes.bytesToHex + ":" + authentikeyBytes.bytesToHex)
+        } else {
+            return "n/a"
+        }
+    }
+    
     // MARK: - View
     var body: some View {
         ZStack {
@@ -132,7 +142,17 @@ struct CardInfoView: View {
                         SatoText(text: "cardAuthentikeyTitle", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(text: cardState.authentikeyBytes?.bytesToHex ?? "n/a", backgroundColor: Colors.lightMenuButton)
+                        CardInfoBox(text: getAuthentikeyData(), backgroundColor: Colors.lightMenuButton)
+                        {
+                            // copy
+                            UIPasteboard.general.string = getAuthentikeyData()
+                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                            generator.prepare()
+                            generator.impactOccurred()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                generator.impactOccurred()
+                            }
+                        }
                         
                         Spacer()
                             .frame(height: 20)

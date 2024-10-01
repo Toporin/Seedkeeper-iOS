@@ -108,6 +108,12 @@ struct SKSecretViewer: View {
                     // copy button
                     Button(action: {
                         UIPasteboard.general.string = contentText
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.prepare()
+                        generator.impactOccurred()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            generator.impactOccurred()
+                        }
                     }) {
                         Image(systemName: "square.on.square")
                             .foregroundColor(.white)
