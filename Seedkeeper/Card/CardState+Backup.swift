@@ -61,11 +61,11 @@ extension CardState {
             if let authentikeyHeader = backupSecretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
                 // the backup authentikey is already store in the card, get its sid
                 authentikeySid = authentikeyHeader.sid
-                logger.info("Master authentikey is already present in card with sid: \(authentikeySid)", tag: "onImportSecretsToBackupCard")
+                logger.info("Master authentikey is already present in card with sid: \(authentikeySid) and fingerprint: \(authentikeyFingerprintBytes.bytesToHex)", tag: "onImportSecretsToBackupCard")
             } else {
                 // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
                 authentikeySid = try self.importAuthentikeyAsSecret(for: .master)
-                logger.info("Backup authentikey imported in card with sid: \(authentikeySid)", tag: "onImportSecretsToBackupCard")
+                logger.info("Backup authentikey imported in card with sid: \(authentikeySid) and fingerprint: \(authentikeyFingerprintBytes.bytesToHex)", tag: "onImportSecretsToBackupCard")
             }
             
             //for secret in self.secretsForBackup {
@@ -109,6 +109,8 @@ extension CardState {
             DispatchQueue.main.async {
                 self.homeNavigationPath.append(NavigationRoutes.backupSuccess)
                 self.importIndex = 0
+                // hide the list of secrets in home screen otherwise user might be confused 
+                self.isCardDataAvailable = false
             }
             
         } catch let error {
@@ -170,11 +172,11 @@ extension CardState {
                     if let authentikeyHeader = masterSecretHeaders.first(where: {$0.fingerprintBytes == authentikeyFingerprintBytes}) {
                         // the backup authentikey is already store in the card, get its sid
                         authentikeySid = authentikeyHeader.sid
-                        logger.info("Backup authentikey is already present in card with sid: \(authentikeySid)", tag: "requestExportSecretsForBackup")
+                        logger.info("Backup authentikey is already present in card with sid: \(authentikeySid) and fingerprint: \(authentikeyFingerprintBytes.bytesToHex)", tag: "requestExportSecretsForBackup")
                     } else {
                         // the backup authentikey could not be found, so we import it (required to export encrypted secrets)
                         authentikeySid = try self.importAuthentikeyAsSecret(for: .backup)
-                        logger.info("Backup authentikey imported in card with sid: \(authentikeySid)", tag: "requestExportSecretsForBackup")
+                        logger.info("Backup authentikey imported in card with sid: \(authentikeySid) and fingerprint: \(authentikeyFingerprintBytes.bytesToHex)", tag: "requestExportSecretsForBackup")
                     }
                     
                     // we export secrets, possibly on multiple nfc sessions if needed
@@ -229,15 +231,22 @@ extension CardState {
     
     func importAuthentikeyAsSecret(for cardType: ScannedCardType) throws -> Int {
         var authentikeySecretBytes = [UInt8]()
+        var label = ""
         
         if cardType == .master {
             authentikeySecretBytes = [UInt8(authentikeyBytes!.count)] + authentikeyBytes!
+            label = self.masterCardLabel
         } else if cardType == .backup {
             authentikeySecretBytes = [UInt8(authentikeyBytesForBackup!.count)] + authentikeyBytesForBackup!
+            label = self.backupCardLabel
+        }
+        if label.count > 32 {
+            // we limit size of label to 32 chars
+            label = label.prefix(29) + "..."
         }
         
         let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: authentikeySecretBytes)
-        let authentikeyLabel = "Seedkeeper authentikey" //TODO: use better label!
+        let authentikeyLabel = "Authentikey #\(authentikeyFingerprintBytes.bytesToHex):'\(label)'"
         let authentikeySecretHeader = SeedkeeperSecretHeader(type: SeedkeeperSecretType.pubkey,
                                                   subtype: UInt8(0x00),
                                                   fingerprintBytes: authentikeyFingerprintBytes,
@@ -247,6 +256,7 @@ extension CardState {
                                                   isEncrypted: false)
         
         let (rapdu2, authentikeySid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: authentikeySecretObject)
+        logger.info("Successfully imported authentikey with sid: \(authentikeySid) and fingerprint: \(fingerprintBytes.bytesToHex) ", tag: "importAuthentikeyAsSecret")
         
         return authentikeySid
     }
