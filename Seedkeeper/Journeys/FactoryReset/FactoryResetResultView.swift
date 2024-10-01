@@ -47,6 +47,7 @@ struct FactoryResetResultView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "home"), style: .regular, horizontalPadding: 66, action: {
+                    cardState.isCardDataAvailable = false
                     homeNavigationPath = .init()
                 })
                 
