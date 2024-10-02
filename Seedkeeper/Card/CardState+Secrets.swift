@@ -39,19 +39,21 @@ extension CardState {
             return
         }
         
-        let pinBytes = Array(pinForMasterCard.utf8)
-        
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
-            let rapdu = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            if !isAuthentikeyValid {
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onSetCardLabel")
-                return
+            // check that card authentikey matches the cached one
+            if let authentikeyBytes = authentikeyBytes {
+                let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                    session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                    logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onSetCardLabel")
+                    return
+                }
             }
+            
+            let pinBytes = Array(pinForMasterCard.utf8)
+            let rapdu = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
             let isOk = try cmdSet.cardSetLabel(label: cardLabelToSet)
             if isOk {
@@ -102,19 +104,22 @@ extension CardState {
                     }
                     return
                 }
-                let pinBytes = Array(pinForMasterCard.utf8)
                 
                 cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                 
                 do {
-                    let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-                    
-                    let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-                    if !isAuthentikeyValid {
-                        session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                        logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestImportSecret")
-                        return
+                    // check that card authentikey matches the cached one
+                    if let authentikeyBytes = authentikeyBytes {
+                        let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                        guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                            session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                            logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestImportSecret")
+                            return
+                        }
                     }
+                    
+                    let pinBytes = Array(pinForMasterCard.utf8)
+                    let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
                     
                     var secretHeader = SeedkeeperSecretHeader(type: secretPayload.type,
                                                               subtype: secretPayload.subtype,
@@ -208,17 +213,20 @@ extension CardState {
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
-            let pinBytes = Array(pinForMasterCard.utf8)
-            var pinResponse = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            if !isAuthentikeyValid {
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onExportSecret")
-                return
+            // check that card authentikey matches the cached one
+            if let authentikeyBytes = authentikeyBytes {
+                let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                    session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                    logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onExportSecret")
+                    return
+                }
             }
             
-            var secret = try cmdSet.seedkeeperExportSecret(sid: currentSecretHeader.sid)
+            let pinBytes = Array(pinForMasterCard.utf8)
+            var _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            let secret = try cmdSet.seedkeeperExportSecret(sid: currentSecretHeader.sid)
             
             DispatchQueue.main.async {
                 self.currentSecretObject = secret
@@ -265,19 +273,21 @@ extension CardState {
             return
         }
         
-        let pinBytes = Array(pinForMasterCard.utf8)
-        
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
-            _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            if !isAuthentikeyValid {
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onDeleteSecret")
-                return
+            // check that card authentikey matches the cached one
+            if let authentikeyBytes = authentikeyBytes {
+                let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                    session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                    logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onDeleteSecret")
+                    return
+                }
             }
+            
+            let pinBytes = Array(pinForMasterCard.utf8)
+            _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
             let rapdu = try cmdSet.seedkeeperResetSecret(sid: currentSecretHeader.sid)
             try checkEqual(rapdu.sw, StatusWord.ok.rawValue, tag: "Function: \(#function), line: \(#line)")

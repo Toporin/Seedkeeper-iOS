@@ -37,21 +37,22 @@ extension CardState {
         
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
-        let pinBytes = Array(pinForMasterCard.utf8)
-        let pinBytesNew = Array(pinCodeToSetup.utf8)
-                
         do {
-            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-            
-            var isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-            
-            if !isAuthentikeyValid {
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                logger.error(String(localized: "nfcAuthentikeyError"), tag: "onUpdatePinCode")
-                return
+            // check that card authentikey matches the cached one
+            if let authentikeyBytes = authentikeyBytes {
+                let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                    session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                    logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onUpdatePinCode")
+                    return
+                }
             }
             
-            var rapdu = try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
+            let pinBytes = Array(pinForMasterCard.utf8)
+            try cmdSet.cardVerifyPIN(pin: pinBytes)
+            
+            let pinBytesNew = Array(pinCodeToSetup.utf8)
+            try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
             
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateSuccess"))
             logger.info(String(localized: "nfcPinCodeUpdateSuccess"), tag: "onUpdatePinCode")

@@ -36,23 +36,26 @@ extension CardState {
         cmdSet = SatocardCommandSet(cardChannel: cardChannel)
         
         do {
+            // check that card authentikey matches the cached one for backup
+            if let authentikeyBytes = authentikeyBytesForBackup {
+                let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                    session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                    logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onImportSecretsToBackupCard")
+                    return
+                }
+            }
+            
             let pinBytes = Array(pinForBackupCard.utf8)
             do {
-                var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
             } catch let error as StatusWord where error == .lockError {
                 // When nfc session time-out, secret export can be interrupted in the middle of operation.
                 // In this case, a lockError can be generated in the next command sent to card.
                 // just try again
-                var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                 logger.info("LockError - retry", tag: "onImportSecretsToBackupCard")
                 
-            }
-            
-            let isAuthentikeyValid = try isAuthentikeyValid(for: .backup)
-            if !isAuthentikeyValid {
-                session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "onImportSecretsToBackupCard")
-                return
             }
             
             // check whether the backup authentikey is already present in card
@@ -74,11 +77,13 @@ extension CardState {
          
                 do {
                     let secret = self.secretsForBackup[index]
-                    try cmdSet.seedkeeperImportSecret(secretObject: secret, sidPubkey: authentikeySid)
+                    let (_, sid, fingerprint) = try cmdSet.seedkeeperImportSecret(secretObject: secret, sidPubkey: authentikeySid)
                     
                     DispatchQueue.main.async {
                         self.importIndex = index+1
                     }
+                    
+                    logger.info("Imported encrypted secret with sid: \(sid) and fingerprint: \(fingerprint.bytesToHex)", tag: "onImportSecretsToBackupCard")
                     
                 } catch let error as StatusWord where error == .secureImportDataTooLong {
                     // TODO: add to report
@@ -160,23 +165,25 @@ extension CardState {
                 cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                 
                 do {
+                    // check that card authentikey matches the cached one
+                    if let authentikeyBytes = authentikeyBytes {
+                        let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                        guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                            session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                            logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestExportSecretsForBackup")
+                            return
+                        }
+                    }
+                    
                     let pinBytes = Array(pinForMasterCard.utf8)
                     do {
-                        var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                        _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                     } catch let error as StatusWord where error == .lockError {
                         // When nfc session time-out, secret export can be interrupted in the middle of operation.
                         // In this case, a lockError can be generated in the next command sent to card.
                         // just try again
-                        var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                        _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                         logger.info("LockError - trying again", tag: "requestExportSecretsForBackup")
-                        
-                    }
-                    
-                    let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-                    if !isAuthentikeyValid {
-                        session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                        logger.error(String(localized: "nfcAuthentikeyError"), tag: "requestExportSecretsForBackup")
-                        return
                     }
                     
                     // get the list of secrets headers
@@ -219,7 +226,7 @@ extension CardState {
                             self.exportIndex = index+1
                         }
                         
-                        logger.info("Exported secret sid: \(encryptedSecretObject.secretHeader.sid)", tag: "requestExportSecretsForBackup")
+                        logger.info("Exported secret with sid: \(encryptedSecretObject.secretHeader.sid)", tag: "requestExportSecretsForBackup")
                         
                         //sleep(1)// force multiple nfc session - for debug purpose!
                     }

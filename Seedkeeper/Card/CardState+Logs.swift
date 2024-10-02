@@ -36,15 +36,18 @@ extension CardState {
                     let cardStatus: CardStatus?
                     (_, cardStatus, _) = try self.selectApplet()
                     
+                    // check that card authentikey matches the cached one
+                    if let authentikeyBytes = authentikeyBytes {
+                        let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
+                        guard possibleAuthentikeys.contains(authentikeyBytes) else {
+                            session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
+                            logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestCardLogs")
+                            return
+                        }
+                    }
+                    
                     let pinBytes = Array(pinForMasterCard.utf8)
                     let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
-                        
-                    let isAuthentikeyValid = try isAuthentikeyValid(for: .master)
-                    if !isAuthentikeyValid {
-                        session?.stop(errorMessage: String(localized: "nfcAuthentikeyError"))
-                        logger.error("\(String(localized: "nfcAuthentikeyError"))", tag: "requestCardLogs")
-                        return
-                    }
                     
                     // Note: nbTotal is the total number of events logged, but max nbAvailable are stored.
                     // so the actual number of events stored is min(nbTotal, nbAvailable)
