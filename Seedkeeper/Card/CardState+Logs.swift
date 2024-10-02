@@ -33,9 +33,6 @@ extension CardState {
                 cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                 
                 do {
-                    let cardStatus: CardStatus?
-                    (_, cardStatus, _) = try self.selectApplet()
-                    
                     // check that card authentikey matches the cached one
                     if let authentikeyBytes = authentikeyBytes {
                         let (_, possibleAuthentikeys) = try cmdSet.cardInitiateSecureChannel()
@@ -47,7 +44,7 @@ extension CardState {
                     }
                     
                     let pinBytes = Array(pinForMasterCard.utf8)
-                    let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                    _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                     
                     // Note: nbTotal is the total number of events logged, but max nbAvailable are stored.
                     // so the actual number of events stored is min(nbTotal, nbAvailable)

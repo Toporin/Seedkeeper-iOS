@@ -179,7 +179,7 @@ class CardState: ObservableObject {
                     cmdSet = SatocardCommandSet(cardChannel: cardChannel)
                     
                     // get status
-                    let (cardStatus, cardType) = try selectAppletAndGetStatus()
+                    let (cardStatus, _) = try selectAppletAndGetStatus()
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:
@@ -231,7 +231,7 @@ class CardState: ObservableObject {
                         
                         let pinBytes = Array(pin.utf8)
                         do {
-                            var response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                            _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                         } catch CardError.wrongPIN(let retryCounter){
                             DispatchQueue.main.async {
                                 switch scannedCardType {

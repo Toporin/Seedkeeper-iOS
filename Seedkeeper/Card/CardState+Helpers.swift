@@ -58,7 +58,7 @@ extension CardState {
             throw SatocardError.invalidResponse
         }
         
-        var cardStatus = CardStatus(rapdu: apdu)
+        let cardStatus = CardStatus(rapdu: apdu)
         return cardStatus
     }
     
@@ -75,13 +75,13 @@ extension CardState {
         
         // for Seedkeeper v2 and higher, the cardStatus is already provided in select response
         if selectApdu.data.count >= 7 {
-            var cardStatus = CardStatus(rapdu: selectApdu)
+            let cardStatus = CardStatus(rapdu: selectApdu)
             return (cardStatus, cardType)
         }
         
         // if cardStatus cannot be recovered from select apdu, send getStatus command
-        var statusApdu = try cmdSet.cardGetStatus()
-        var cardStatus = CardStatus(rapdu: statusApdu)
+        let statusApdu = try cmdSet.cardGetStatus()
+        let cardStatus = CardStatus(rapdu: statusApdu)
         return (cardStatus, cardType)
     }
     

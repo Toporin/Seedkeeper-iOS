@@ -53,7 +53,7 @@ extension CardState {
             }
             
             let pinBytes = Array(pinForMasterCard.utf8)
-            let rapdu = try cmdSet.cardVerifyPIN(pin: pinBytes)
+            _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
             let isOk = try cmdSet.cardSetLabel(label: cardLabelToSet)
             if isOk {
@@ -119,7 +119,7 @@ extension CardState {
                     }
                     
                     let pinBytes = Array(pinForMasterCard.utf8)
-                    let response = try cmdSet.cardVerifyPIN(pin: pinBytes)
+                    _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                     
                     var secretHeader = SeedkeeperSecretHeader(type: secretPayload.type,
                                                               subtype: secretPayload.subtype,

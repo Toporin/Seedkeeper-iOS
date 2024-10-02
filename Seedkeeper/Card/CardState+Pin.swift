@@ -49,10 +49,10 @@ extension CardState {
             }
             
             let pinBytes = Array(pinForMasterCard.utf8)
-            try cmdSet.cardVerifyPIN(pin: pinBytes)
+            _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
             
             let pinBytesNew = Array(pinCodeToSetup.utf8)
-            try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
+            _ = try cmdSet.cardChangePIN(oldPin: pinBytes, newPin: pinBytesNew)
             
             session?.stop(alertMessage: String(localized: "nfcPinCodeUpdateSuccess"))
             logger.info(String(localized: "nfcPinCodeUpdateSuccess"), tag: "onUpdatePinCode")
@@ -104,7 +104,7 @@ extension CardState {
         
         do {
             let pinBytes = Array(pin.utf8)
-            var rapdu = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
+            _ = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
             
             session?.stop(alertMessage: String(localized: "nfcPinCodeSetSuccess"))
             logger.info("\(String(localized: "nfcPinCodeSetSuccess"))", tag: "onSetPinCode")
@@ -145,7 +145,7 @@ extension CardState {
         
         do {
             let pinBytes = Array(pin.utf8)
-            var rapdu = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
+            _ = try cmdSet.cardSetup(pin_tries0: 5, pin0: pinBytes)
             
             // optional: set label
             if let masterAuthentikeyBytes = self.authentikeyBytes {

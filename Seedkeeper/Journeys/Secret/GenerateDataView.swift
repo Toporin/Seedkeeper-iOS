@@ -90,7 +90,7 @@ struct GenerateDataView: View {
                         if generatorModeNavData.secretCreationMode == .manualImport {
                             // Import button for manual import
                             SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
-                                var payload = DataPayload(label: labelText!, data: dataText)
+                                let payload = DataPayload(label: labelText!, data: dataText)
                                 cardState.requestImportSecret(secretPayload: payload)
                             })
                         }

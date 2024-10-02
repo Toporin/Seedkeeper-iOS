@@ -2091,7 +2091,7 @@ struct SKMnemonicEnglish {
         
         var entropyString = ""
         for word in words {
-            var index = SKMnemonicEnglish.wordList.firstIndex(of: String(word))
+            let index = SKMnemonicEnglish.wordList.firstIndex(of: String(word))
             let indexString = String(index!, radix: 10)
             let paddedString =  "".padding(toLength: (4-indexString.count), withPad: "0", startingAt: 0) + indexString
             entropyString += paddedString

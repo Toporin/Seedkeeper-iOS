@@ -297,7 +297,7 @@ extension CardState {
                                                   secretHeader: authentikeySecretHeader,
                                                   isEncrypted: false)
         
-        let (rapdu2, authentikeySid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: authentikeySecretObject)
+        let (_, authentikeySid, fingerprintBytes) = try cmdSet.seedkeeperImportSecret(secretObject: authentikeySecretObject)
         logger.info("Successfully imported authentikey with sid: \(authentikeySid) and fingerprint: \(fingerprintBytes.bytesToHex) ", tag: "importAuthentikeyAsSecret")
         
         return authentikeySid

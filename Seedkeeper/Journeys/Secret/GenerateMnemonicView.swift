@@ -36,7 +36,7 @@ struct GenerateMnemonicView: View {
     }
     
     var canManualImportMnemonic: Bool {
-        if let labelText = labelText  {
+        if labelText != nil  {
             return isMnemonicValid()
         } else {
             return false
