@@ -25,14 +25,14 @@ enum NavigationRoutes: Hashable {
     case onboarding
     case menu
     case settings
-    case createPinCode(PinCodeNavigationData)
+    case createPinCode(PinCodeNavigationData) // TODO: used?
     case confirmPinCode(PinCodeNavigationData)
     case logs
     case cardInfo
     case editLabel(String)
     case authenticity
     case editPinCodeRequest
-    case editPinCode
+    case editPinCode // TODO: used?
     case pinCode(ActionAfterPin)
     case addSecret
     case showSecret(SeedkeeperSecretHeader)

@@ -22,11 +22,18 @@ struct PinCodeNavigationData: Hashable {
     let pinCode: String?
 }
 
+enum FocusedField {
+    case pinField
+}
+
+// TODO: merge PinCodeView, ConfirmPinCodeView & CreatePinCodeView
 struct CreatePinCodeView: View {
     // MARK: - Properties
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCode: String = ""
     @State private var shouldShowPinCodeError: Bool = false
+    @FocusState private var focusedField: FocusedField?
+    
     var pinCodeNavigationData: PinCodeNavigationData
     
     var isContinueBtnEnabled: Bool {
@@ -83,7 +90,7 @@ struct CreatePinCodeView: View {
             return String(localized: "placeholder.confirmPinCode")
         }
     }
-        
+    
     var body: some View {
         ZStack {
             Image("bg_glow")
@@ -102,6 +109,7 @@ struct CreatePinCodeView: View {
                 Spacer().frame(height: 24)
                 
                 SecureTextInput(placeholder: self.getPlaceHolder(), text: $pinCode)
+                    .focused($focusedField, equals: .pinField)
                 
                 if shouldShowPinCodeError {
                     Text(String(localized: "invalidPinCode"))
@@ -112,6 +120,7 @@ struct CreatePinCodeView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "next"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
+                    print("DEBUG in CreatePinCodeView pinCodeNavigationData.mode: \(pinCodeNavigationData.mode)")
                     guard Validator.isPinValid(pin: pinCode) else {
                         shouldShowPinCodeError = true
                         return
@@ -129,6 +138,7 @@ struct CreatePinCodeView: View {
                 
                 Spacer().frame(height: 16)
             }
+            .onAppear {focusedField = .pinField}// set focus on PIN field automatically
             .onChange(of: pinCode) { _ in
                 shouldShowPinCodeError = false
             }

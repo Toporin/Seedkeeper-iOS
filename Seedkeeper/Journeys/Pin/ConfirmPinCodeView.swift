@@ -15,6 +15,8 @@ struct ConfirmPinCodeView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCodeConfirmation: String = ""
     @State private var shouldShowPinCodeError: Bool = false
+    @FocusState private var focusedField: FocusedField?
+    
     var pinCodeNavigationData: PinCodeNavigationData
     
     var isContinueBtnEnabled: Bool {
@@ -39,6 +41,7 @@ struct ConfirmPinCodeView: View {
                 Spacer().frame(height: 24)
                 
                 SecureTextInput(placeholder: String(localized: "placeholder.confirmPinCode"), text: $pinCodeConfirmation)
+                    .focused($focusedField, equals: .pinField)
                 
                 if shouldShowPinCodeError {
                     Text(String(localized: "pinCodeDoesNotMatch"))
@@ -49,6 +52,7 @@ struct ConfirmPinCodeView: View {
                 Spacer()
                 
                 SKButton(text: String(localized: "confirm"), style: .regular, horizontalPadding: 66, isEnabled: isContinueBtnEnabled, action: {
+                    print("DEBUG in ConfirmPinCodeView")
                     guard let pinCodeToValidate = self.pinCodeNavigationData.pinCode, Validator.isPinValid(pin: pinCodeConfirmation) && pinCodeConfirmation == pinCodeToValidate else {
                         shouldShowPinCodeError = true
                         return
@@ -71,6 +75,7 @@ struct ConfirmPinCodeView: View {
                 
                 Spacer().frame(height: 16)
             }
+            .onAppear {focusedField = .pinField}// set focus on PIN field automatically
             .onChange(of: pinCodeConfirmation) { _ in
                 shouldShowPinCodeError = false
             }

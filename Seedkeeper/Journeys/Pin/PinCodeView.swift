@@ -13,12 +13,13 @@ struct PinCodeView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     @State private var pinCode: String = ""
+    @FocusState private var focusedField: FocusedField?
     
     var actionAfterPin: ActionAfterPin
     var isContinueBtnEnabled: Bool {
         return !pinCode.isEmpty
     }
-        
+     
     var body: some View {
         ZStack {
             Image("bg_glow")
@@ -37,6 +38,7 @@ struct PinCodeView: View {
                 Spacer().frame(height: 24)
                 
                 SecureTextInput(placeholder: String(localized: "placeholder.enterPinCode"), text: $pinCode)
+                    .focused($focusedField, equals: .pinField)
                 
                 Spacer()
                 
@@ -61,6 +63,7 @@ struct PinCodeView: View {
                 Spacer().frame(height: 16)
             }
             .padding([.leading, .trailing], 32)
+            .onAppear {focusedField = .pinField}// set focus on PIN field automatically
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
