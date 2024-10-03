@@ -31,9 +31,7 @@ struct FactoryResetView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     
-    @State var pushConfirmationView: Bool = false
     @State var hasUserConfirmedTerms = false
-    @State var showNotOwnerAlert: Bool = false
     
     func getActionButtonTitle() -> String {
         switch cardState.resetMode {
@@ -72,7 +70,7 @@ struct FactoryResetView: View {
                 
                 if cardState.resetMode == .start {
                     //checkbox with confirmation
-                    SatoToggle(isOn: $hasUserConfirmedTerms, label: "factoryResetConfirmationText")
+                    SatoToggleWarning(isOn: $hasUserConfirmedTerms, label: "factoryResetConfirmationText")
                 } else if cardState.resetMode == .sendResetCommand &&
                             cardState.resetRemainingSteps != 0x00 &&
                             cardState.resetRemainingSteps != 0xFF {

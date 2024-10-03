@@ -23,6 +23,7 @@
 		0DAF45232CA698A4001FDE73 /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45222CA698A4001FDE73 /* LoggerService.swift */; };
 		0DAF45252CA698F1001FDE73 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45242CA698F1001FDE73 /* Log.swift */; };
 		0DAF45272CAAA862001FDE73 /* EditLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45262CAAA862001FDE73 /* EditLabelView.swift */; };
+		0DAF45292CAED406001FDE73 /* SatoToggleWarning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAF45282CAED406001FDE73 /* SatoToggleWarning.swift */; };
 		D03110952BE40D2400ED0997 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110942BE40D2400ED0997 /* LogsView.swift */; };
 		D03110982BE417A000ED0997 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03110972BE417A000ED0997 /* Formatter.swift */; };
 		D0339C422C0F4020002DF8FB /* PasswordGeneratorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */; };
@@ -134,6 +135,7 @@
 		0DAF45222CA698A4001FDE73 /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
 		0DAF45242CA698F1001FDE73 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		0DAF45262CAAA862001FDE73 /* EditLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLabelView.swift; sourceTree = "<group>"; };
+		0DAF45282CAED406001FDE73 /* SatoToggleWarning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatoToggleWarning.swift; sourceTree = "<group>"; };
 		D03110942BE40D2400ED0997 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D03110972BE417A000ED0997 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		D0339C412C0F4020002DF8FB /* PasswordGeneratorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorBox.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				D080FD752C261CF600B50489 /* SKSecretViewer.swift */,
 				D080FD772C261D1E00B50489 /* OptionSelectorView.swift */,
 				D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */,
+				0DAF45282CAED406001FDE73 /* SatoToggleWarning.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -749,6 +752,7 @@
 				D080FD702C260ED000B50489 /* Constants.swift in Sources */,
 				0DAF45132C9DA47E001FDE73 /* BackupFailedView.swift in Sources */,
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
+				0DAF45292CAED406001FDE73 /* SatoToggleWarning.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
 				D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */,
 				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,

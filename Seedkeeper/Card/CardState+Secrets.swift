@@ -257,7 +257,6 @@ extension CardState {
     // MARK: - Delete secret
     // *********************************************************
     
-    // TODO: ask for confirmation?
     func requestDeleteSecret() {
         session = SatocardController(onConnect: onDeleteSecret, onFailure: onDisconnection)
         session?.start(alertMessage: String(localized: "nfcDeleteSecret") + (self.currentSecretHeader?.label ?? "") )

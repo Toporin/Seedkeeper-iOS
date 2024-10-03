@@ -18,6 +18,10 @@ struct ShowSecretView: View {
     var secret: SeedkeeperSecretHeader
     @State var isSecretHeaderFetched: Bool = false
     
+    // delete secret
+    @State private var showConfirmMsg: Bool = false
+    @State var hasUserConfirmedTerms = false
+    
     var body: some View {
         ZStack {
             Image("bg_glow")
@@ -124,14 +128,25 @@ struct ShowSecretView: View {
                     Spacer()
                         .frame(height: 30)
                     
+                    // Mark: confirm delete msg
+                    if showConfirmMsg {
+                        //checkbox with confirmation
+                        SatoText(text: "secretResetWarningText", style: .danger)
+                        SatoToggleWarning(isOn: $hasUserConfirmedTerms, label: "factoryResetConfirmationText")
+                    }
+                    
                     // MARK: action buttons
                     HStack {
                         
                         if let version = cardState.masterCardStatus?.protocolVersion, version >= 0x0002 {
                             // Only show delete button if supported by card
                             SKActionButtonSmall(title: String(localized: "delete"), icon: "ic_trash", isEnabled: .constant(true)) {
-                                cardState.currentSecretHeader = secret
-                                cardState.requestDeleteSecret()
+                                if showConfirmMsg == false {
+                                    showConfirmMsg = true
+                                } else if hasUserConfirmedTerms {
+                                    cardState.currentSecretHeader = secret
+                                    cardState.requestDeleteSecret()
+                                }
                             }
                         }
                         
