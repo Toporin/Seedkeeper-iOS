@@ -9,16 +9,18 @@ import Foundation
 import SwiftUI
 
 class PasswordOptions: ObservableObject, Equatable {
-    @Published var passwordLength: Double = 8
+    @Published var passwordLength: Double = 12
     @Published var minPasswordLength: Double = 8
     @Published var includeLowercase: Bool = true
-    @Published var includeUppercase: Bool = false
-    @Published var includeNumbers: Bool = false
-    @Published var includeSymbols: Bool = false
+    @Published var includeUppercase: Bool = true
+    @Published var includeNumbers: Bool = true
+    @Published var includeSymbols: Bool = true
     @Published var isMemorablePassword: Bool = false {
         didSet {
-            passwordLength = isMemorablePassword ? 4 : 8
+            passwordLength = isMemorablePassword ? 6 : 12
             minPasswordLength = isMemorablePassword ? 4 : 8
+            includeNumbers = isMemorablePassword ? false : true
+            includeSymbols = isMemorablePassword ? false : true
         }
     }
     
