@@ -81,6 +81,20 @@ struct SKSecretViewer: View {
                     
                 // MARK: qr, copy & hide buttons
                 HStack {
+                    
+                    if showSeedQRCode {
+                        Text("SeedQR")
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    } else if showQRCode {
+                        Text("QRcode")
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+                    
+                    
                     Spacer()
                     
                     if (secretType == .bip39Mnemonic || secretType == .masterseed) {
