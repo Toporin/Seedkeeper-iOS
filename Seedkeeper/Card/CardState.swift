@@ -43,8 +43,8 @@ class CardState: ObservableObject {
     @Published var homeNavigationPath = NavigationPath()
     
     var authentikeyBytesForBackup: [UInt8]? // TODO: rename to backupAuthentikeyBytes
-    @Published var certificateDicForBackup = [String: String]() // TODO: remove as unused?
-    @Published var certificateCodeForBackup = PkiReturnCode.unknown // TODO: remove as unused?
+    @Published var certificateDicForBackup = [String: String]()
+    @Published var certificateCodeForBackup = PkiReturnCode.unknown
     
     @Published var masterCardLabel: String = ""
     @Published var backupCardLabel: String = ""
@@ -158,7 +158,6 @@ class CardState: ObservableObject {
     // *********************************************************
     // MARK: Properties for card logs
     // *********************************************************
-    @Published var shouldUpdateCardLogs = true // TODO: flag if cardLogs should be updated 
     @Published var cardLogs: [SeedkeeperLog] = [SeedkeeperLog]()
     @Published var nbTotalLogs: Int = 0
     @Published var nbAvailableLogs: Int = 0
@@ -353,7 +352,7 @@ class CardState: ObservableObject {
             }
         )// session
 
-        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
 
     // *********************************************************

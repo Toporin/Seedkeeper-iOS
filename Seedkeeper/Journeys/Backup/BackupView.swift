@@ -120,7 +120,6 @@ struct BackupView: View {
                 SKButton(text: getActionButtonTitle(), style: .regular, horizontalPadding: 66, action: {
                     switch cardState.backupMode {
                     case .start:
-                        // TODO: add logs
                         // reset var & empty the list of secrets to export
                         cardState.secretsForBackup.removeAll()
                         cardState.importIndex = 0

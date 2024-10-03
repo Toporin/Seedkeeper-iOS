@@ -43,7 +43,7 @@ struct SKSecretViewer: View {
     // https://github.com/SeedSigner/seedsigner/blob/dev/docs/seed_qr/README.md#standard-seedqr-specification
     private func generateMnemonicStandardSeedQR(with mnemonic: String) -> UIImage? {
         do {
-            let data = SKMnemonicEnglish().getStandardSeedQRString(from: mnemonic) // TODO: convert to entropy...
+            let data = SKMnemonicEnglish().getStandardSeedQRString(from: mnemonic)
             let doc = try QRCode.Document(utf8String: data, errorCorrection: .high)
             doc.design.foregroundColor(Color.black.cgColor!)
             doc.design.backgroundColor(Color.white.cgColor!)

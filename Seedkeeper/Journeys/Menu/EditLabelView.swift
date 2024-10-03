@@ -16,11 +16,9 @@ struct EditLabelView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State var currentLabel: String
     
-    @State private var labelText: String = ""
+    @State private var msgError: SecretImportWizardError? = nil
     
-    var isEditButtonEnabled: Bool { //TODO: use?
-        return labelText.count < 64
-    }
+    @State private var labelText: String = ""
     
     var body: some View {
         ZStack {
@@ -45,10 +43,27 @@ struct EditLabelView: View {
                     }
                 }
                 
+                if let msgError = msgError {
+                    Spacer()
+                        .frame(height: 16)
+                    
+                    Text(msgError.localizedString())
+                        .font(.custom("Roboto-Regular", size: 12))
+                        .foregroundColor(Colors.ledRed)
+                }
+                
                 Spacer()
                 
-                SKButton(text: String(localized: "editLabelButton"), style: .regular, horizontalPadding: 66, isEnabled: true, action: {
-                        self.cardState.requestSetCardLabel(label: labelText)
+                SKButton(text: String(localized: "editLabelButton"), 
+                         style: .regular, horizontalPadding: 66,
+                         isEnabled: true,
+                         action: {
+                    
+                    guard labelText.utf8.count <= Constants.MAX_CARD_LABEL_SIZE else {
+                        msgError = .cardLabelTooLong
+                        return
+                    }
+                    self.cardState.requestSetCardLabel(label: labelText)
                     }
                 )
                 

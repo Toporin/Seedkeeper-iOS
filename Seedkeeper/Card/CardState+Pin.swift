@@ -130,7 +130,7 @@ extension CardState {
     
     func requestInitPinOnBackupCard() {
         session = SatocardController(onConnect: onSetPinCodeForBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: String(localized: "nfcScanBackupCard")) // TODO: update nfc message
+        session?.start(alertMessage: String(localized: "nfcScanBackupCard"))
     }
     
     // TODO: merge with onSetPinCode(cardChannel: CardChannel)

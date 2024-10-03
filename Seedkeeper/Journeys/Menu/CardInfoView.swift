@@ -169,18 +169,6 @@ struct CardInfoView: View {
                         Spacer()
                             .frame(height: 20)
                         
-                        
-                        //                // WARNING: CARD RESET TO FACTORY
-                        //                SatoText(text: "cardResetToFactory", style: .lightSubtitleDark)
-                        //                Spacer()
-                        //                    .frame(height: 14)
-                        //                CardInfoBox(
-                        //                    text: "Warning: this will erase all secrets!", //TODO: localize
-                        //                    backgroundColor: Colors.ledRed)
-                        //                {
-                        //                    self.homeNavigationPath.append(NavigationRoutes.factoryReset)
-                        //                }
-                        
                     }.padding([.leading, .trailing], 20)
                     
                 } //ScrollView

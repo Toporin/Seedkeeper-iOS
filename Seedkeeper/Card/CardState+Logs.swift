@@ -85,7 +85,7 @@ extension CardState {
             }
         )// session
         
-        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
 }

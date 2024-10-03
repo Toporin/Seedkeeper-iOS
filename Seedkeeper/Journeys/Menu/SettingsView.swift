@@ -90,7 +90,7 @@ struct SettingsView: View {
                         .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
                     SatoText(text: "cardResetToFactorySubtitle", style: .SKMenuItemSubtitle)
                     CardInfoBox(
-                        text: "Warning: this will erase all secrets!", //TODO: localize
+                        text: "warningFactoryResetButton",
                         backgroundColor: Colors.ledRed)
                     {
                         self.homeNavigationPath.append(NavigationRoutes.factoryReset)

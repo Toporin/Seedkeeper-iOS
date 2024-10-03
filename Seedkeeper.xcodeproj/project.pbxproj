@@ -32,7 +32,6 @@
 		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
 		D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
-		D062F01B2C85E4CC001CF243 /* bip39-2048-english.txt in Resources */ = {isa = PBXBuildFile; fileRef = D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */; };
 		D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D062F01C2C862F5B001CF243 /* SKImageButton.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
 		D07141662BF26DFD00A4939A /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */; };
@@ -48,7 +47,6 @@
 		D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07141782BF4E54200A4939A /* ShowSecretView.swift */; };
 		D071417B2BF4FDB100A4939A /* GenerateSecretTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */; };
 		D071417D2BF505E500A4939A /* GenerateGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */; };
-		D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD642C260A8E00B50489 /* KeychainHelper.swift */; };
 		D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD672C260DB200B50489 /* OnboardingContainerView.swift */; };
 		D080FD6A2C260DD100B50489 /* OnBoardingWelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD692C260DD100B50489 /* OnBoardingWelcomeView.swift */; };
 		D080FD6C2C260DF200B50489 /* OnboardingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080FD6B2C260DF200B50489 /* OnboardingInfoView.swift */; };
@@ -145,7 +143,6 @@
 		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
 		D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsHandlerView.swift; sourceTree = "<group>"; };
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
-		D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bip39-2048-english.txt"; sourceTree = "<group>"; };
 		D062F01C2C862F5B001CF243 /* SKImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKImageButton.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -161,7 +158,6 @@
 		D07141782BF4E54200A4939A /* ShowSecretView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSecretView.swift; sourceTree = "<group>"; };
 		D071417A2BF4FDB100A4939A /* GenerateSecretTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateSecretTypeView.swift; sourceTree = "<group>"; };
 		D071417C2BF505E500A4939A /* GenerateGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateGeneratorView.swift; sourceTree = "<group>"; };
-		D080FD642C260A8E00B50489 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D080FD672C260DB200B50489 /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
 		D080FD692C260DD100B50489 /* OnBoardingWelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingWelcomeView.swift; sourceTree = "<group>"; };
 		D080FD6B2C260DF200B50489 /* OnboardingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInfoView.swift; sourceTree = "<group>"; };
@@ -270,7 +266,6 @@
 				D0C939D72BD6A35900F2A17B /* Validator.swift */,
 				D03110972BE417A000ED0997 /* Formatter.swift */,
 				D087224F2C19FC2500E0FBE5 /* SKMnemonicHelper.swift */,
-				D080FD642C260A8E00B50489 /* KeychainHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -496,7 +491,6 @@
 		D0E433842BD3FBC1008DBAA6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D062F01A2C85E4CB001CF243 /* bip39-2048-english.txt */,
 				D0344C112C57D10B00C3002E /* memorable-pwd.txt */,
 				D0C939D92BD6AB3600F2A17B /* Localization */,
 				D0E433852BD3FBC6008DBAA6 /* Fonts */,
@@ -662,7 +656,6 @@
 				D0F727AD2C2B121900C05DB4 /* GoogleService-Info.plist in Resources */,
 				D0BA41452BCFDDF300FD25B9 /* Preview Assets.xcassets in Resources */,
 				D0E433942BD3FBE8008DBAA6 /* OpenSans-SemiBold.ttf in Resources */,
-				D062F01B2C85E4CC001CF243 /* bip39-2048-english.txt in Resources */,
 				D0C939E12BD6AB4700F2A17B /* Localizable.strings in Resources */,
 				D07141682BF26E0200A4939A /* OpenSans-Light.ttf in Resources */,
 				D07141672BF26DFF00A4939A /* OpenSans-Medium.ttf in Resources */,
@@ -743,7 +736,6 @@
 				0DAF45112C985F89001FDE73 /* Payload.swift in Sources */,
 				0DAF451C2CA172D7001FDE73 /* FactoryResetResultView.swift in Sources */,
 				D080FD682C260DB200B50489 /* OnboardingContainerView.swift in Sources */,
-				D080FD652C260A8E00B50489 /* KeychainHelper.swift in Sources */,
 				D07141792BF4E54200A4939A /* ShowSecretView.swift in Sources */,
 				0DAF45202CA5EE8E001FDE73 /* CardLogsView.swift in Sources */,
 				D0E433A32BD40B56008DBAA6 /* MenuView.swift in Sources */,

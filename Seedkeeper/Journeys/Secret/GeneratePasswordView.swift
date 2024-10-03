@@ -21,6 +21,7 @@ enum SecretImportWizardError: String {
     case mnemonicTooLong
     case mnemonicWrongFormat
     case dataTooLong
+    case cardLabelTooLong
     case labelTooLong
     case loginTooLong
     case urlTooLong
@@ -317,9 +318,6 @@ struct GeneratePasswordView: View {
                             
                             Spacer()
                         }
-                        
-                        // TODO: add msg here in case of error
-                        // e.g. if secret too long?
                         
                         Spacer().frame(height: 16)
                         

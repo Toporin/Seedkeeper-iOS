@@ -187,14 +187,13 @@ extension CardState {
             }
         )// session
 
-        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard"))
     }
     
     // *********************************************************
     // MARK: - Export secret
     // *********************************************************
     
-    // TODO: rename to exportSecret
     func requestExportSecret(with secretHeader: SeedkeeperSecretHeader) {
         currentSecretHeader = secretHeader
         session = SatocardController(onConnect: onExportSecret, onFailure: onDisconnection)

@@ -25,12 +25,12 @@ struct BackupFailedView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                SatoText(text: "failedBold", style: .SKStrongBodyDark) //TODO: localize
+                SatoText(text: "failedInfoTtile", style: .SKStrongBodyDark)
                 
                 Spacer()
                     .frame(height: 16)
                 
-                SatoText(text: "failedInfoSubtitle", style: .SKStrongBodyDark)//TODO: localize
+                SatoText(text: "failedInfoSubtitle", style: .SKStrongBodyDark)
                 
                 Spacer()
                 
@@ -44,7 +44,7 @@ struct BackupFailedView: View {
                     Spacer()
                 }
                 
-                Image("il_backup_congrats")//TODO: localize
+                Image("il_backup_congrats")//TODO: change image
                     .resizable()
                     .frame(width: 300, height: 268)
 
@@ -64,7 +64,7 @@ struct BackupFailedView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: "backupFailedViewTitle", style: .lightTitleDark)//TODO: localize
+                SatoText(text: "failedInfoTtile", style: .lightTitleDark)
             }
         }
     }

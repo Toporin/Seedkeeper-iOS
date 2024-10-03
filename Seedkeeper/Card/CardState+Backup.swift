@@ -20,7 +20,7 @@ extension CardState {
     // *********************************************************
     func requestImportSecretsToBackupCard() {
         session = SatocardController(onConnect: onImportSecretsToBackupCard, onFailure: onDisconnection)
-        session?.start(alertMessage: String(localized: "nfcScanBackupCardForImport")) // TODO: change message
+        session?.start(alertMessage: String(localized: "nfcScanBackupCardForImport"))
     }
     
     func onImportSecretsToBackupCard(cardChannel: CardChannel) -> Void {
@@ -268,7 +268,7 @@ extension CardState {
             }
         )// session
         
-        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) // TODO: change txt? nfcHoldSatodime
+        session?.start(alertMessage: String(localized: "nfcScanMasterCard")) 
     }
     
     func importAuthentikeyAsSecret(for cardType: ScannedCardType) throws -> Int {
