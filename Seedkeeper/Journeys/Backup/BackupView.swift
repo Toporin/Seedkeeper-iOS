@@ -85,7 +85,7 @@ struct BackupView: View {
                 if (cardState.backupMode == .backupExportFromMaster){
                     // TODO: provide more context and better instructions to user! + localization
                     if (cardState.secretHeadersForBackup.count > 30){
-                        SatoText(text: "Note: multiple NFC sessions may be required as you are backuping a large number of secrets!", style: .SKStrongBodyDark)
+                        SatoText(text: "backupMultipleNFCSessionNote", style: .SKStrongBodyDark)
                     }
                     // show export progression as it may require several nfc sessions
                     //SatoText(text: "Secret: \(cardState.exportIndex) of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)

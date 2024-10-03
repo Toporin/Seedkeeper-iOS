@@ -127,7 +127,7 @@ struct Bip39MnemonicPayload : Payload {
     }
     
     func humanReadableName() -> String {
-        return "Bip39 seed";
+        return "Bip39";
     }
     
     func getMnemonicSize() -> MnemonicSize? {

@@ -35,11 +35,11 @@ struct CardInfoView: View {
            let cardStatus = cardState.masterCardStatus{
             // note: memory might not be up-to-date if secrets were deleted in the meantime
             return "Seedkeeper v\(cardStatus.protocolMajorVersion).\(cardStatus.protocolMinorVersion)-\(cardStatus.appletMajorVersion).\(cardStatus.appletMinorVersion) \n" +
-                    "Number of secrets: \(cardState.masterSecretHeaders.count) \n" +
-                    "Available memory: \(seedkeeperStatus.freeMemory) bytes \n" +
-                    "Total memory: \(seedkeeperStatus.totalMemory) bytes"
+                    String(localized: "numberSecrets") + " \(cardState.masterSecretHeaders.count) \n" +
+                    String(localized: "availableMemory") + " \(seedkeeperStatus.freeMemory) bytes \n" +
+                    String(localized: "totalMemory") + " \(seedkeeperStatus.totalMemory) bytes"
         } else {
-            return "Number of secrets: \(cardState.masterSecretHeaders.count)"
+            return String(localized: "numberSecrets") + " \(cardState.masterSecretHeaders.count)"
         }
     }
 
@@ -75,7 +75,7 @@ struct CardInfoView: View {
                         SatoText(text: self.getSeedkeeperDataString(), style: .SKStrongBodyLight)
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .center)
-                            .frame(height: 180)
+                            //.frame(height: 180)
                             .background(Colors.lightMenuButton)
                             .cornerRadius(20)
                         

@@ -121,7 +121,7 @@ struct ShowSecretView: View {
                     }else {
                         // empty secret field
                         SKSecretViewer(secretType: .password, // TODO: use something else?
-                                       contentText: .constant("Click on export to show secret data"))
+                                       contentText: .constant(String(localized: "helpMsgToExportSecret")))
                         
                     }
                     
