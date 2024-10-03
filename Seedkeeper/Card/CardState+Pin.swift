@@ -155,7 +155,7 @@ extension CardState {
                 }
                 let masterAuthentikeySecretBytes = [UInt8(masterAuthentikeyBytes.count)] + masterAuthentikeyBytes
                 let masterAuthentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: masterAuthentikeySecretBytes)
-                let backupLabel = "Backup for \(masterAuthentikeyFingerprintBytes):'\(masterLabel)'"
+                let backupLabel = "Backup for #\(masterAuthentikeyFingerprintBytes.bytesToHex):'\(masterLabel)'"
                 let _ = try cmdSet.cardSetLabel(label: backupLabel)
                 logger.info("Successfully set label for backup card", tag: "onSetPinCodeForBackupCard")
             }

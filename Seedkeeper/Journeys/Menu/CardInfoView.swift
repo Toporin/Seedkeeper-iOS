@@ -46,7 +46,7 @@ struct CardInfoView: View {
     func getAuthentikeyData() -> String {
         if let authentikeyBytes = cardState.authentikeyBytes {
             let authentikeyFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: [UInt8(authentikeyBytes.count)] + authentikeyBytes)
-            return (authentikeyFingerprintBytes.bytesToHex + ":" + authentikeyBytes.bytesToHex)
+            return ("#" + authentikeyFingerprintBytes.bytesToHex + ":" + authentikeyBytes.bytesToHex)
         } else {
             return "n/a"
         }
