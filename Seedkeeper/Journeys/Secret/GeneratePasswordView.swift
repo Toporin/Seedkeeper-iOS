@@ -10,8 +10,7 @@ import SwiftUI
 import SatochipSwift
 
 enum SecretImportWizardError: String {
-    case emptyLabel
-    case emptySecret
+    case labelEmpty
     case passwordEmpty
     case mnemonicEmpty
     case dataEmpty
@@ -28,6 +27,7 @@ enum SecretImportWizardError: String {
     case passphraseTooLong
     case descriptorTooLong
     case secretTooLongForV1
+    case noCharSetSelected
     
     func localizedString() -> String {
         return NSLocalizedString(self.rawValue, comment: "")
@@ -50,21 +50,21 @@ struct GeneratePasswordView: View {
     
     @State var password = ""
         
-    var canGeneratePassword: Bool {
-        if let labelText = labelText {
-            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption()
-        } else {
-            return false
-        }
-    }
+//    var canGeneratePassword: Bool {
+//        if let labelText = labelText {
+//            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption()
+//        } else {
+//            return false
+//        }
+//    }
     
-    var canManualImportPassword: Bool {
-        if let labelText = labelText {
-            return !labelText.isEmpty && password.count >= 1
-        } else {
-            return false
-        }
-    }
+//    var canManualImportPassword: Bool {
+//        if let labelText = labelText {
+//            return !labelText.isEmpty && password.count >= 1
+//        } else {
+//            return false
+//        }
+//    }
     
     private func getMemorableWordsFromTextFile() -> [String] {
         guard let path = Bundle.main.path(forResource: "memorable-pwd", ofType: "txt") else {
@@ -134,7 +134,8 @@ struct GeneratePasswordView: View {
         }
         
         guard !characterSet.isEmpty else {
-            return "Please select at least one character set"
+            msgError = .noCharSetSelected // this should trigger an error
+            return ""
         }
         
         let length = Int(options.passwordLength)
@@ -274,7 +275,7 @@ struct GeneratePasswordView: View {
                                     // check conditions
                                     guard let labelText = labelText,
                                             !labelText.isEmpty else {
-                                        msgError = .emptyLabel
+                                        msgError = .labelEmpty
                                         return
                                     }
                                     guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
@@ -282,7 +283,7 @@ struct GeneratePasswordView: View {
                                         return
                                     }
                                     guard !password.isEmpty else {
-                                        msgError = .emptySecret
+                                        msgError = .passwordEmpty
                                         return
                                     }
                                     guard password.utf8.count <= Constants.MAX_FIELD_SIZE else {

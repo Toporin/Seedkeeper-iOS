@@ -77,7 +77,7 @@ struct GenerateDescriptorView: View {
                             // check conditions
                             guard let labelText = labelText,
                                     !labelText.isEmpty else {
-                                msgError = .emptyLabel
+                                msgError = .labelEmpty
                                 return
                             }
                             guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
@@ -85,7 +85,11 @@ struct GenerateDescriptorView: View {
                                 return
                             }
                             guard !descriptorText.isEmpty else {
-                                msgError = .emptySecret
+                                msgError = .descriptorEmpty
+                                return
+                            }
+                            guard descriptorText.utf8.count <= Constants.MAX_FIELD_SIZE_16B else {
+                                msgError = .descriptorTooLong
                                 return
                             }
                             

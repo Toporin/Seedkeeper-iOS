@@ -78,7 +78,7 @@ struct GenerateDataView: View {
                                     // check conditions
                                     guard let labelText = labelText,
                                             !labelText.isEmpty else {
-                                        msgError = .emptyLabel
+                                        msgError = .labelEmpty
                                         return
                                     }
                                     guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
@@ -86,7 +86,7 @@ struct GenerateDataView: View {
                                         return
                                     }
                                     guard !dataText.isEmpty else {
-                                        msgError = .emptySecret
+                                        msgError = .dataEmpty
                                         return
                                     }
                                     guard dataText.utf8.count <= Constants.MAX_FIELD_SIZE_16B else {

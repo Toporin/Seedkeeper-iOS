@@ -186,7 +186,7 @@ struct GenerateMnemonicView: View {
                                             // check conditions
                                             guard let labelText = labelText,
                                                     !labelText.isEmpty else {
-                                                msgError = .emptyLabel
+                                                msgError = .labelEmpty
                                                 return
                                             }
                                             guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
@@ -194,7 +194,7 @@ struct GenerateMnemonicView: View {
                                                 return
                                             }
                                             guard !seedPhrase.isEmpty else {
-                                                msgError = .emptySecret
+                                                msgError = .mnemonicEmpty
                                                 return
                                             }
                                             guard seedPhrase.utf8.count <= Constants.MAX_FIELD_SIZE else {
