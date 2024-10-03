@@ -114,6 +114,7 @@ struct GeneratePasswordView: View {
             }
             
             password.removeLast()
+            msgError = nil
             return password
         }
         
@@ -147,6 +148,7 @@ struct GeneratePasswordView: View {
             }
         }
         
+        msgError = nil
         return password
     }
     
