@@ -17,36 +17,10 @@ struct GenerateDataView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
     
+    @State private var msgError: SecretImportWizardError? = nil
+    
     @State private var labelText: String?
-    
     @State var dataText = ""
-    @State private var dataPayload: DataPayload?
-    
-    var canImportSecret: Bool {
-        if let labelText = labelText {
-            return !labelText.isEmpty && dataText.count >= 1
-        } else {
-            return false
-        }
-    }
-
-    func getViewTitle() -> String {
-        switch generatorModeNavData.secretCreationMode {
-        case .generate:
-            return "" // should not happen
-        case .manualImport:
-            return String(localized: "importDataSecret")
-        }
-    }
-    
-    func getViewSubtitle() -> String {
-        switch generatorModeNavData.secretCreationMode {
-        case .generate:
-            return "" // should not happen
-        case .manualImport:
-            return String(localized: "importDataSecretInfoSubtitle")
-        }
-    }
     
     var body: some View {
         ZStack {
@@ -62,12 +36,12 @@ struct GenerateDataView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
+                        SatoText(text: String(localized: "importDataSecret"), style: .SKStrongBodyDark)
                         
                         Spacer()
                             .frame(height: 16)
                         
-                        SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
+                        SatoText(text: String(localized: "importDataSecretInfoSubtitle"), style: .SKStrongBodyDark)
                         
                         Spacer()
                             .frame(height: 30)
@@ -81,19 +55,58 @@ struct GenerateDataView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .data, contentText: $dataText, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
+                        SKSecretViewer(secretType: .data, contentText: $dataText, isEditable: true, placeholder: "Data")
 
                         Spacer()
                             .frame(height: 16)
                         
-                        
-                        if generatorModeNavData.secretCreationMode == .manualImport {
-                            // Import button for manual import
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
-                                let payload = DataPayload(label: labelText!, data: dataText)
-                                cardState.requestImportSecret(secretPayload: payload)
-                            })
+                        if let msgError = msgError {
+                            Text(msgError.localizedString())
+                                .font(.custom("Roboto-Regular", size: 12))
+                                .foregroundColor(Colors.ledRed)
+                            
+                            Spacer()
+                                .frame(height: 16)
                         }
+                        
+                        // Import button for manual import
+                        SKButton(text: String(localized: "import"),
+                                 style: .regular, horizontalPadding: 66,
+                                 isEnabled: true,
+                                 action: {
+                                            
+                                    // check conditions
+                                    guard let labelText = labelText,
+                                            !labelText.isEmpty else {
+                                        msgError = .emptyLabel
+                                        return
+                                    }
+                                    guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
+                                        msgError = .labelTooLong
+                                        return
+                                    }
+                                    guard !dataText.isEmpty else {
+                                        msgError = .emptySecret
+                                        return
+                                    }
+                                    guard dataText.utf8.count <= Constants.MAX_FIELD_SIZE_16B else {
+                                        msgError = .dataTooLong
+                                        return
+                                    }
+                                    
+                                    let payload = DataPayload(label: labelText, data: dataText)
+                            
+                                    if let version = cardState.masterCardStatus?.protocolVersion, version == 1 {
+                                        // for v1, secret size is limited to 255 bytes
+                                        let payloadBytes = payload.getPayloadBytes()
+                                        if payloadBytes.count > Constants.MAX_SECRET_SIZE_FOR_V1 {
+                                            msgError = .secretTooLongForV1
+                                            return
+                                        }
+                                    }
+                                    
+                                    cardState.requestImportSecret(secretPayload: payload)
+                        })
                         
                         Spacer().frame(height: 16)
                         
@@ -111,7 +124,7 @@ struct GenerateDataView: View {
         })
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
+                SatoText(text: "importSecret", style: .lightTitleDark)
             }
         }
     }
@@ -135,10 +148,6 @@ struct DataPayload : Payload {
         payload.append(contentsOf: dataBytes)
         
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {

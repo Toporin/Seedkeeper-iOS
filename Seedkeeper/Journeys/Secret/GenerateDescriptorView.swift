@@ -16,36 +16,10 @@ struct GenerateDescriptorView: View {
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
     
+    @State private var msgError: SecretImportWizardError? = nil
+    
     @State private var labelText: String?
-    
     @State var descriptorText = ""
-    @State private var descriptorPayload: DescriptorPayload?
-    
-    var canImportSecret: Bool {
-        if let labelText = labelText {
-            return !labelText.isEmpty && descriptorText.count >= 1
-        } else {
-            return false
-        }
-    }
-
-    func getViewTitle() -> String {
-        switch generatorModeNavData.secretCreationMode {
-        case .generate:
-            return "" // should not happen
-        case .manualImport:
-            return String(localized: "importDescriptorSecret")
-        }
-    }
-    
-    func getViewSubtitle() -> String {
-        switch generatorModeNavData.secretCreationMode {
-        case .generate:
-            return "" // should not happen
-        case .manualImport:
-            return String(localized: "importDescriptorSecretInfoSubtitle")
-        }
-    }
     
     var body: some View {
         ZStack {
@@ -61,12 +35,12 @@ struct GenerateDescriptorView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
+                        SatoText(text: String(localized: "importDescriptorSecret"), style: .SKStrongBodyDark)
                         
                         Spacer()
                             .frame(height: 16)
                         
-                        SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
+                        SatoText(text: String(localized: "importDescriptorSecretInfoSubtitle"), style: .SKStrongBodyDark)
                         
                         Spacer()
                             .frame(height: 30)
@@ -80,20 +54,55 @@ struct GenerateDescriptorView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .walletDescriptor, contentText: $descriptorText, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
+                        SKSecretViewer(secretType: .walletDescriptor, contentText: $descriptorText, isEditable: true, placeholder: "Descriptor")
 
                         Spacer()
                             .frame(height: 16)
                         
-                        if generatorModeNavData.secretCreationMode == .manualImport {
-                            // Import button for manual import
-                            SKButton(text: String(localized: "import"), style: .regular, horizontalPadding: 66, isEnabled: canImportSecret, action: {
-                                                                                                    
-                                let payload = DescriptorPayload(label: labelText!, descriptor: descriptorText)
-                                cardState.requestImportSecret(secretPayload: payload)
-                                
-                            })
+                        if let msgError = msgError {
+                            Text(msgError.localizedString())
+                                .font(.custom("Roboto-Regular", size: 12))
+                                .foregroundColor(Colors.ledRed)
+                            
+                            Spacer()
+                                .frame(height: 16)
                         }
+                        
+                        // Import button for manual import
+                        SKButton(text: String(localized: "import"),
+                                 style: .regular, horizontalPadding: 66,
+                                 isEnabled: true, //canImportSecret,
+                                 action: {
+                                                 
+                            // check conditions
+                            guard let labelText = labelText,
+                                    !labelText.isEmpty else {
+                                msgError = .emptyLabel
+                                return
+                            }
+                            guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
+                                msgError = .labelTooLong
+                                return
+                            }
+                            guard !descriptorText.isEmpty else {
+                                msgError = .emptySecret
+                                return
+                            }
+                            
+                            let payload = DescriptorPayload(label: labelText, descriptor: descriptorText)
+                            
+                            if let version = cardState.masterCardStatus?.protocolVersion, version == 1 {
+                                // for v1, secret size is limited to 255 bytes
+                                let payloadBytes = payload.getPayloadBytes()
+                                if payloadBytes.count > Constants.MAX_SECRET_SIZE_FOR_V1 {
+                                    msgError = .secretTooLongForV1
+                                    return
+                                }
+                            }
+                            
+                            cardState.requestImportSecret(secretPayload: payload)
+                            
+                        })
                         
                         Spacer().frame(height: 16)
                         
@@ -111,7 +120,7 @@ struct GenerateDescriptorView: View {
         })
         .toolbar {
             ToolbarItem(placement: .principal) {
-                SatoText(text: generatorModeNavData.secretCreationMode == .manualImport ? "importSecret" : "generateSecret", style: .lightTitleDark)
+                SatoText(text: "importSecret", style: .lightTitleDark)
             }
         }
     }
@@ -135,10 +144,6 @@ struct DescriptorPayload : Payload {
         payload.append(contentsOf: dataBytes)
         
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {

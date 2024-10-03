@@ -91,10 +91,6 @@ struct MasterseedPayload : Payload {
         return payload
     }
     
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-    }
-    
     func getContentString() -> String {
         return masterseedBytes.bytesToHex
     }
@@ -130,10 +126,6 @@ struct ElectrumMnemonicPayload : Payload {
             payload.append(contentsOf: passphraseBytes)
         }
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {
@@ -186,10 +178,6 @@ struct Bip39MnemonicPayload : Payload {
         return payload
     }
     
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-    }
-    
     func getContentString() -> String {
         return mnemonic
     }
@@ -231,10 +219,6 @@ struct PubkeyPayload : Payload {
         return payload
     }
     
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-    }
-    
     func getContentString() -> String {
         return pubkeyBytes.bytesToHex
     }
@@ -262,10 +246,6 @@ struct Secret2FAPayload : Payload {
         return payload
     }
     
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
-    }
-    
     func getContentString() -> String {
         return secretBytes.bytesToHex
     }
@@ -291,10 +271,6 @@ struct DefaultPayload : Payload {
         payload.append(contentsOf: defaultBytes)
         
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {

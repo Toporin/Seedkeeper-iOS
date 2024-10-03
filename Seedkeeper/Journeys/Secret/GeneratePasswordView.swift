@@ -9,14 +9,39 @@ import Foundation
 import SwiftUI
 import SatochipSwift
 
+enum SecretImportWizardError: String {
+    case emptyLabel
+    case emptySecret
+    case passwordEmpty
+    case mnemonicEmpty
+    case dataEmpty
+    case descriptorEmpty
+    case secretTooLong
+    case passwordTooLong
+    case mnemonicTooLong
+    case mnemonicWrongFormat
+    case dataTooLong
+    case labelTooLong
+    case loginTooLong
+    case urlTooLong
+    case passphraseTooLong
+    case descriptorTooLong
+    case secretTooLongForV1
+    
+    func localizedString() -> String {
+        return NSLocalizedString(self.rawValue, comment: "")
+    }
+}
+
 struct GeneratePasswordView: View {
     // MARK: - Properties
     @EnvironmentObject var cardState: CardState
     
     @Binding var homeNavigationPath: NavigationPath
     @State var generatorModeNavData: GeneratorModeNavData
-    
     @StateObject var passwordOptions = PasswordOptions()
+    
+    @State private var msgError: SecretImportWizardError? = nil
     
     @State private var labelText: String?
     @State private var loginText: String?
@@ -63,7 +88,7 @@ struct GeneratePasswordView: View {
         
     func generatePassword(options: PasswordOptions) -> String {
         let numberSet = "0123456789"
-        let symbolSet = "!@#$%^&*()-_=+{}[]|;:'\",.<>?/`~"
+        let symbolSet = "!@#$%&*()-_=+{}[]|;:,.<>?/~" // "!@#$%^&*()-_=+{}[]|;:'\",.<>?/`~" // remove confusing chars
         let upperCaseSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let lowerCaseSet = "abcdefghijklmnopqrstuvwxyz"
         
@@ -175,7 +200,7 @@ struct GeneratePasswordView: View {
                             .frame(height: 16)
                         
                         
-                        EditableCardInfoBox(mode: .text("Login"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true,
+                        EditableCardInfoBox(mode: .text("Login (optional)"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5, shouldDisplaySuggestions: true,
                                 action:
                                 { loginTextResult in
                                     if case .text(let customLoginText) = loginTextResult {
@@ -193,7 +218,7 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        EditableCardInfoBox(mode: .text("Url"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
+                        EditableCardInfoBox(mode: .text("Url (optional)"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { urlTextResult in
                             if case .text(let customUrlText) = urlTextResult {
                                 urlText = customUrlText
                             }
@@ -209,10 +234,19 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        SKSecretViewer(secretType: .password, contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
+                        SKSecretViewer(secretType: .password, contentText: $password, isEditable: generatorModeNavData.secretCreationMode == .manualImport, placeholder: "Password")
 
                         Spacer()
                             .frame(height: 16)
+                        
+                        if let msgError = msgError {
+                            Text(msgError.localizedString())
+                                .font(.custom("Roboto-Regular", size: 12))
+                                .foregroundColor(Colors.ledRed)
+                            
+                            Spacer()
+                                .frame(height: 16)
+                        }
                         
                         HStack(alignment: .center, spacing: 0) {
                             Spacer()
@@ -222,7 +256,7 @@ struct GeneratePasswordView: View {
                                     text: String(localized: "generate"),
                                     style: .regular,
                                     horizontalPadding: 20,
-                                    isEnabled: canGeneratePassword,
+                                    isEnabled: true, //canGeneratePassword,
                                     action: {
                                         password = generatePassword(options: passwordOptions)
                                         
@@ -234,18 +268,54 @@ struct GeneratePasswordView: View {
                                 text: String(localized: "import"),
                                 style: .regular,
                                 horizontalPadding: 20,
-                                isEnabled: canManualImportPassword,
+                                isEnabled: true, //canManualImportPassword,
                                 action: {
-                                    let passwordPayload = PasswordPayload(label: labelText!,
+                                    // check conditions
+                                    guard let labelText = labelText,
+                                            !labelText.isEmpty else {
+                                        msgError = .emptyLabel
+                                        return
+                                    }
+                                    guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
+                                        msgError = .labelTooLong
+                                        return
+                                    }
+                                    guard !password.isEmpty else {
+                                        msgError = .emptySecret
+                                        return
+                                    }
+                                    guard password.utf8.count <= Constants.MAX_FIELD_SIZE else {
+                                        msgError = .passwordTooLong
+                                        return
+                                    }
+                                    if let loginText = loginText, loginText.utf8.count > Constants.MAX_FIELD_SIZE {
+                                        msgError = .loginTooLong
+                                        return
+                                    }
+                                    if let urlText = urlText, urlText.utf8.count > Constants.MAX_FIELD_SIZE {
+                                        msgError = .urlTooLong
+                                        return
+                                    }
+                                    
+                                    let passwordPayload = PasswordPayload(label: labelText,
                                                                       password: password,
                                                                       login: loginText,
                                                                       url: urlText)
+                                    
+                                    if let version = cardState.masterCardStatus?.protocolVersion, version == 1 {
+                                        // for v1, secret size is limited to 255 bytes
+                                        let payloadBytes = passwordPayload.getPayloadBytes()
+                                        if payloadBytes.count > Constants.MAX_SECRET_SIZE_FOR_V1 {
+                                            msgError = .secretTooLongForV1
+                                            return
+                                        }
+                                    }
+                                    
                                     cardState.requestImportSecret(secretPayload: passwordPayload)
                                 }
                             )
                             
                             Spacer()
-                            
                         }
                         
                         // TODO: add msg here in case of error
@@ -313,10 +383,6 @@ struct PasswordPayload : Payload {
         }
 
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {

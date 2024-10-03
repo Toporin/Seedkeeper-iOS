@@ -97,7 +97,7 @@ struct ShowSecretView: View {
                         
                     } else if secret.type == .pubkey {
                         if let payload = cardState.currentSecretPayload as? PubkeyPayload {
-                            SKLabel(title: "fingerprint", content: payload.getFingerprintBytes().bytesToHex)
+                            SKLabel(title: "fingerprint", content: SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: payload.getPayloadBytes()).bytesToHex)
                         }
                     }
                     

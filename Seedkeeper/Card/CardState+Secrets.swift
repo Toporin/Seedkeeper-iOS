@@ -121,11 +121,13 @@ extension CardState {
                     let pinBytes = Array(pinForMasterCard.utf8)
                     _ = try cmdSet.cardVerifyPIN(pin: pinBytes)
                     
+                    let secretBytes = secretPayload.getPayloadBytes()
+                    let secretFingerprintBytes = SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: secretBytes)
                     var secretHeader = SeedkeeperSecretHeader(type: secretPayload.type,
                                                               subtype: secretPayload.subtype,
-                                                              fingerprintBytes: secretPayload.getFingerprintBytes(),
+                                                              fingerprintBytes: secretFingerprintBytes,
                                                               label: secretPayload.label)
-                    let secretObject = SeedkeeperSecretObject(secretBytes: secretPayload.getPayloadBytes(),
+                    let secretObject = SeedkeeperSecretObject(secretBytes: secretBytes,
                                                               secretHeader: secretHeader,
                                                               isEncrypted: false)
                     

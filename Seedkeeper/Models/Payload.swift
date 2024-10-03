@@ -13,7 +13,6 @@ protocol Payload: HumanReadable {
     var subtype: UInt8 {get set}
     
     func getPayloadBytes() -> [UInt8]
-    func getFingerprintBytes() -> [UInt8]
     func getContentString() -> String
 }
 

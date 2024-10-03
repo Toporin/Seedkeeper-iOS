@@ -19,29 +19,32 @@ struct GenerateMnemonicView: View {
     @State private var showPickerSheet = false
     @State private var generateBtnMode = GenerateBtnMode.willGenerate
     
+    @State private var msgError: SecretImportWizardError? = nil
+    
     @State private var labelText: String?
     @State private var passphraseText: String?
-    @State private var descriptorText: String = ""
+    @State private var descriptorText = ""
     
     @State var seedPhrase = ""
     
-    @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
+    //@State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self)
+    @State var mnemonicSizeOptions = PickerOptions(placeHolder: String(localized: "selectMnemonicSize"), items: MnemonicSize.self, selectedOption: .twelveWords)
     
-    var canGenerateMnemonic: Bool {
-        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption {
-            return !labelText.isEmpty
-        } else {
-            return false
-        }
-    }
+//    var canGenerateMnemonic: Bool {
+//        if let labelText = labelText, let _ = mnemonicSizeOptions.selectedOption {
+//            return !labelText.isEmpty
+//        } else {
+//            return false
+//        }
+//    }
     
-    var canManualImportMnemonic: Bool {
-        if labelText != nil  {
-            return isMnemonicValid()
-        } else {
-            return false
-        }
-    }
+//    var canManualImportMnemonic: Bool {
+//        if labelText != nil  {
+//            return isMnemonicValid()
+//        } else {
+//            return false
+//        }
+//    }
     
     private func isMnemonicValid() -> Bool {
         do {
@@ -129,7 +132,7 @@ struct GenerateMnemonicView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        EditableCardInfoBox(mode: .text("Passphrase"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
+                        EditableCardInfoBox(mode: .text("Passphrase (optional)"), backgroundColor: Colors.purpleBtn, height: 33, backgroundColorOpacity: 0.5) { passphraseTextResult in
                             if case .text(let customPassphraseText) = passphraseTextResult {
                                 passphraseText = customPassphraseText
                             }
@@ -146,11 +149,19 @@ struct GenerateMnemonicView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SKSecretViewer(secretType: .masterseed, contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport)
+                        SKSecretViewer(secretType: .masterseed, contentText: $seedPhrase, isEditable: generatorModeNavData.secretCreationMode == .manualImport, placeholder: "Mnemonic")
 
                         Spacer()
                             .frame(height: 16)
                         
+                        if let msgError = msgError {
+                            Text(msgError.localizedString())
+                                .font(.custom("Roboto-Regular", size: 12))
+                                .foregroundColor(Colors.ledRed)
+                            
+                            Spacer()
+                                .frame(height: 16)
+                        }
                         
                         HStack(alignment: .center, spacing: 0) {
                             Spacer()
@@ -159,7 +170,7 @@ struct GenerateMnemonicView: View {
                                     // generate button
                                     SKButton(text: String(localized: "generate"), 
                                              style: .regular, horizontalPadding: 20,
-                                             isEnabled: canGenerateMnemonic,
+                                             isEnabled: true, //canGenerateMnemonic,
                                              action: {
                                                 seedPhrase = generateMnemonic() ?? "Failed to generate mnemonic"
                                             }
@@ -169,13 +180,55 @@ struct GenerateMnemonicView: View {
                                 // import button
                                 SKButton(text: String(localized: "import"), 
                                          style: .regular, horizontalPadding: 20,
-                                         isEnabled: canManualImportMnemonic, 
+                                         isEnabled: true, //canManualImportMnemonic,
                                          action: {
-                                            let mnemonicPayload = MnemonicPayload(label: labelText!,
+                                            
+                                            // check conditions
+                                            guard let labelText = labelText,
+                                                    !labelText.isEmpty else {
+                                                msgError = .emptyLabel
+                                                return
+                                            }
+                                            guard labelText.utf8.count <= Constants.MAX_LABEL_SIZE else {
+                                                msgError = .labelTooLong
+                                                return
+                                            }
+                                            guard !seedPhrase.isEmpty else {
+                                                msgError = .emptySecret
+                                                return
+                                            }
+                                            guard seedPhrase.utf8.count <= Constants.MAX_FIELD_SIZE else {
+                                                // should not happen...
+                                                msgError = .mnemonicTooLong
+                                                return
+                                            }
+                                            guard isMnemonicValid() else {
+                                                msgError = .mnemonicWrongFormat
+                                                return
+                                            }
+                                            if let passphraseText = passphraseText, passphraseText.utf8.count > Constants.MAX_FIELD_SIZE {
+                                                msgError = .passphraseTooLong
+                                                return
+                                            }
+                                            if descriptorText.utf8.count > Constants.MAX_FIELD_SIZE_16B {
+                                                msgError = .descriptorTooLong
+                                                return
+                                            }
+                                            
+                                            let mnemonicPayload = MnemonicPayload(label: labelText,
                                                                               mnemonic: seedPhrase,
                                                                               passphrase: passphraseText,
                                                                               descriptor: descriptorText)
-//                                            print("DEBUG: mnemonicPayload: \(mnemonicPayload)")
+                                    
+                                            if let version = cardState.masterCardStatus?.protocolVersion, version == 1 {
+                                                // for v1, secret size is limited to 255 bytes
+                                                let payloadBytes = mnemonicPayload.getPayloadBytes()
+                                                if payloadBytes.count > Constants.MAX_SECRET_SIZE_FOR_V1 {
+                                                    msgError = .secretTooLongForV1
+                                                    return
+                                                }
+                                            }
+                                    
                                             cardState.requestImportSecret(secretPayload: mnemonicPayload)
                                         }
                                 )
@@ -313,10 +366,6 @@ struct MnemonicPayload : Payload {
             // we could add 2 zero-bytes...
         }
         return payload
-    }
-    
-    func getFingerprintBytes() -> [UInt8] {
-        return SeedkeeperSecretHeader.getFingerprintBytes(secretBytes: getPayloadBytes())
     }
     
     func getContentString() -> String {
