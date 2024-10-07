@@ -163,9 +163,12 @@ struct SKSecretViewer: View {
                     .disableAutocorrection(true)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .lineLimit(2...10)
-                    .onChange(of: contentText){ newValue in
-                        
-                    }
+                    
+                } else if contentText.isEmpty {
+                    Text(String(localized: "helpMsgToExportSecret"))
+                        .foregroundColor(Color.gray)
+                        .multilineTextAlignment(.center)
+                        .padding()
                 } else {
                     if showSeedQRCode &&
                         (secretType == .bip39Mnemonic || secretType == .masterseed), // TODO: distinguish masterseed by subtype

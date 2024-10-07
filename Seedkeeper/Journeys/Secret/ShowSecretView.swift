@@ -35,10 +35,9 @@ struct ShowSecretView: View {
                     Spacer()
                         .frame(height: 60)
                     
-                    SatoText(text: "manageYourSecret", style: .SKStrongBodyDark)
-                    
-                    Spacer()
-                        .frame(height: 16)
+//                    SatoText(text: "manageYourSecret", style: .SKStrongBodyDark)
+//                    Spacer()
+//                        .frame(height: 16)
                     
                     SatoText(text: "secretInfoSubtitle", style: .SKStrongBodyDark)
                     
@@ -122,8 +121,7 @@ struct ShowSecretView: View {
                     }else {
                         // empty secret field
                         SKSecretViewer(secretType: .password, // TODO: use something else?
-                                       contentText: .constant(String(localized: "helpMsgToExportSecret")))
-                        
+                                       contentText: .constant(""))
                     }
                     
                     Spacer()
