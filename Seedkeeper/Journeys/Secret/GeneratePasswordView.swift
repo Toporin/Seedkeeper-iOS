@@ -28,6 +28,7 @@ enum SecretImportWizardError: String {
     case descriptorTooLong
     case secretTooLongForV1
     case noCharSetSelected
+    case plaintextExportNotAllowed
     
     func localizedString() -> String {
         return NSLocalizedString(self.rawValue, comment: "")

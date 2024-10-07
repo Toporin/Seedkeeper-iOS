@@ -235,6 +235,11 @@ extension CardState {
             session?.stop(alertMessage: String(localized: "nfcSecretFetched"))
             logger.info("\(String(localized: "nfcSecretFetched"))", tag: "onExportSecret")
             
+        } catch let error as StatusWord where error == .exportNotAllowed {
+            // export in plaintext is not allowed by this specific secret policy
+            session?.stop(errorMessage: "\(String(localized: "plaintextExportNotAllowed"))")
+            logger.error("\(String(localized: "plaintextExportNotAllowed"))", tag: "onExportSecret")
+            
         } catch CardError.wrongPIN(let retryCounter) {
             session?.stop(errorMessage: "\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)")
             logger.error("\(String(localized: "nfcWrongPinWithTriesLeft")) \(retryCounter)", tag: "onExportSecret")

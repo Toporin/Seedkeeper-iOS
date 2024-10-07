@@ -16,7 +16,8 @@ struct ShowSecretView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     var secret: SeedkeeperSecretHeader
-    @State var isSecretHeaderFetched: Bool = false
+    
+    @State private var msgError: SecretImportWizardError? = nil
     
     // delete secret
     @State private var showConfirmMsg: Bool = false
@@ -135,6 +136,16 @@ struct ShowSecretView: View {
                         SatoToggleWarning(isOn: $hasUserConfirmedTerms, label: "factoryResetConfirmationText")
                     }
                     
+                    // Mark: error msg
+                    if let msgError = msgError {
+                        Text(msgError.localizedString())
+                            .font(.custom("Roboto-Regular", size: 12))
+                            .foregroundColor(Colors.ledRed)
+                        
+                        Spacer()
+                            .frame(height: 16)
+                    }
+                    
                     // MARK: action buttons
                     HStack {
                         
@@ -153,8 +164,11 @@ struct ShowSecretView: View {
                         Spacer()
                         
                         SKActionButtonSmall(title: String(localized: "export"), icon: "ic_eye", isEnabled: .constant(true)) {
+                            guard secret.exportRights == .exportPlaintextAllowed else {
+                                msgError = .plaintextExportNotAllowed
+                                return
+                            }
                             cardState.requestExportSecret(with: secret)
-                            isSecretHeaderFetched = true
                         }
                     }
                     .padding([.leading, .trailing], 0)
