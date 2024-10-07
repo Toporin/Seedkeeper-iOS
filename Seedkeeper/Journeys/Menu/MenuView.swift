@@ -9,13 +9,14 @@ import Foundation
 import SwiftUI
 
 enum SatochipURL: String {
-    case howToUse = "https://satochip.io/setup-use-seedkeeper-on-mobile/"
-    case terms = "https://satochip.io/terms-of-service/"
-    case privacy = "https://satochip.io/privacy-policy/"
-    case products = "https://satochip.io/shop/"
+    case urlHowToUse
+    case urlTerms
+    case urlPrivacy
+    case urlProducts
 
     var url: URL? {
-        return URL(string: self.rawValue)
+//        return URL(string: self.rawValue)
+        return URL(string: NSLocalizedString(self.rawValue, comment: ""))
     }
 }
 
@@ -37,7 +38,6 @@ struct MenuView: View {
     // MARK: - Helpers
     func openURL(_ satochipURL: SatochipURL) {
         guard let url = satochipURL.url else {
-            print("Invalid URL")
             cardState.logger.error("Invalid URL", tag: "openURL")
             return
         }
@@ -140,7 +140,7 @@ struct MenuView: View {
                             iconWidth: 34, iconHeight: 34,
                             backgroundColor: Colors.lightMenuButton,
                             action: {
-                                self.openURL(.howToUse)
+                                self.openURL(.urlHowToUse)
                             },
                             forcedHeight: 58
                         )
@@ -159,7 +159,7 @@ struct MenuView: View {
                         text: String(localized: "termsOfService"),
                         backgroundColor: Colors.darkMenuButton,
                         action: {
-                            self.openURL(.terms)
+                            self.openURL(.urlTerms)
                         }
                     )
                     
@@ -167,7 +167,7 @@ struct MenuView: View {
                         text: String(localized: "privacyPolicy"),
                         backgroundColor: Colors.darkMenuButton,
                         action: {
-                            self.openURL(.privacy)
+                            self.openURL(.urlPrivacy)
                         }
                     )
                 }
@@ -182,7 +182,7 @@ struct MenuView: View {
                 Spacer()
                 
                 ProductButton {
-                    self.openURL(.products)
+                    self.openURL(.urlProducts)
                 }
                 .frame(maxWidth: .infinity)
                 .padding([.horizontal], 10)

@@ -60,13 +60,15 @@ struct AddSecretView: View {
                 Spacer()
                     
                 MenuButton(
-                    title: String(localized: "howToUseSeedkeeper"),
+                    title: String(localized: "howToUse"),
                     iconName: "ic_questionmark",
                     iconWidth: 40,
                     iconHeight: 40,
                     backgroundColor: Colors.lightMenuButton,
                     action: {
-                        
+                        if let url = SatochipURL.urlHowToUse.url {
+                            UIApplication.shared.open(url)
+                        }
                     },
                     forcedHeight: 53
                 )
