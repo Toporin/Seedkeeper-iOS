@@ -36,11 +36,6 @@ struct GenerateDataView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SatoText(text: String(localized: "importDataSecret"), style: .SKStrongBodyDark)
-                        
-                        Spacer()
-                            .frame(height: 16)
-                        
                         SatoText(text: String(localized: "importDataSecretInfoSubtitle"), style: .SKStrongBodyDark)
                         
                         Spacer()

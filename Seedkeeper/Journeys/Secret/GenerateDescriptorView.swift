@@ -35,11 +35,6 @@ struct GenerateDescriptorView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SatoText(text: String(localized: "importDescriptorSecret"), style: .SKStrongBodyDark)
-                        
-                        Spacer()
-                            .frame(height: 16)
-                        
                         SatoText(text: String(localized: "importDescriptorSecretInfoSubtitle"), style: .SKStrongBodyDark)
                         
                         Spacer()
