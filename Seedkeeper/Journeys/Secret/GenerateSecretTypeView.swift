@@ -20,15 +20,12 @@ struct GenerateSecretTypeView: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                Spacer().frame(height: 60)
-                
-                SatoText(text: secretCreationMode == .generate ? "generateSecret" : "importASecret", style: .SKStrongBodyDark)
-                
-                Spacer().frame(height: 16)
+                Spacer()
+                    .frame(height: 60)
                 
                 SatoText(text: secretCreationMode == .generate ? "generateSecretInfoSubtitle" : "importASecretSubtitle", style: .SKStrongBodyDark)
                 
-                Spacer().frame(height: 16)
+                Spacer()
                 
                 // Use buttons
                 MenuButton(
@@ -36,7 +33,7 @@ struct GenerateSecretTypeView: View {
                     iconName: "ic_3DotsUnderlined",
                     iconWidth: 50,
                     iconHeight: 50,
-                    backgroundColor: Colors.purpleBtn,
+                    backgroundColor: Colors.purpleBtn, // alternate color between purpleBtn & lightMenuButton
                     action: {
                         homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .password, secretCreationMode: secretCreationMode)))
                     },
@@ -52,7 +49,7 @@ struct GenerateSecretTypeView: View {
                     iconName: "ic_leaf",
                     iconWidth: 50,
                     iconHeight: 50,
-                    backgroundColor: Colors.purpleBtn,
+                    backgroundColor: Colors.lightMenuButton, // alternate color between purpleBtn & lightMenuButton
                     action: {
                         homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .mnemonic, secretCreationMode: secretCreationMode)))
                     },
@@ -69,7 +66,7 @@ struct GenerateSecretTypeView: View {
                         iconName: "ic_descriptor_svg",
                         iconWidth: 50,
                         iconHeight: 50,
-                        backgroundColor: Colors.purpleBtn,
+                        backgroundColor: Colors.purpleBtn, // alternate color between purpleBtn & lightMenuButton
                         action: {
                             homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .descriptor, secretCreationMode: secretCreationMode)))
                         },
@@ -87,7 +84,7 @@ struct GenerateSecretTypeView: View {
                         iconName: "ic_data_svg",
                         iconWidth: 50,
                         iconHeight: 50,
-                        backgroundColor: Colors.purpleBtn,
+                        backgroundColor: Colors.lightMenuButton, // alternate color between purpleBtn & lightMenuButton
                         action: {
                             homeNavigationPath.append(NavigationRoutes.generateGenerator(GeneratorModeNavData(generatorMode: .data, secretCreationMode: secretCreationMode)))
                         },
@@ -99,7 +96,8 @@ struct GenerateSecretTypeView: View {
                         .frame(height: 24)
                 }
                 
-                Spacer().frame(height: 16)
+                Spacer()
+                
             }
             .padding([.leading, .trailing], Dimensions.lateralPadding)
         }
