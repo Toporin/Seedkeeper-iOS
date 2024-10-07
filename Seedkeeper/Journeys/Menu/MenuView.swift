@@ -276,6 +276,7 @@ struct MenuButton: View {
                                     .foregroundColor(.white)
                                     .font(.subheadline)
                                     .lineLimit(2)
+                                    .multilineTextAlignment(.leading)
                                     .padding([.leading, .trailing])
                             }
                             Spacer()
