@@ -84,11 +84,21 @@ struct SettingsView: View {
                     
                     Spacer()
                     
+                    Rectangle()
+                        .frame(width: .infinity, height: 2)
+                        .foregroundColor(Colors.separator)
+                        .padding([.leading, .trailing], 31)
+    
+                    Spacer()
+                    
                     // WARNING: CARD RESET TO FACTORY
                     SatoText(text: "cardResetToFactory", style: .SKMenuItemTitle)
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
                     SatoText(text: "cardResetToFactorySubtitle", style: .SKMenuItemSubtitle)
+                    Spacer()
+                        .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
+                    SatoText(text: "cardResetToFactoryWarning", style: .danger)
                     CardInfoBox(
                         text: "warningFactoryResetButton",
                         backgroundColor: Colors.ledRed)
