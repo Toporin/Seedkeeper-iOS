@@ -33,7 +33,6 @@
 		D03540172C04D80C00ABF9C7 /* BackupCongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */; };
 		D04E21542C3C4DDA004028B9 /* AlertsHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */; };
 		D05EB84C2BFE4E86006B84BB /* CardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05EB84B2BFE4E86006B84BB /* CardState.swift */; };
-		D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D062F01C2C862F5B001CF243 /* SKImageButton.swift */; };
 		D071415F2BF2599100A4939A /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071415E2BF2599100A4939A /* DataController.swift */; };
 		D07141662BF26DFD00A4939A /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */; };
 		D07141672BF26DFF00A4939A /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07141652BF26D9000A4939A /* OpenSans-Medium.ttf */; };
@@ -145,7 +144,6 @@
 		D03540162C04D80C00ABF9C7 /* BackupCongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCongratsView.swift; sourceTree = "<group>"; };
 		D04E21532C3C4DDA004028B9 /* AlertsHandlerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsHandlerView.swift; sourceTree = "<group>"; };
 		D05EB84B2BFE4E86006B84BB /* CardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardState.swift; sourceTree = "<group>"; };
-		D062F01C2C862F5B001CF243 /* SKImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKImageButton.swift; sourceTree = "<group>"; };
 		D071415E2BF2599100A4939A /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		D07141632BF26D9000A4939A /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		D07141642BF26D9000A4939A /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
@@ -467,7 +465,6 @@
 				D0E4339B2BD3FDD0008DBAA6 /* EmptyScanStateOverlay.swift */,
 				D0E4339D2BD3FE27008DBAA6 /* ScanButton.swift */,
 				D0E433A62BD425AA008DBAA6 /* SKButton.swift */,
-				D062F01C2C862F5B001CF243 /* SKImageButton.swift */,
 				D0C939D32BD687D400F2A17B /* SecureTextInput.swift */,
 				D071416B2BF272F300A4939A /* CardInfoBox.swift */,
 				D071416D2BF2772600A4939A /* EditableCardInfoBox.swift */,
@@ -754,7 +751,6 @@
 				D071416A2BF2725400A4939A /* CardInfoView.swift in Sources */,
 				0DAF45292CAED406001FDE73 /* SatoToggleWarning.swift in Sources */,
 				D07141722BF4D71900A4939A /* DashboardView.swift in Sources */,
-				D062F01D2C862F5B001CF243 /* SKImageButton.swift in Sources */,
 				D0D832392C20AA3500AE2984 /* CardState+Pin.swift in Sources */,
 				0DAF45072C90A6C0001FDE73 /* Seedkeeper.xcdatamodeld in Sources */,
 				D071415F2BF2599100A4939A /* DataController.swift in Sources */,

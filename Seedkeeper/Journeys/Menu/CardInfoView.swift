@@ -17,7 +17,6 @@ struct CardInfoView: View {
     // MARK: - Literals
     let title = "cardInfo"
     
-    let cardGenuineTitle = String(localized: "cardAuthenticity")
     let cardGenuineText = String(localized: "thisCardIsGenuine")
     let cardNotGenuineText = String(localized: "thisCardIsNotGenuine")
     
@@ -68,16 +67,25 @@ struct CardInfoView: View {
                             .frame(height: 66)
                         
                         // SEEDKEEPER DATA
-                        SatoText(text: "**Seedkeeper status**", style: .lightSubtitleDark)
+                        SatoText(text: "seedkeeperStatus", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        //CardInfoBox(text: self.getSeedkeeperDataString(), backgroundColor: Colors.lightMenuButton, lineLimit: 3)
-                        SatoText(text: self.getSeedkeeperDataString(), style: .SKStrongBodyLight)
-                            .padding()
+                        
+//                        //CardInfoBox(text: self.getSeedkeeperDataString(), backgroundColor: Colors.lightMenuButton, lineLimit: 3)
+//                        SatoText(text: self.getSeedkeeperDataString(), style: .SKStrongBodyDark)
+//                            .padding()
+//                            .frame(maxWidth: .infinity, alignment: .center)
+//                            //.background(Colors.lightMenuButton)
+//                            .cornerRadius(20)
+                        
+                        SatoText(text: self.getSeedkeeperDataString(), style: .SKStrongBodyDark)
+                            .padding(30)
                             .frame(maxWidth: .infinity, alignment: .center)
-                            //.frame(height: 180)
-                            .background(Colors.lightMenuButton)
-                            .cornerRadius(20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Colors.lightMenuButton, lineWidth: 2)
+                                    .padding(15)
+                            )
                         
                         Spacer()
                             .frame(height: 20)
@@ -95,7 +103,7 @@ struct CardInfoView: View {
                         SatoText(text: "cardLabel", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(text: self.cardState.masterCardLabel, backgroundColor: Colors.lightMenuButton)
+                        CardInfoBoxWithIcon(text: self.cardState.masterCardLabel, backgroundColor: Colors.lightMenuButton, iconName: "pencil")
                         {
                             //TODO: label edit screen?
                             homeNavigationPath.append(NavigationRoutes.editLabel(self.cardState.masterCardLabel))
@@ -108,7 +116,7 @@ struct CardInfoView: View {
                         SatoText(text: "pinCodeBold", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(text: "updatePinButton", backgroundColor: Colors.lightMenuButton)
+                        CardInfoBoxWithIcon(text: "updatePinButton", backgroundColor: Colors.lightMenuButton, iconName: "pencil")
                         {
                             guard let _ = cardState.masterCardStatus else {
                                 return
@@ -117,32 +125,28 @@ struct CardInfoView: View {
                         }
                         
                         Spacer()
-                        
-                        //                Rectangle()
-                        //                    .frame(width: .infinity, height: 2)
-                        //                    .foregroundColor(Colors.separator)
-                        //                    .padding([.leading, .trailing], 31)
-                        //
-                        //                Spacer()
+                            .frame(height: 20)
                         
                         // CERTIFICATE STATUS
-                        SatoText(text: cardGenuineTitle, style: .lightSubtitleDark)
+                        SatoText(text: "cardAuthenticity", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(
+                        CardInfoBoxWithIcon(
                             text: cardState.certificateCode == .success ? cardGenuineText : cardNotGenuineText,
-                            backgroundColor: cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed)
+                            backgroundColor: cardState.certificateCode == .success ? Colors.authenticGreen : Colors.ledRed,
+                            iconName: "eye")
                         {
                             self.homeNavigationPath.append(NavigationRoutes.authenticity)
                         }
                         
                         Spacer()
+                            .frame(height: 20)
                         
                         // CARD AUTHENTIKEY
                         SatoText(text: "cardAuthentikeyTitle", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(text: getAuthentikeyData(), backgroundColor: Colors.lightMenuButton)
+                        CardInfoBoxWithIcon(text: getAuthentikeyData(), backgroundColor: Colors.lightMenuButton, iconName: "square.on.square")
                         {
                             // copy
                             UIPasteboard.general.string = getAuthentikeyData()
@@ -161,7 +165,7 @@ struct CardInfoView: View {
                         SatoText(text: "cardLogsTitle", style: .lightSubtitleDark)
                         Spacer()
                             .frame(height: 14)
-                        CardInfoBox(text: "cardLogsButton", backgroundColor: Colors.lightMenuButton)
+                        CardInfoBoxWithIcon(text: "cardLogsButton", backgroundColor: Colors.lightMenuButton, iconName: "eye")
                         {
                             cardState.requestCardLogs()
                         }

@@ -99,9 +99,10 @@ struct SettingsView: View {
                     Spacer()
                         .frame(height: SettingsView.dimensions.verticalInsideGroupSeparator)
                     SatoText(text: "cardResetToFactoryWarning", style: .danger)
-                    CardInfoBox(
+                    CardInfoBoxWithIcon(
                         text: "warningFactoryResetButton",
-                        backgroundColor: Colors.ledRed)
+                        backgroundColor: Colors.ledRed,
+                        iconName: "exclamationmark.triangle")
                     {
                         self.homeNavigationPath.append(NavigationRoutes.factoryReset)
                     }
