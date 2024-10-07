@@ -72,15 +72,6 @@ struct GenerateMnemonicView: View {
         return nil
     }
     
-    func getViewTitle() -> String {
-        switch generatorModeNavData.secretCreationMode {
-        case .generate:
-            return String(localized: "generateMnemonicSecret")
-        case .manualImport:
-            return String(localized: "importMnemonicSecret")
-        }
-    }
-    
     func getViewSubtitle() -> String {
         switch generatorModeNavData.secretCreationMode {
         case .generate:
@@ -103,11 +94,6 @@ struct GenerateMnemonicView: View {
                         
                         Spacer()
                             .frame(height: 60)
-                        
-                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
-                        
-                        Spacer()
-                            .frame(height: 16)
                         
                         SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
                         
@@ -168,7 +154,7 @@ struct GenerateMnemonicView: View {
                             
                                 if generatorModeNavData.secretCreationMode == .generate {
                                     // generate button
-                                    SKButton(text: String(localized: "generate"), 
+                                    SKButton(text: String(localized: seedPhrase.isEmpty ? "generate" : "regenerate"),
                                              style: .regular, horizontalPadding: 20,
                                              isEnabled: true, //canGenerateMnemonic,
                                              action: {
