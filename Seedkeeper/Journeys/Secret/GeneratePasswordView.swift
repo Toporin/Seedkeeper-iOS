@@ -50,22 +50,6 @@ struct GeneratePasswordView: View {
     @State private var urlText: String?
     
     @State var password = ""
-        
-//    var canGeneratePassword: Bool {
-//        if let labelText = labelText {
-//            return !labelText.isEmpty && passwordOptions.userSelectedAtLeastOneIncludeOption()
-//        } else {
-//            return false
-//        }
-//    }
-    
-//    var canManualImportPassword: Bool {
-//        if let labelText = labelText {
-//            return !labelText.isEmpty && password.count >= 1
-//        } else {
-//            return false
-//        }
-//    }
     
     private func getMemorableWordsFromTextFile() -> [String] {
         guard let path = Bundle.main.path(forResource: "memorable-pwd", ofType: "txt") else {
@@ -185,10 +169,9 @@ struct GeneratePasswordView: View {
                         Spacer()
                             .frame(height: 60)
                         
-                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
-                        
-                        Spacer()
-                            .frame(height: 16)
+//                        SatoText(text: self.getViewTitle(), style: .SKStrongBodyDark)
+//                        Spacer()
+//                            .frame(height: 16)
                         
                         SatoText(text: self.getViewSubtitle(), style: .SKStrongBodyDark)
                         
@@ -258,7 +241,7 @@ struct GeneratePasswordView: View {
                             
                             if generatorModeNavData.secretCreationMode == .generate {
                                 SKButton(
-                                    text: String(localized: "generate"),
+                                    text: String(localized: password.isEmpty ? "generate" : "regenerate"),
                                     style: .regular,
                                     horizontalPadding: 20,
                                     isEnabled: true, //canGeneratePassword,
