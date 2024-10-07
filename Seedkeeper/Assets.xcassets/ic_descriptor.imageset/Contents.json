@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "rectangle.dashed.and.paperclip.png",
+      "filename" : "Lable_light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Lable_light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Lable_light@5x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

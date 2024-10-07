@@ -172,11 +172,11 @@ struct SKSecretButton: View {
         case .masterseed:
             return "ic_leaf"
         case .electrumMnemonic:
-            return "atom"
+            return "ic_electrum_svg"
         case .walletDescriptor:
-            return "rectangle.dashed.and.paperclip"
+            return "ic_descriptor_svg"
         case .data:
-            return "doc.plaintext"
+            return "ic_data_svg"
         default:
             return "ic_key"
         }

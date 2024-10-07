@@ -66,7 +66,7 @@ struct GenerateSecretTypeView: View {
                 if (secretCreationMode == SecretCreationMode.manualImport){
                     MenuButton(
                         title: String(localized: "descriptorTitle"),
-                        iconName: "rectangle.dashed.and.paperclip",
+                        iconName: "ic_descriptor_svg",
                         iconWidth: 50,
                         iconHeight: 50,
                         backgroundColor: Colors.purpleBtn,
@@ -84,7 +84,7 @@ struct GenerateSecretTypeView: View {
                 if (secretCreationMode == SecretCreationMode.manualImport){
                     MenuButton(
                         title: String(localized: "dataTitle"),
-                        iconName: "doc.plaintext",
+                        iconName: "ic_data_svg",
                         iconWidth: 50,
                         iconHeight: 50,
                         backgroundColor: Colors.purpleBtn,
