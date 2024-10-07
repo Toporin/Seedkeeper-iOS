@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 enum SatochipURL: String {
+    case urlNoCardYet
     case urlHowToUse
     case urlTerms
     case urlPrivacy

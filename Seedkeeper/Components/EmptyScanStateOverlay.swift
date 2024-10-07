@@ -29,8 +29,8 @@ struct EmptyScanStateOverlay: View {
                 Spacer()
                 
                 Button(action: {
-                    if let weblinkUrl = URL(string: "https://satochip.io/product/seedkeeper/") {
-                        UIApplication.shared.open(weblinkUrl)
+                    if let url = SatochipURL.urlNoCardYet.url {
+                        UIApplication.shared.open(url)
                     }
                 }) {
                     HStack {
