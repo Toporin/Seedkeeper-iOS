@@ -209,13 +209,13 @@ extension CardState {
                     for index in minIndex ..< secretHeaders.count {
                         let secretHeader = secretHeaders[index]
                         
-                        // check secret type: skip backup authentikey
-                        // TODO: perform these checks before initiating scan session for performance
-                        // TODO: skip all pubkeys or only the backup authentikey?
-                        if secretHeader.type == .pubkey {
-                            logger.info("Skip export pubkey with label: '\(secretHeader.label)'", tag: "requestExportSecretsForBackup")
-                            continue
-                        }
+//                        // check secret type: skip backup authentikey
+//                        // TODO: perform these checks before initiating scan session for performance
+//                        // TODO: skip all pubkeys or only the backup authentikey?
+//                        if secretHeader.type == .pubkey {
+//                            logger.info("Skip export pubkey with label: '\(secretHeader.label)'", tag: "requestExportSecretsForBackup")
+//                            continue
+//                        }
                         
                         let encryptedSecretObject = try cmdSet.seedkeeperExportSecret(sid: secretHeader.sid, sidPubkey: authentikeySid)
                         

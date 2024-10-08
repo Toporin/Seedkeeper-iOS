@@ -140,10 +140,12 @@ class CardState: ObservableObject {
     @Published var secretHeadersForBackup: [SeedkeeperSecretHeader] = []
     //var secretsForBackup: [SeedkeeperSecretHeader:SeedkeeperSecretObject] = [:]
     var secretsForBackup: [SeedkeeperSecretObject] = []
+    var numberSkippedSecrets = 0
     
     @Published var importIndex = 0
     
     var backupError: String = "" // TODO: improve using enum
+    
     
     // *********************************************************
     // MARK: Properties for factory reset
@@ -287,46 +289,64 @@ class CardState: ObservableObject {
                     }
                     
                     // List all secret headers
+                    var secretHeaders: [SeedkeeperSecretHeader] = [SeedkeeperSecretHeader]()
+                    var fetchedLabel: String = ""
                     do {
-                        let secretHeaders: [SeedkeeperSecretHeader] = try cmdSet.seedkeeperListSecretHeaders()
-                        DispatchQueue.main.async {
-                            switch scannedCardType {
-                            case .master:
-                                self.masterSecretHeaders = secretHeaders
-                            case .backup:
-                                self.backupSecretHeaders = secretHeaders
-                            }
-                        }
+                        secretHeaders = try cmdSet.seedkeeperListSecretHeaders()
                         
-                        let fetchedLabel = try cmdSet.cardGetLabel()
-                        DispatchQueue.main.async {
-                            switch scannedCardType {
-                            case .master:
-                                self.masterCardLabel = fetchedLabel
-                            case .backup:
-                                self.backupCardLabel = fetchedLabel
-                            }
-                        }
-                        
-                        session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
-                        logger.info("\(String(localized: "nfcSecretsListSuccess"))", tag: "scan")
-                        
+                        fetchedLabel = try cmdSet.cardGetLabel()
                     } catch let error {
                         logger.error("\(String(localized: "nfcErrorOccured")) : \(error.localizedDescription)", tag: "scan")
                         session?.stop(errorMessage: "\(String(localized: "nfcErrorOccured")) \(error.localizedDescription)")
                     }
+                    session?.stop(alertMessage: String(localized: "nfcSecretsListSuccess"))
+                    logger.info("\(String(localized: "nfcSecretsListSuccess"))", tag: "scan")
                     
+                    // if scanning backup card, compute the list of secrets to backup
+                    var secretHeadersToBackup: [SeedkeeperSecretHeader] = [SeedkeeperSecretHeader]()
+                    var numberSkippedPubkeys = 0
+                    var numberSkippedSecrets = 0
+                    if scannedCardType == .backup {
+                        for secretHeader in self.masterSecretHeaders {
+                            // check secret type: skip backup authentikey
+                            // TODO: currently skip all pubkeys, should we only skip the backup authentikey?
+                            if secretHeader.type == .pubkey {
+                                numberSkippedPubkeys += 1
+                                logger.info("Skip backup of pubkey with label '\(secretHeader.label)'", tag: "scan")
+                                continue
+                            }
+                            
+                            // check if secret is already stored in backup
+                            if secretHeaders.contains(where: {$0.fingerprintBytes == secretHeader.fingerprintBytes}) {
+                                numberSkippedSecrets += 1
+                                logger.info("Skip backup of secret with label '\(secretHeader.label)' and sid: \(secretHeader.sid) (already present in backup card)", tag: "scan")
+                                continue
+                            }
+                            
+                            // secret is not backuped yet, add it to list
+                            secretHeadersToBackup.append(secretHeader)
+                        }
+                    }
+                    
+                    // update cardState
                     DispatchQueue.main.async {
                         switch scannedCardType {
                         case .master:
+                            self.masterCardLabel = fetchedLabel
+                            self.masterSecretHeaders = secretHeaders
                             self.isCardDataAvailable = true
                             self.homeNavigationPath = .init()
                         case .backup:
-                            self.backupMode = .backupExportFromMaster
+                            self.backupCardLabel = fetchedLabel
+                            self.backupSecretHeaders = secretHeaders
                             // get an array of secretHeaders that are in masterSecretHeaders but not in backupSecretHeaders
                             // These are the secrets that must be backuped
-                            self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }
-                            self.logger.info("secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)", tag: "requestExportSecretsForBackup")
+                            //self.secretHeadersForBackup = self.masterSecretHeaders.filter { headers in !self.backupSecretHeaders.contains(where: { $0.fingerprintBytes == headers.fingerprintBytes }) }
+                            self.secretHeadersForBackup = secretHeadersToBackup
+                            self.logger.info("secretHeadersForBackup.count: \(self.secretHeadersForBackup.count)", tag: "scan")
+                            self.numberSkippedSecrets = numberSkippedSecrets
+                            self.logger.info("numberSkippedSecrets: \(numberSkippedSecrets)", tag: "scan")
+                            self.backupMode = .backupExportFromMaster
                             self.homeNavigationPath.append(NavigationRoutes.backup)
                         }
                     }

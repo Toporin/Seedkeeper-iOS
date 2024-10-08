@@ -74,7 +74,7 @@ struct FactoryResetView: View {
                 } else if cardState.resetMode == .sendResetCommand &&
                             cardState.resetRemainingSteps != 0x00 &&
                             cardState.resetRemainingSteps != 0xFF {
-                    SatoText(text: "Steps remaining: \(cardState.resetRemainingSteps)", style: .SKStrongBodyDark)
+                    SatoText(text: String(localized: "stepsRemaining") + "\(cardState.resetRemainingSteps)", style: .SKStrongBodyDark)
                 }
                 Spacer()
                 

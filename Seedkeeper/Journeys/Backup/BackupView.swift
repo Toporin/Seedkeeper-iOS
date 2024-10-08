@@ -21,6 +21,9 @@ struct BackupView: View {
     @EnvironmentObject var cardState: CardState
     @Binding var homeNavigationPath: NavigationPath
     
+    @State private var showProgressBar: Bool = false
+
+    
     func getActionButtonTitle() -> String {
         switch cardState.backupMode {
         case .start:
@@ -83,22 +86,24 @@ struct BackupView: View {
                 
                 // User info when exporting encrypted secrets
                 if (cardState.backupMode == .backupExportFromMaster){
-                    // TODO: provide more context and better instructions to user! + localization
                     if (cardState.secretHeadersForBackup.count > 30){
                         SatoText(text: "backupMultipleNFCSessionNote", style: .SKStrongBodyDark)
                     }
                     // show export progression as it may require several nfc sessions
-                    //SatoText(text: "Secret: \(cardState.exportIndex) of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)
-                    SatoText(text: "Secrets exported: \(cardState.exportIndex)/\(cardState.secretHeadersForBackup.count) ", style: .SKStrongBodyDark)
-                   
-                    Spacer()
+                    //SatoText(text: String(localized: "backupSecretsExported") + "\(cardState.exportIndex)/\(cardState.secretHeadersForBackup.count) ", style: .SKStrongBodyDark)
+                    
+                    if showProgressBar {
+                        ProgressView(String(localized: "backupExportingProgressBar"), value: Double(cardState.exportIndex), total: Double(cardState.secretHeadersForBackup.count))
+                        Spacer()
+                    }
                 }
                
                 // User info after encrypted secrets
                 else if (cardState.backupMode == .backupExportReady){
-                    // TODO: provide more context and better instructions to user! + localization
                     // show export progression as it may require several nfc sessions
-                    SatoText(text: "Number of secrets to backup: \(cardState.secretsForBackup.count) out of \(cardState.masterSecretHeaders.count) ", style: .SKStrongBodyDark)
+                    SatoText(text: String(localized: "numberSecretsToBackup") + "\(cardState.secretsForBackup.count)", style: .SKStrongBodyDark)
+                    //SatoText(text: String(localized: "numberSkippedSecrets") + "\(cardState.numberSkippedSecrets)", style: .SKStrongBodyDark)
+                    
                     Spacer()
                 }
                 
@@ -106,8 +111,14 @@ struct BackupView: View {
                 else if (cardState.backupMode == .initiateImportToBackup){
                     // TODO: provide more context and better instructions to user! + localization
                     // show export progression as it may require several nfc sessions
-                    SatoText(text: "Secrets imported: \(cardState.importIndex) out of \(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
-                    Spacer()
+                    
+                    //SatoText(text: String(localized: "backupSecretsImported") + "\(cardState.importIndex)/\(cardState.secretsForBackup.count) ", style: .SKStrongBodyDark)
+                    
+                    if showProgressBar {
+                        ProgressView(String(localized: "backupImportingProgressBar"), value: Double(cardState.importIndex), total: Double(cardState.secretsForBackup.count))
+                        
+                        Spacer()
+                    }
                 }
                 
                 Image(getIndicationImageName())
@@ -125,14 +136,17 @@ struct BackupView: View {
                         cardState.importIndex = 0
                         cardState.exportIndex = 0
                         cardState.backupMode = .pairBackupCard
-                        
+                        showProgressBar = false
                     case .pairBackupCard:
                         homeNavigationPath.append(NavigationRoutes.pinCode(.continueBackupFlow))
                     case .backupExportFromMaster:
+                        showProgressBar = true
                         cardState.requestExportSecretsForBackup()
                     case .backupExportReady:
+                        showProgressBar = false
                         cardState.backupMode = .initiateImportToBackup
                     case .initiateImportToBackup:
+                        showProgressBar = true
                         cardState.requestImportSecretsToBackupCard()
                     }
                 })
